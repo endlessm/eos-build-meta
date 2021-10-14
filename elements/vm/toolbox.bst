@@ -2,7 +2,7 @@ kind: meson
 
 sources:
 - kind: tar
-  url: https://github.com/containers/toolbox/releases/download/0.0.99.1/toolbox-0.0.99.1.tar.xz
+  url: https://github.com/containers/toolbox/releases/download/0.0.99.2/toolbox-0.0.99.2.tar.xz
 - kind: git_tag
   url: https://github.com/HarryMichal/go-version.git
   track: v1.0.0
@@ -85,6 +85,8 @@ sources:
   directory: 'src/vendor/golang.org/x/sys'
 - kind: patch
   path: files/toolbox/riscv.patch
+- kind: patch
+  path: files/toolbox/gnome-sdk-as-default.patch
 
 build-depends:
 - freedesktop-sdk.bst:components/systemd.bst
