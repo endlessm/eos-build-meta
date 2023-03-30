@@ -16,6 +16,7 @@ runtime-depends:
 - freedesktop-sdk.bst:components/python3.bst
 - freedesktop-sdk.bst:components/sdl2.bst
 - freedesktop-sdk.bst:components/sdl2-image.bst
+- freedesktop-sdk.bst:components/systemd-libs.bst
 - freedesktop-sdk.bst:bootstrap-import.bst
 
 config:
