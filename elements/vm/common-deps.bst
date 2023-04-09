@@ -38,6 +38,8 @@ depends:
 - vm/NetworkManager-fortisslvpn.bst
 - vm/NetworkManager-vpnc.bst
 
+- vm/qemu-guest-agent.bst
+
 - core-deps/pipewire-daemon.bst
 - core-deps/wireplumber.bst
 
