@@ -5,6 +5,18 @@ sources:
   track: master
   track-tags: True
   ref: freedesktop-sdk-23.08beta.4-0-gecac7d1b8efecb53e392b20f459c382682e4eb5d
+- kind: patch
+  path: freedesktop-sdk-systemd-repart-fix.patch
+- kind: patch
+  path: freedesktop-sdk-lockdown.patch
+- kind: patch
+  path: freedesktop-sdk-dracut.patch
+- kind: patch
+  path: freedesktop-sdk-tpm.patch
+- kind: patch
+  path: freedesktop-sdk-fusermount.patch
+- kind: patch
+  path: freedesktop-sdk-module-signing.patch
 config:
   options:
     target_arch: '%{arch}'
@@ -38,3 +50,4 @@ config:
     components/pygobject.bst: sdk/pygobject.bst
     components/vala.bst: sdk/vala.bst
     components/zenity.bst: void/zenity.bst
+    components/linux-module-cert.bst: vm-secure/linux-module-cert.bst
