@@ -24,6 +24,9 @@ while [ $# -gt 0 ]; do
             shift
             cmdline+=("$1")
             ;;
+        --debug)
+            cmdline+=("systemd.debug-shell=ttyS0" "rd.systemd.debug-shell=ttyS0")
+            ;;
         --help)
             echo "USAGE: $0 [OPTIONS] [ELEMENT]"
             echo "Options:"
@@ -32,6 +35,7 @@ while [ $# -gt 0 ]; do
             echo "    --buildid                 Boot a specific build ID, instead of the building and booting the current"
             echo "    --notpm                   Disable the TPM"
             echo "    --cmdline ARG             Append an ARG to the kernel command line. Can be repeated multiple times"
+            echo "    --debug                   Turn on the systemd debug shell on the serial console"
             echo "Args:"
             echo "    ELEMENT                   The element to boot. Defaults to 'vm-secure/image.bst'"
             exit
@@ -138,8 +142,19 @@ QEMU_ARGS+=(-device ich9-intel-hda)
 QEMU_ARGS+=(-audiodev pa,id=sound0)
 QEMU_ARGS+=(-device hda-output,audiodev=sound0)
 
+if [[ "${cmdline[*]}" =~ "ttyS0" ]]; then
+        QEMU_ARGS+=(-serial mon:stdio)
+
+        trap reset EXIT
+        reset
+
+        cmdline+=("systemd.tty.rows.ttyS0=$(tput lines)" "systemd.tty.columns.ttyS0=$(tput cols)")
+else
+        QEMU_ARGS+=(-serial none)
+fi
+
 if [ ${#cmdline[@]} -gt 0 ]; then
     QEMU_ARGS+=(-smbios "type=11,value=io.systemd.stub.kernel-cmdline-extra=${cmdline[*]}")
 fi
 
-exec qemu-system-x86_64 "${QEMU_ARGS[@]}"
+qemu-system-x86_64 "${QEMU_ARGS[@]}"
