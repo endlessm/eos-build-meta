@@ -24,6 +24,18 @@ while [ $# -gt 0 ]; do
             shift
             cmdline+=("$1")
             ;;
+        --help)
+            echo "USAGE: $0 [OPTIONS] [ELEMENT]"
+            echo "Options:"
+            echo "    --reset                   Completely wipe the VM and start over"
+            echo "    --reset-secure-state      Wipe out the VM's TPM chip, but keep data in tact (you'll need the recovery key)"
+            echo "    --buildid                 Boot a specific build ID, instead of the building and booting the current"
+            echo "    --notpm                   Disable the TPM"
+            echo "    --cmdline ARG             Append an ARG to the kernel command line. Can be repeated multiple times"
+            echo "Args:"
+            echo "    ELEMENT                   The element to boot. Defaults to 'vm-secure/image.bst'"
+            exit
+            ;;
         *)
             args+=("$1")
             ;;
