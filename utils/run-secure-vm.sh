@@ -119,7 +119,13 @@ if ! [ -f "${STATE_DIR}/OVMF_CODE.fd" ] || ! [ -f "${STATE_DIR}/OVMF_VARS_TEMPLA
 fi
 
 if [ "${reset_secure+set}" = set ] || ! [ -f "${STATE_DIR}/OVMF_VARS.fd" ]; then
-    cp "${STATE_DIR}/OVMF_VARS_TEMPLATE.fd" "${STATE_DIR}/OVMF_VARS.fd"
+    virt-fw-vars \
+        --input "${STATE_DIR}/OVMF_VARS_TEMPLATE.fd" \
+        --output "${STATE_DIR}/OVMF_VARS.fd" \
+        --set-pk OvmfEnrollDefaultKeys files/boot-keys/PK.crt \
+        --add-kek OvmfEnrollDefaultKeys files/boot-keys/KEK.crt \
+        --add-db OvmfEnrollDefaultKeys files/boot-keys/DB.crt \
+        --sb
 fi
 
 QEMU_ARGS=()
