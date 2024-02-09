@@ -45,9 +45,9 @@ done
 
 : ${STATE_DIR:="${PWD}/current-secure-vm"}
 : ${SWTPM_STATE:="${STATE_DIR}/swtpm-state"}
-: ${SWTPM_UNIT=swtpm-$(echo -n "$(realpath .)" | sha1sum | head -c 8)}
+: ${TPM_SOCK:="${STATE_DIR}/swtpm-sock"}
+: ${TPM_LOG:="${STATE_DIR}/swtpm-log"}
 : ${BST:=bst}
-: ${TPM_SOCK:="${XDG_RUNTIME_DIR}/${SWTPM_UNIT}/sock"}
 : ${IMAGE_ELEMENT:="vm-secure/image.bst"}
 
 BST_OPTIONS=()
@@ -69,21 +69,15 @@ if [ "${buildid+set}" = set ]; then
 fi
 
 if ! [ "${no_tpm+set}" = set ]; then
-    if systemctl --user -q is-active "${SWTPM_UNIT}"; then
-        systemctl --user stop "${SWTPM_UNIT}"
-    fi
-    if systemctl --user -q is-failed "${SWTPM_UNIT}"; then
-        systemctl --user reset-failed "${SWTPM_UNIT}"
-    fi
-
     if [ "${reset_secure+set}" = set ] ; then
         rm -rf "${SWTPM_STATE}"
     fi
+
     [ -d "${SWTPM_STATE}" ] || mkdir -p "${SWTPM_STATE}"
 
-    TPM_SOCK_DIR="$(dirname "${TPM_SOCK}")"
-    [ -d "${TPM_SOCK_DIR}" ] ||  mkdir -p "${TPM_SOCK_DIR}"
-    systemd-run --user --service-type=simple --unit="${SWTPM_UNIT}" -- swtpm socket --tpm2 --tpmstate dir="${SWTPM_STATE}" --ctrl type=unixio,path="${TPM_SOCK}"
+    # Launch the software TPM
+    trap 'kill $(jobs -p)' EXIT
+    swtpm socket --tpm2 --tpmstate dir="${SWTPM_STATE}" --ctrl type=unixio,path="${TPM_SOCK}" --log file="${TPM_LOG}" &
 fi
 
 cleanup_dirs=()
