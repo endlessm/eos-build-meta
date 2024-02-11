@@ -1,10 +1,11 @@
 kind: meson
 
 sources:
-- kind: tar
-  base-dir: ''
-  url: freedesktop_software:accountsservice/accountsservice-23.13.9.tar.xz
-  ref: adda4cdeae24fa0992e7df3ffff9effa7090be3ac233a3edfdf69d5a9c9b924f
+- kind: git_repo
+  url: freedesktop:accountsservice/accountsservice
+  track: refs/tags/*
+  ref: 23.13.9-0-g57e491f5e6f3da2d5a949f4f8747c8f4e8ed799d
+
 build-depends:
 - sdk/gobject-introspection.bst
 - sdk/vala.bst
@@ -16,6 +17,3 @@ depends:
 - freedesktop-sdk.bst:components/dbus.bst
 - freedesktop-sdk.bst:components/polkit.bst
 - freedesktop-sdk.bst:bootstrap-import.bst
-
-variables:
-  meson: meson %{build-dir} */ %{meson-args}
