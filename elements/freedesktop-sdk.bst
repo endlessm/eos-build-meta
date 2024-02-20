@@ -13,6 +13,10 @@ sources:
   path: patches/freedesktop-sdk/kernel-backports.patch
 - kind: patch
   path: patches/freedesktop-sdk/0001-components-linux-Enable-SECURITY_LANDLOCK.patch
+- kind: patch
+  path: patches/freedesktop-sdk/abseil-riscv64.patch
+- kind: patch
+  path: patches/freedesktop-sdk/sg2402-experimental.patch
 
 config:
   options:
@@ -25,7 +29,7 @@ config:
     - arch == "ppc64le":
         bootstrap_build_arch: "ppc64le"
     - arch == "riscv64":
-        bootstrap_build_arch: "x86_64"
+        bootstrap_build_arch: "riscv64"
 
   overrides:
     components/appstream-glib.bst: sdk/appstream-glib.bst
