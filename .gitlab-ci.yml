@@ -99,7 +99,7 @@ default:
   when: manual
   allow_failure: true
   script:
-  - ${BST_NO_PUSH} --max-jobs $(( $(nproc) / 4 )) -o arch "${ARCH}" build "${IMAGE}"
+  - ${BST} --max-jobs $(( $(nproc) / 4 )) -o arch "${ARCH}" build "${IMAGE}"
   - ${BST} -o arch "${ARCH}" artifact checkout --hardlinks "${IMAGE}" --directory image
   artifacts:
     when: always
@@ -378,6 +378,16 @@ raspberrypi-4-image:
     artifacts: false
   variables:
     IMAGE: boards/raspberrypi-4/image.bst
+
+librem5-image:
+  extends:
+  - .manual-image-template
+  - .aarch64
+  needs:
+  - job: 'build-aarch64'
+    artifacts: false
+  variables:
+    IMAGE: boards/librem5/image.bst
 
 iso-installer-x86_64:
   extends:
