@@ -4,6 +4,7 @@ set -eu
 
 args=()
 cmdline=()
+creds=()
 
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -27,6 +28,10 @@ while [ $# -gt 0 ]; do
         --debug)
             cmdline+=("systemd.debug-shell=ttyS0" "rd.systemd.debug-shell=ttyS0")
             ;;
+        --credential)
+            shift
+            creds+=("$1")
+            ;;
         --help)
             echo "USAGE: $0 [OPTIONS] [ELEMENT]"
             echo "Options:"
@@ -34,6 +39,7 @@ while [ $# -gt 0 ]; do
             echo "    --reset-secure-state      Wipe out the VM's TPM chip, but keep data in tact (you'll need the recovery key)"
             echo "    --buildid                 Boot a specific build ID, instead of the building and booting the current"
             echo "    --notpm                   Disable the TPM"
+            echo "    --credential ARG          Pass through a systemd credential"
             echo "    --cmdline ARG             Append an ARG to the kernel command line. Can be repeated multiple times"
             echo "    --debug                   Turn on the systemd debug shell on the serial console"
             echo "Args:"
@@ -51,6 +57,7 @@ done
 : ${SWTPM_STATE:="${STATE_DIR}/swtpm-state"}
 : ${TPM_SOCK:="${STATE_DIR}/swtpm-sock"}
 : ${TPM_LOG:="${STATE_DIR}/swtpm-log"}
+: ${TYPE11:="${STATE_DIR}/type11.txt"}
 : ${BST:=bst}
 : ${IMAGE_ELEMENT:="vm-secure/image.bst"}
 
@@ -151,7 +158,7 @@ QEMU_ARGS+=(-device hda-output,audiodev=sound0)
 if [[ "${cmdline[*]}" =~ "ttyS0" ]]; then
         QEMU_ARGS+=(-serial mon:stdio)
 
-        trap reset EXIT
+        #trap reset EXIT
         reset
 
         cmdline+=("systemd.tty.rows.ttyS0=$(tput lines)" "systemd.tty.columns.ttyS0=$(tput cols)")
@@ -161,6 +168,14 @@ fi
 
 if [ ${#cmdline[@]} -gt 0 ]; then
     QEMU_ARGS+=(-smbios "type=11,value=io.systemd.stub.kernel-cmdline-extra=${cmdline[*]}")
+fi
+
+if [ ${#creds[@]} -gt 0 ]; then
+    rm "$TYPE11" || true
+    for cred in "${creds[@]}"; do
+        echo "$cred" >> "$TYPE11"
+    done
+    QEMU_ARGS+=(-smbios "type=11,path=$TYPE11")
 fi
 
 qemu-system-x86_64 "${QEMU_ARGS[@]}"
