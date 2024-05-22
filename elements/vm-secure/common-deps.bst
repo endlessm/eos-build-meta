@@ -17,3 +17,4 @@ depends:
 - vm-secure/efitools-maybe.bst
 - vm-secure/reload-sysext.bst
 - vm-secure/mokutil.bst
+- vm-secure/set-chassis-type.bst
