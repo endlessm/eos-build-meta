@@ -22,7 +22,7 @@ config:
        --seed "%{sysroot-seed}" \
        --rootsource /dev/gpt-auto-root \
        --rootfstype btrfs \
-       --rootfsopts relatime \
+       --rootfsopts relatime,nodev,nosuid,noexec \
        --noboot >'%{install-root}/vars.txt'
 
   - |
