@@ -20,6 +20,7 @@ depends:
 - vm-deps/efitools-maybe.bst
 - vm-secure/reload-sysext.bst
 - vm-deps/mokutil.bst
+- vm-secure/var-flatpak-subvol.bst
 
 (?):
 - arch in ["x86_64"]:

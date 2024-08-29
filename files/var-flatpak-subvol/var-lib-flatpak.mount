@@ -1,0 +1,14 @@
+[Unit]
+Conflicts=umount.target
+Before=umount.target
+After=systemd-tmpfiles-setup.service
+After=blockdev@dev-gpt\x2dauto\x2droot.target
+
+[Install]
+WantedBy=graphical.target
+
+[Mount]
+What=/dev/gpt-auto-root
+Where=/var/lib/flatpak
+Type=btrfs
+Options=relatime,nodev,nosuid,subvol=var/lib/flatpak,x-systemd.after=systemd-tmpfiles-setup.service,x-systemd.wanted-by=local-fs.target
