@@ -14,6 +14,7 @@ build-depends:
 
 runtime-depends:
 - core-deps/exfat-progs.bst
+- core-deps/ntfs3g-progs.bst
 - freedesktop-sdk.bst:components/btrfs-progs.bst
 - freedesktop-sdk.bst:components/dosfstools.bst
 - freedesktop-sdk.bst:components/e2fsprogs.bst
