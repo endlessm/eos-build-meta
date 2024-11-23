@@ -4,6 +4,7 @@ depends:
 - vm-deps/deps.bst
 
 - vm-secure/repart-config.bst
+- vm-secure/root-mount-dropins.bst
 - vm-secure/kernel-modules-only.bst
 - vm-secure/sysupdate-config.bst
 - vm-secure/sysupdate-apparmor-config.bst
