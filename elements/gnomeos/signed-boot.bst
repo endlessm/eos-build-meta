@@ -28,15 +28,23 @@ variables:
       efi-arch: aa64
       devicetree-args: >-
         --devicetree-auto="/boot/dtbs/rockchip/rk3588-rock-5b.dtb"
+        --devicetree-auto="/boot/dtbs/rockchip/rk3399-pinephone-pro.dtb"
+        --devicetree-auto="/boot/dtbs/allwinner/sun50i-a64-pinephone-1.0.dtb"
+        --devicetree-auto="/boot/dtbs/allwinner/sun50i-a64-pinephone-1.2.dtb"
+        --devicetree-auto="/boot/dtbs/allwinner/sun50i-a64-pinephone-1.1.dtb"
   - arch == 'riscv64':
       efi-arch: riscv64
   kcmdline: >-
     rw
-    quiet splash
     mount.usrflags=ro
     mount.usrfstype=squashfs
     lockdown=confidentiality
     systemd.firstboot=no
+    root=LABEL=root
+    loglevel=10
+    console=ttyS2,1500000n8
+    console=tty0
+    consoleblank=0
 
 config:
   install-commands:
