@@ -40,8 +40,8 @@ config:
   - |
     set -x
 
-    roothash=$(jq -r '(.[] | select(.type | match("^usr-.*-verity$"))).roothash' /usr-image/repart.json)
-    label=$(jq -r '(.[] | select(.type | match("^usr-.*-verity$"))).label' /usr-image/repart.json)
+    roothash=$(jq -r '(.[] | select(.type | match("^usr-.*-verity$"))).roothash' /usr-image/mini.repart.json)
+    label=$(jq -r '(.[] | select(.type | match("^usr-.*-verity$"))).label' /usr-image/mini.repart.json)
     image_version="${label##gnomeos_usr_v_}"
 
     version="$(ls -1 /usr/lib/modules | head -n1)"
@@ -60,6 +60,35 @@ config:
       --sbat=@sbat.txt \
       --output="%{install-root}/efi/EFI/Linux/gnomeos_${image_version}.efi.extra.d/apparmor.addon.efi"
 
+    cat <<EOF >sysusers.conf
+    g guest 1000
+    u guest 1000:1000 "Guest" /home/guest /bin/bash
+    m guest wheel
+    m guest users
+    EOF
+
+    cat <<EOF >gdm.conf
+    [daemon]
+    AutomaticLoginEnable=True
+    AutomaticLogin=guest
+    EOF
+    gdm=$(cat gdm.conf | base64 -w0)
+
+    cat <<EOF >tmpfiles.conf
+    C /home/guest - - - - /usr/share/factory/etc/skel
+    Z /home/guest - guest guest
+    f+~ /etc/gdm/custom.conf - - - - ${gdm}
+    EOF
+    sysusers=$(cat sysusers.conf | base64 -w0)
+    tmpfiles=$(cat tmpfiles.conf | base64 -w0)
+
+    ukify build \
+      --secureboot-private-key=VENDOR.key \
+      --secureboot-certificate=VENDOR.crt \
+      --cmdline="root=tmpfs rd.systemd.mask=systemd-repart.service systemd.mask=systemd-repart.service systemd.set-credential-binary=sysusers.extra:${sysusers} systemd.set-credential-binary=tmpfiles.extra:${tmpfiles}" \
+      --sbat=@sbat.txt \
+      --output="%{install-root}/efi/EFI/Linux/gnomeos_${image_version}.efi.extra.d/volatile.addon.efi"
+
     ukify build \
       --secureboot-private-key=VENDOR.key \
       --secureboot-certificate=VENDOR.crt \
@@ -67,6 +96,12 @@ config:
       --sbat=@sbat.txt \
       --output="%{install-root}/efi/EFI/Linux/gnomeos_${image_version}.efi.extra.d/nvidia.addon.efi"
 
+    # Note: because we sign root=tmpfs, it is important we do not use
+    # a pcr key for ready pcrphase or later. Otherwise we allow the live ISO
+    # to unlock encrypted disks, since you can log in as root on it.
+    # Encrypted mounts should be mounted before local-fs.target, that
+    # is before sysinit.target. That means we can allow up to
+    # leave-initrd.
     ukify build \
       --output "%{install-root}/efi/EFI/Linux/gnomeos_${image_version}.efi" \
       --os-release=@/etc/os-release \
@@ -74,7 +109,7 @@ config:
       --uname="${version}" \
       --pcr-private-key=tpm2-pcr-private.pem \
       --pcr-public-key=tpm2-pcr-public.pem \
-      --phases="enter-initrd,enter-initrd:leave-initrd,enter-initrd:leave-initrd:sysinit" \
+      --phases="enter-initrd,enter-initrd:leave-initrd" \
       --secureboot-private-key=VENDOR.key \
       --secureboot-certificate=VENDOR.crt \
       --linux="/boot/vmlinuz" \
