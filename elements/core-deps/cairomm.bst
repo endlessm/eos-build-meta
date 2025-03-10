@@ -8,12 +8,12 @@ sources:
   track: 1.*
   ref: 1.18.0-0-ge0bad547705348657d09db4c9375833d8890cf54
 build-depends:
-- core-deps/graphviz.bst
 - core-deps/mm-common.bst
 - freedesktop-sdk.bst:components/doxygen.bst
 - freedesktop-sdk.bst:components/libxslt.bst
 - freedesktop-sdk.bst:components/perl.bst
 - freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
+- sdk/graphviz.bsd
 
 depends:
 - core-deps/libsigcplusplus.bst
