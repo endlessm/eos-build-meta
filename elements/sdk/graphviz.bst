@@ -11,7 +11,6 @@ build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-autotools.bst
 
 depends:
-- sdk/gdk-pixbuf.bst
 - sdk/glib.bst
 - sdk/pango.bst
 - freedesktop-sdk.bst:components/cairo.bst
@@ -34,7 +33,7 @@ variables:
     --without-devil
     --without-qt
     --with-pangocairo
-    --with-gdk-pixbuf
+    --without-gdk-pixbuf
 
 public:
   bst:
