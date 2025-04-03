@@ -15,3 +15,4 @@ depends:
 - freedesktop-sdk.bst:components/python3-packaging.bst
 - freedesktop-sdk.bst:components/python3-pygments.bst
 - freedesktop-sdk.bst:components/python3-typogrify.bst
+- sdk/graphviz.bst

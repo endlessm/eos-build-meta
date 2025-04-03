@@ -7,13 +7,13 @@ sources:
   ref: 4.18.0-0-gd4ab096c8990ab3fa9673a62233fa85ae96b3a58
 
 build-depends:
-- core-deps/graphviz.bst
 - core-deps/mm-common.bst
 - freedesktop-sdk.bst:components/doxygen.bst
 - freedesktop-sdk.bst:components/libxslt.bst
 - freedesktop-sdk.bst:components/m4.bst
 - freedesktop-sdk.bst:components/perl-xml-parser.bst
 - freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
+- sdk/graphviz.bst
 
 depends:
 - core-deps/cairomm.bst

@@ -7,7 +7,7 @@ sources:
   ref: 3.9.1-10-g43165451a96242c12bddb90c660aed35f405245d
 
 build-depends:
-- core-deps/graphviz.bst
+- sdk/graphviz.bst
 - sdk/gi-docgen.bst
 - sdk/gobject-introspection.bst
 - sdk/vala.bst
