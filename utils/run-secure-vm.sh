@@ -26,6 +26,10 @@ while [ $# -gt 0 ]; do
         --notpm)
             no_tpm=1
             ;;
+        --serial)
+            serial=1
+            cmdline+=("console=ttyS0")
+            ;;
         --cmdline)
             shift
             cmdline+=("$1")
@@ -110,6 +114,7 @@ if [ "${live+set}" = set ]; then
 fi
 
 if [ "${reset+set}" = set ] || ! [ -f "${STATE_DIR}/disk.${img_ext}" ]; then
+    mkdir -p "${STATE_DIR}"
     checkout="$(mktemp -d --tmpdir="${STATE_DIR}" checkout.XXXXXXXXXX)"
     cleanup_dirs+=("${checkout}")
 
@@ -171,6 +176,11 @@ elif [ "${live}" = cdrom ]; then
     QEMU_ARGS+=(-device "virtio-scsi-pci,id=scsi")
     QEMU_ARGS+=(-device "scsi-cd,drive=boot-disk,bootindex=1")
 fi
+
+if [ "${serial+set}" = set ]; then
+    QEMU_ARGS+=(-serial stdio)
+fi
+
 QEMU_ARGS+=(-device virtio-vga-gl -display gtk,gl=on)
 QEMU_ARGS+=(-full-screen)
 QEMU_ARGS+=(-device ich9-intel-hda)
