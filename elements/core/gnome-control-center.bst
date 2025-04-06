@@ -3,8 +3,8 @@ kind: meson
 sources:
 - kind: git_repo
   url: gnome:gnome-control-center.git
-  track: main
-  ref: 48.0-23-gc3994d40127bf150bd81ae9a5dce2d2cd32147a1
+  track: jjardon/stub-x11
+  ref: 48.0-35-g24dcc99b88df37fc1ecd33a7999ce036af6f75d4
 - kind: git_module
   url: gnome:libgnome-volume-control.git
   path: subprojects/gvc
@@ -46,7 +46,6 @@ depends:
 - core-deps/upower.bst
 - core-deps/boltd.bst
 - core/gnome-bluetooth.bst
-- core/gnome-color-manager.bst
 - core/gnome-desktop.bst
 - core/gnome-settings-daemon.bst
 - core/tecla.bst
@@ -65,3 +64,4 @@ variables:
   meson-local: >-
     -Ddocumentation=true
     -Dmalcontent=true
+    -Dx11-support=false
