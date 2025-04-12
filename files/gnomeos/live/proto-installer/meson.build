@@ -6,9 +6,10 @@ gnome.compile_resources(
   install: true,
 )
 
+# 'installer-daemon.py',
+
 install_data(
   'installer.py',
-  'installer-daemon.py',
   install_mode: ['rwxr-xr-x'],
   install_dir: get_option('prefix') / 'lib' / 'gnomeos-installer',
 )
