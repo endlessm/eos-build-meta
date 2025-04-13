@@ -1,6 +1,7 @@
 kind: script
 
 build-depends:
+- freedesktop-sdk.bst:components/fakecap.bst
 - freedesktop-sdk.bst:components/jq.bst
 - freedesktop-sdk.bst:vm/prepare-image.bst
 - gnomeos/make-layer.bst
@@ -17,18 +18,19 @@ variables:
   sysroot-seed: df2427db-01ec-4c99-96b1-be3edb3cd9f6
   repart-seed: 53752261-a988-42fb-a585-b35ae0ab2af4
 
+environment:
+  LD_PRELOAD: /usr/libexec/fakecap/fakecap.so
+  FAKECAP_DB: /fakecap
+
 config:
   commands:
+  - mkdir /fakecap
   - |
     prepare-image.sh \
        --sysroot /sysroot \
        --initscripts /etc/fdsdk/initial_scripts \
        --seed "%{sysroot-seed}" \
        --noroot --noboot >/dev/null
-
-  - |
-    mkdir -p /sysroot/usr/share/factory
-    mv -T /sysroot/etc /sysroot/usr/share/factory/etc
 
   - |
     prepare-image.sh \
@@ -39,10 +41,6 @@ config:
 
   - |
     chmod 0711 '/sysroot-nvidia-runtime/bin/nvidia-sleep.sh' '/sysroot-nvidia-runtime/lib/systemd/system-sleep/nvidia'
-
-  - |
-    mkdir -p /sysroot-nvidia-runtime/usr/share/factory
-    mv -T /sysroot-nvidia-runtime/etc /sysroot-nvidia-runtime/usr/share/factory/etc
 
   - |
     mkdir -p /sysroot-nvidia-runtime/usr/lib/extension-release.d
@@ -61,12 +59,43 @@ config:
     EOF
 
   - |
-    mkdir -p /output
-    make-layer /sysroot/usr /sysroot-nvidia-runtime/usr /output/usr
+    mkdir -p /tmp/output/etc
+    make-layer /sysroot/etc /sysroot-nvidia-runtime/etc /tmp/output/etc/etc
 
   - |
-    mkdir -p /output/etc
-    cp -T /sysroot-nvidia-runtime/usr/lib/os-release /output/etc/os-release
+    find /tmp/output/etc
+
+  - |
+    find /tmp/output/etc/etc -depth -type d -empty -delete
+
+  - |
+    unknown=()
+    for p in /tmp/output/etc/etc/*; do
+      rel="${p#/tmp/output/etc}"
+      case "${rel}" in
+        /etc/systemd|/etc/ld.so.cache)
+          # Those are created another way
+        ;;
+        /etc/logrotate.d)
+          # Those should not exist
+        ;;
+        *)
+          unknown+=("${rel}")
+        ;;
+      esac
+    done
+    if [ "${#unknown[*]}" -gt 0 ]; then
+      echo "Unknown paths:" "${unknown[@]}"
+      exit 1
+    fi
+
+  - |
+    mkdir -p /tmp/output
+    make-layer /sysroot/usr /sysroot-nvidia-runtime/usr /tmp/output/usr
+
+  - |
+    mkdir -p /tmp/output/etc
+    cp -T /sysroot-nvidia-runtime/usr/lib/os-release /tmp/output/etc/os-release
 
   - mkdir -p definitions
   - |

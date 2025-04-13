@@ -8,6 +8,8 @@ sources:
   path: patches/xdg-desktop-portal/1548.patch
 - kind: patch
   path: patches/xdg-desktop-portal/1533.patch
+- kind: patch
+  path: patches/xdg-desktop-portal/1624.patch
 
 build-depends:
 - freedesktop-sdk.bst:components/flatpak.bst
@@ -23,7 +25,7 @@ depends:
 - freedesktop-sdk.bst:components/libgudev.bst
 - freedesktop-sdk.bst:components/pipewire.bst
 - freedesktop-sdk.bst:components/systemd-libs.bst
-- freedesktop-sdk.bst:bootstrap-import.bst
+- freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
 
 public:
   bst:
