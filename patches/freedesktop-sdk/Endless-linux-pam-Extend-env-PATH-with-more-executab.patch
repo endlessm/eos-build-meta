@@ -1,0 +1,39 @@
+From 1fb6a465a0ad9c12ef1e0bd31e5084c3051983dc Mon Sep 17 00:00:00 2001
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Tue, 15 Apr 2025 16:16:42 +0800
+Subject: [PATCH 3/3] [Endless] linux-pam: Extend env PATH with more executable
+ binary's folder
+
+Extend env PATH with more executable binary's folder into
+/etc/environment.
+
+https://phabricator.endlessm.com/T11289
+https://phabricator.endlessm.com/T35802
+---
+ elements/components/linux-pam-base.bst | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/elements/components/linux-pam-base.bst b/elements/components/linux-pam-base.bst
+index 1b89bee2b..cae8e7442 100644
+--- a/elements/components/linux-pam-base.bst
++++ b/elements/components/linux-pam-base.bst
+@@ -22,7 +22,15 @@ variables:
+ config:
+   install-commands:
+     (>):
+-    - rm -rf "%{install-root}/var/run"
++    - |
++      rm -rf "%{install-root}/var/run"
++      # Add PATH to /etc/environment if it's not present there or in
++      # /etc/security/pam_env.conf
++      if ! grep -qs ^PATH "%{install-root}"/etc/security/pam_env.conf; then
++        if ! grep -qs ^PATH= "%{install-root}"/etc/environment; then
++          echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"' >> "%{install-root}"/etc/environment
++        fi
++      fi
+ 
+ public:
+   bst:
+-- 
+2.49.0
+
