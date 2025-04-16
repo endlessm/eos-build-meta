@@ -1,0 +1,30 @@
+From 61fa2166c90f35f41e817933ba6e43cbc2c96b7a Mon Sep 17 00:00:00 2001
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Wed, 16 Apr 2025 14:39:51 +0800
+Subject: [PATCH] [Endless] fontconfig: Use /usr/lib/fontconfig/cache as the
+ cache
+
+Build with --with-cache-dir=/usr/lib/fontconfig/cache so the caches are
+stored with the OS' OSTree filesystem.
+
+https://phabricator.endlessm.com/T34305
+https://phabricator.endlessm.com/T35803
+---
+ elements/components/fontconfig.bst | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/elements/components/fontconfig.bst b/elements/components/fontconfig.bst
+index 05d261176..3ecaddd2c 100644
+--- a/elements/components/fontconfig.bst
++++ b/elements/components/fontconfig.bst
+@@ -11,6 +11,7 @@ depends:
+ variables:
+   conf-local: >-
+     --with-templatedir="%{sysconfdir}/fonts/conf.avail"
++    --with-cache-dir="%{prefix}/lib/fontconfig/cache"
+ 
+ public:
+   bst:
+-- 
+2.49.0
+
