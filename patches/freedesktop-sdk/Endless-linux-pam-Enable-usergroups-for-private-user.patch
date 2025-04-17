@@ -1,0 +1,79 @@
+From 31c080b4292ab01371ecf57ff4bfaba53af52564 Mon Sep 17 00:00:00 2001
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Tue, 15 Apr 2025 17:03:25 +0800
+Subject: [PATCH 2/3] [Endless] linux-pam: Enable usergroups for private user
+ groups, the UMASK 0002
+
+With every user having their own group, the "historical" umask of 0022
+is excessively restrictive. For example, create an user account "user1"
+on GNOME OS current version. The user will have username "user1" in
+primary group "user1" but umask is 0022. The main disadvantage is that
+it prevents setting up shared directories for common access.
+
+To enable this type of shared directories, add the pam_umask module
+configured with usergroups=true so that the default umask becomes 0002
+(instead of 0022). Then, new files in shared directories can be read &
+written by the users in the same group.
+
+AC:
+- Command "umask" should output 0002.
+- 1. Have two users: user1 and user2 on the system.
+  2. Add user2 into user1's group "user1" by command:
+     "sudo usermod -aG user1 user2".
+  3. User1 creates a folder by command: "mkdir -p /tmp/test". Then,
+     create a dummy file into it by "touch /tmp/test/dummy.txt".
+  4. User1 logs out. And, login with user2. User2 should be able to
+     modify "/tmp/test/dummy.txt".
+
+https://phabricator.endlessm.com/T31847
+https://phabricator.endlessm.com/T35802
+https://github.com/endlessm/eos-build-meta/pull/2#discussion_r2050472931
+---
+ elements/components/linux-pam-base.bst | 1 +
+ files/linux-pam-config/password-auth   | 5 +++++
+ files/linux-pam-config/system-auth     | 5 +++++
+ 3 files changed, 11 insertions(+)
+
+diff --git a/elements/components/linux-pam-base.bst b/elements/components/linux-pam-base.bst
+index 0aa51500d..1148d37c4 100644
+--- a/elements/components/linux-pam-base.bst
++++ b/elements/components/linux-pam-base.bst
+@@ -17,6 +17,7 @@ variables:
+     -Dnis=disabled
+     -Dselinux=disabled
+     -Ddocs=disabled
++    -Dusergroups=true
+ 
+ config:
+   install-commands:
+diff --git a/files/linux-pam-config/password-auth b/files/linux-pam-config/password-auth
+index 1df8aac70..0e9e0f2a5 100644
+--- a/files/linux-pam-config/password-auth
++++ b/files/linux-pam-config/password-auth
+@@ -15,4 +15,9 @@ session     optional      pam_keyinit.so revoke
+ session     required      pam_limits.so
+ -session     optional      pam_systemd.so
+ session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
++# The pam_umask module will set the umask according to the system default in
++# /etc/login.defs and user settings, solving the problem of different
++# umask settings with different shells, display managers, remote sessions etc.
++# See "man pam_umask".
++session     optional      pam_umask.so
+ session     required      pam_unix.so
+diff --git a/files/linux-pam-config/system-auth b/files/linux-pam-config/system-auth
+index 1df8aac70..0e9e0f2a5 100644
+--- a/files/linux-pam-config/system-auth
++++ b/files/linux-pam-config/system-auth
+@@ -15,4 +15,9 @@ session     optional      pam_keyinit.so revoke
+ session     required      pam_limits.so
+ -session     optional      pam_systemd.so
+ session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
++# The pam_umask module will set the umask according to the system default in
++# /etc/login.defs and user settings, solving the problem of different
++# umask settings with different shells, display managers, remote sessions etc.
++# See "man pam_umask".
++session     optional      pam_umask.so
+ session     required      pam_unix.so
+-- 
+2.49.0
+
