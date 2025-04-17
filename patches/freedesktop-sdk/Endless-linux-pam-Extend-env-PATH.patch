@@ -1,0 +1,60 @@
+From 87c594400353fd9ced64fffaacdceddb22133af9 Mon Sep 17 00:00:00 2001
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Tue, 15 Apr 2025 16:16:42 +0800
+Subject: [PATCH 3/3] [Endless] linux-pam: Extend env PATH
+
+EOS 6 (including before) extends env PATH with more paths:
+"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
+* Users can access commands in /usr/sbin and /sbin without full path. It
+  is useful for commands, such as reboot and poweroff.
+* Users may install applications into /usr/local/{bin, games, sbin}.
+
+GNOME OS provides env PATH as "/bin:/usr/bin" by default.
+* After check GNOME OS' filesystem, notice:
+  - /bin is linked to /usr/bin
+  - /sbin is linked to /usr/sbin
+  - /usr/sbin is linked to /usr/bin
+  Which means users already can access the commands in /usr/sbin and
+  /sbin without full path directly.
+* EOS has an immutable filesystem maintained by OSTree and /usr/games is
+  an empty directory.
+
+Consider the mentioned above, the new env PATH can be simplified as
+"/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games" and
+extended by configuring /etc/environment.
+
+Note: "$HOME/.local/bin" will be prepended by shell automatically.
+
+AC: Command "printenv PATH"'s output should include
+"/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games"
+
+https://phabricator.endlessm.com/T11289
+https://phabricator.endlessm.com/T35802
+---
+ elements/components/linux-pam-base.bst | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/elements/components/linux-pam-base.bst b/elements/components/linux-pam-base.bst
+index 1148d37c4..3cbe3fa51 100644
+--- a/elements/components/linux-pam-base.bst
++++ b/elements/components/linux-pam-base.bst
+@@ -22,7 +22,15 @@ variables:
+ config:
+   install-commands:
+     (>):
+-    - rm -rf "%{install-root}/var/run"
++    - |
++      rm -rf "%{install-root}/var/run"
++      # Add PATH to /etc/environment if it's not present there or in
++      # /etc/security/pam_env.conf
++      if ! grep -qs ^PATH "%{install-root}"/etc/security/pam_env.conf; then
++        if ! grep -qs ^PATH= "%{install-root}"/etc/environment; then
++          echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games"' >> "%{install-root}"/etc/environment
++        fi
++      fi
+ 
+ public:
+   bst:
+-- 
+2.49.0
+
