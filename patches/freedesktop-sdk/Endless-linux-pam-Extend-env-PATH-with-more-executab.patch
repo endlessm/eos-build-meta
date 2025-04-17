@@ -1,0 +1,43 @@
+From ba5cb54b1323b862b037ac1f95fce8c52cd1206c Mon Sep 17 00:00:00 2001
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Tue, 15 Apr 2025 16:16:42 +0800
+Subject: [PATCH 2/3] [Endless] linux-pam: Extend env PATH with more executable
+ binary's folder
+
+Extend env PATH with more executable binary's folders into
+/etc/environment. Without this, new images would not have */sbin, for
+example in the PATH like they previously did.
+
+AC: Command "printenv PATH"'s output should include
+"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
+
+https://phabricator.endlessm.com/T11289
+https://phabricator.endlessm.com/T35802
+---
+ elements/components/linux-pam-base.bst | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/elements/components/linux-pam-base.bst b/elements/components/linux-pam-base.bst
+index 0aa51500d..a3188d7b1 100644
+--- a/elements/components/linux-pam-base.bst
++++ b/elements/components/linux-pam-base.bst
+@@ -21,7 +21,15 @@ variables:
+ config:
+   install-commands:
+     (>):
+-    - rm -rf "%{install-root}/var/run"
++    - |
++      rm -rf "%{install-root}/var/run"
++      # Add PATH to /etc/environment if it's not present there or in
++      # /etc/security/pam_env.conf
++      if ! grep -qs ^PATH "%{install-root}"/etc/security/pam_env.conf; then
++        if ! grep -qs ^PATH= "%{install-root}"/etc/environment; then
++          echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"' >> "%{install-root}"/etc/environment
++        fi
++      fi
+ 
+ public:
+   bst:
+-- 
+2.49.0
+
