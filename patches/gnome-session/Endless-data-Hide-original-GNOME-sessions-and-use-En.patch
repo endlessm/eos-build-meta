@@ -1,0 +1,100 @@
+From 417ca27b188d16416297f450241135ae617f1b23 Mon Sep 17 00:00:00 2001
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Thu, 17 Apr 2025 14:58:53 +0800
+Subject: [PATCH] [Endless] data: Hide original GNOME sessions and use Endless
+ custom one
+
+Hide the GNOME sessions (both Wayland and Xorg). Will use Endless custom
+GNOME shell mode with Endless custom session. This is done by
+manipulating GNOME session's desktop files.
+
+AC: After login to desktop environment, command
+"printenv XDG_CURRENT_DESKTOP" should output Endless:GNOME.
+
+https://phabricator.endlessm.com/T29401
+https://phabricator.endlessm.com/T35804
+---
+ data/endless-wayland.desktop.in.in | 8 ++++++++
+ data/endless-xorg.desktop.in.in    | 8 ++++++++
+ data/gnome-wayland.desktop.in.in   | 1 +
+ data/gnome-xorg.desktop.in.in      | 1 +
+ data/gnome.desktop.in.in           | 1 +
+ data/meson.build                   | 3 ++-
+ 6 files changed, 21 insertions(+), 1 deletion(-)
+ create mode 100644 data/endless-wayland.desktop.in.in
+ create mode 100644 data/endless-xorg.desktop.in.in
+
+diff --git a/data/endless-wayland.desktop.in.in b/data/endless-wayland.desktop.in.in
+new file mode 100644
+index 00000000..16f9a86e
+--- /dev/null
++++ b/data/endless-wayland.desktop.in.in
+@@ -0,0 +1,8 @@
++[Desktop Entry]
++Name=Endless on Wayland
++Comment=This session logs you into Endless
++Exec=env GNOME_SHELL_SESSION_MODE=endless @bindir@/gnome-session --session=gnome
++TryExec=@bindir@/gnome-shell
++Type=Application
++DesktopNames=Endless:GNOME
++X-GDM-SessionRegisters=true
+diff --git a/data/endless-xorg.desktop.in.in b/data/endless-xorg.desktop.in.in
+new file mode 100644
+index 00000000..4ed6bf98
+--- /dev/null
++++ b/data/endless-xorg.desktop.in.in
+@@ -0,0 +1,8 @@
++[Desktop Entry]
++Name=Endless on Xorg
++Comment=This session logs you into Endless
++Exec=env GNOME_SHELL_SESSION_MODE=endless @bindir@/gnome-session --session=gnome
++TryExec=@bindir@/gnome-shell
++Type=Application
++DesktopNames=Endless:GNOME
++X-GDM-SessionRegisters=true
+diff --git a/data/gnome-wayland.desktop.in.in b/data/gnome-wayland.desktop.in.in
+index b747802d..f58e5844 100644
+--- a/data/gnome-wayland.desktop.in.in
++++ b/data/gnome-wayland.desktop.in.in
+@@ -7,3 +7,4 @@ Type=Application
+ DesktopNames=GNOME
+ X-GDM-SessionRegisters=true
+ X-GDM-CanRunHeadless=true
++Hidden=true
+diff --git a/data/gnome-xorg.desktop.in.in b/data/gnome-xorg.desktop.in.in
+index 9a76fac8..7c31b430 100644
+--- a/data/gnome-xorg.desktop.in.in
++++ b/data/gnome-xorg.desktop.in.in
+@@ -6,3 +6,4 @@ TryExec=@bindir@/gnome-session
+ Type=Application
+ DesktopNames=GNOME
+ X-GDM-SessionRegisters=true
++Hidden=true
+diff --git a/data/gnome.desktop.in.in b/data/gnome.desktop.in.in
+index d6c228ae..5f62e95b 100644
+--- a/data/gnome.desktop.in.in
++++ b/data/gnome.desktop.in.in
+@@ -7,3 +7,4 @@ Type=Application
+ DesktopNames=GNOME
+ X-GDM-SessionRegisters=true
+ X-GDM-CanRunHeadless=true
++Hidden=true
+diff --git a/data/meson.build b/data/meson.build
+index bd66ff01..e0f679f7 100644
+--- a/data/meson.build
++++ b/data/meson.build
+@@ -3,9 +3,10 @@ desktop_plain = 'gnome'
+ desktops = [
+   desktop_plain,
+   'gnome-wayland',
++  'endless-wayland',
+ ]
+ if have_x11
+-  desktops += ['gnome-xorg']
++  desktops += ['gnome-xorg','endless-xorg']
+ endif
+ 
+ shell_component = {
+-- 
+2.49.0
+
