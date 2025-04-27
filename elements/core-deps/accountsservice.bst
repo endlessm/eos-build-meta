@@ -18,6 +18,8 @@ depends:
 - freedesktop-sdk.bst:bootstrap-import.bst
 
 variables:
+  meson-local: >-
+    -Dextra_admin_groups=adm,systemd-journal
   meson: meson %{build-dir} */ %{meson-args}
   local_flags: >-
     -Wno-error=implicit-function-declaration
