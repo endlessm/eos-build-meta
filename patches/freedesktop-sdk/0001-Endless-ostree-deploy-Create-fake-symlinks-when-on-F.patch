@@ -1,0 +1,272 @@
+From 72bb88f1c36d61297b94be0da196008e91d6d683 Mon Sep 17 00:00:00 2001
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Fri, 6 Jun 2025 18:02:55 +0800
+Subject: [PATCH 1/3] [Endless] ostree: deploy: Create fake symlinks when on
+ FAT filesystems
+
+When trying to deploy on a vfat partitions, such as the EFI ESP, we
+fail to create the loader symlink, and deployment fails.
+
+We'd like to use sd-boot for PAYG deployment, which only works with the
+ESP, so we need a way to deploy without using symlinks.
+
+For a quick and dirty minimally invasive fix, we've made deployment
+create a bogus symlink - a text file named loader.sln that contains
+the name of the real loader dir.
+
+We've modified systemd-boot to read these bogus symlinks as well.
+
+AC:
+1. Fake symlinks ("/boot/loader.sln") should exits on EOS PAYG
+   deployment system and has content "loader.0" or "loader.1". Non-PAYG
+   system should not have the fake symlinks ("/boot/loader.sln").
+2. EOS PAYG deployed system should boot into desktop environment.
+
+https://phabricator.endlessm.com/T27040
+https://phabricator.endlessm.com/T35831
+---
+ elements/include/ostree-source.yml            |   2 +
+ ...ake-symlinks-when-on-FAT-filesystems.patch | 218 ++++++++++++++++++
+ 2 files changed, 220 insertions(+)
+ create mode 100644 patches/ostree/0001-deploy-Create-fake-symlinks-when-on-FAT-filesystems.patch
+
+diff --git a/elements/include/ostree-source.yml b/elements/include/ostree-source.yml
+index 41587ee2f..59ba85868 100644
+--- a/elements/include/ostree-source.yml
++++ b/elements/include/ostree-source.yml
+@@ -5,6 +5,8 @@ sources:
+   exclude:
+   - v*.*.*
+   ref: v2025.2-0-g1dd64eb264be462475a1163c6fee686c1f191994
++- kind: patch_queue
++  path: patches/ostree
+ - kind: git_module
+   path: libglnx
+   url: gnome:libglnx.git
+diff --git a/patches/ostree/0001-deploy-Create-fake-symlinks-when-on-FAT-filesystems.patch b/patches/ostree/0001-deploy-Create-fake-symlinks-when-on-FAT-filesystems.patch
+new file mode 100644
+index 000000000..d3e02ffe2
+--- /dev/null
++++ b/patches/ostree/0001-deploy-Create-fake-symlinks-when-on-FAT-filesystems.patch
+@@ -0,0 +1,218 @@
++From 961b87051c70777ad39c4f87ad1708ae4ab5cb84 Mon Sep 17 00:00:00 2001
++From: Derek Foreman <derek@endlessm.com>
++Date: Thu, 20 Jun 2019 17:28:00 -0500
++Subject: [PATCH 1/3] deploy: Create fake symlinks when on FAT filesystems
++
++When trying to deploy on a vfat partitions, such as the EFI ESP, we
++fail to create the loader symlink, and deployment fails.
++
++We'd like to use sd-boot, which only works with the ESP, so we need
++a way to deploy without using symlinks.
++
++For a quick and dirty minimally invasive fix, I've made deployment
++create a bogus symlink - a text file named loader.sln that contains
++the name of the real loader dir.
++
++I've modified systemd-boot to read these bogus symlinks as well.
++
++https://phabricator.endlessm.com/T27040
++
++Rebase 2022.1 (T32964): Handle conflicts with 02b61979 and 9a526bba.
++
++Rebase 2023.5 (T35068): Handle conflicts with upstream reformatted code.
++  Run clang-format to conform with upstream style.
++
++Rebase 2025.2 (T35831): Handle conflicts with upstream reformatted code.
++---
++ src/libostree/ostree-sysroot-deploy.c | 74 +++++++++++++++++++++++++--
++ src/libostree/ostree-sysroot.c        | 30 ++++++-----
++ 2 files changed, 87 insertions(+), 17 deletions(-)
++
++diff --git a/src/libostree/ostree-sysroot-deploy.c b/src/libostree/ostree-sysroot-deploy.c
++index 5d356d4d..5982509a 100644
++--- a/src/libostree/ostree-sysroot-deploy.c
+++++ b/src/libostree/ostree-sysroot-deploy.c
++@@ -24,12 +24,14 @@
++ #include <gio/gunixoutputstream.h>
++ #include <glib-unix.h>
++ #include <linux/kexec.h>
+++#include <linux/magic.h>
++ #include <stdbool.h>
++ #include <stdint.h>
++ #include <sys/ioctl.h>
++ #include <sys/mount.h>
++ #include <sys/poll.h>
++ #include <sys/socket.h>
+++#include <sys/statfs.h>
++ #include <sys/statvfs.h>
++ 
++ #ifdef HAVE_LIBSYSTEMD
++@@ -66,6 +68,31 @@
++  */
++ #define EARLY_PRUNE_SAFETY_MARGIN_SIZE (1 << 20) /* 1 MB */
++ 
+++static gboolean
+++fs_is_fat (int parent_dfd)
+++{
+++  struct statfs buf;
+++
+++  if (TEMP_FAILURE_RETRY (fstatfs (parent_dfd, &buf)) < 0)
+++    return FALSE;
+++
+++  if (buf.f_type == MSDOS_SUPER_MAGIC)
+++    return TRUE;
+++
+++  return FALSE;
+++}
+++
+++static gboolean
+++symlink_fat (const char *target, int parent_dfd, const char *linkpath, GCancellable *cancellable,
+++             GError **error)
+++{
+++  if (!glnx_file_replace_contents_at (parent_dfd, linkpath, (guint8 *)target, -1,
+++                                      GLNX_FILE_REPLACE_DATASYNC_NEW, cancellable, error))
+++    return FALSE;
+++
+++  return TRUE;
+++}
+++
++ /*
++  * Like symlinkat() but overwrites (atomically) an existing
++  * symlink.
++@@ -74,6 +101,9 @@ static gboolean
++ symlink_at_replace (const char *oldpath, int parent_dfd, const char *newpath,
++                     GCancellable *cancellable, GError **error)
++ {
+++  g_autofree char *dest_dir = g_path_get_dirname (newpath);
+++  glnx_autofd int dest_dir_dfd = -1;
+++  gboolean fat;
++   /* Possibly in the future generate a temporary random name here,
++    * would need to move "generate a temporary name" code into
++    * libglnx or glib?
++@@ -83,12 +113,36 @@ symlink_at_replace (const char *oldpath, int parent_dfd, const char *newpath,
++   /* Clean up any stale temporary links */
++   (void)unlinkat (parent_dfd, temppath, 0);
++ 
+++  /* Clean up any stale FAT "symlinks" */
+++  g_autofree char *temp_fat_path = g_strconcat (temppath, ".sln", NULL);
+++  (void)unlinkat (parent_dfd, temp_fat_path, 0);
+++
+++  if (!glnx_opendirat (parent_dfd, dest_dir, TRUE, &dest_dir_dfd, error))
+++    return FALSE;
+++
+++  fat = fs_is_fat (dest_dir_dfd);
+++
++   /* Create the temp link */
++-  if (TEMP_FAILURE_RETRY (symlinkat (oldpath, parent_dfd, temppath)) < 0)
++-    return glnx_throw_errno_prefix (error, "symlinkat");
+++  if (!fat)
+++    {
+++      if (TEMP_FAILURE_RETRY (symlinkat (oldpath, parent_dfd, temppath)) < 0)
+++        return glnx_throw_errno_prefix (error, "symlinkat");
+++    }
+++  else
+++    {
+++      if (!symlink_fat (oldpath, parent_dfd, temp_fat_path, cancellable, error))
+++        return glnx_throw_errno_prefix (error, "symlinkat");
+++    }
++ 
++   /* Rename it into place */
++-  if (!glnx_renameat (parent_dfd, temppath, parent_dfd, newpath, error))
+++  if (fat)
+++    {
+++      g_autofree char *new_fat_path = g_strconcat (newpath, ".sln", NULL);
+++      if (!glnx_renameat (parent_dfd, temp_fat_path, parent_dfd, new_fat_path, error))
+++        return FALSE;
+++      return TRUE;
+++    }
+++  else if (!glnx_renameat (parent_dfd, temppath, parent_dfd, newpath, error))
++     return FALSE;
++ 
++   return TRUE;
++@@ -2217,14 +2271,24 @@ swap_bootloader (OstreeSysroot *sysroot, OstreeBootloader *bootloader, int curre
++   if (!_ostree_sysroot_ensure_boot_fd (sysroot, error))
++     return FALSE;
++ 
+++  gboolean fat = fs_is_fat (sysroot->boot_fd);
++   g_assert_cmpint (sysroot->boot_fd, !=, -1);
++ 
++   /* The symlink was already written, and we used syncfs() to ensure
++    * its data is in place.  Renaming now should give us atomic semantics;
++    * see https://bugzilla.gnome.org/show_bug.cgi?id=755595
++    */
++-  if (!glnx_renameat (sysroot->boot_fd, "loader.tmp", sysroot->boot_fd, "loader", error))
++-    return FALSE;
+++  if (!fat)
+++    {
+++      if (!glnx_renameat (sysroot->boot_fd, "loader.tmp", sysroot->boot_fd, "loader", error))
+++        return FALSE;
+++    }
+++  else
+++    {
+++      if (!glnx_renameat (sysroot->boot_fd, "loader.tmp.sln", sysroot->boot_fd, "loader.sln",
+++                          error))
+++        return FALSE;
+++    }
++ 
++   /* As grub doesn't support replaying XFS journal,
++    * we must fsfreeze/thaw again here:
++diff --git a/src/libostree/ostree-sysroot.c b/src/libostree/ostree-sysroot.c
++index 3968c38f..7e5086f9 100644
++--- a/src/libostree/ostree-sysroot.c
+++++ b/src/libostree/ostree-sysroot.c
++@@ -665,34 +665,40 @@ static gboolean
++ read_current_bootversion (OstreeSysroot *self, int *out_bootversion, GCancellable *cancellable,
++                           GError **error)
++ {
++-  int ret_bootversion;
+++  int ret_bootversion = 0;
++   struct stat stbuf;
+++  g_autofree char *target = NULL;
++ 
++   if (!glnx_fstatat_allow_noent (self->sysroot_fd, "boot/loader", &stbuf, AT_SYMLINK_NOFOLLOW,
++                                  error))
++     return FALSE;
++   if (errno == ENOENT)
++     {
++-      g_debug ("Didn't find $sysroot/boot/loader symlink; assuming bootversion 0");
++-      ret_bootversion = 0;
+++      /* Don't share the error because we want error handling to be the same as before we
+++       * added fake symlinks */
+++      g_debug ("Didn't find $sysroot/boot/loader symlink; trying fake symlink");
+++      target = glnx_file_get_contents_utf8_at (self->sysroot_fd, "boot/loader.sln", NULL,
+++                                               cancellable, NULL);
+++      if (!target)
+++        goto not_found;
++     }
++   else
++     {
++       if (!S_ISLNK (stbuf.st_mode))
++         return glnx_throw (error, "Not a symbolic link: boot/loader");
++-
++-      g_autofree char *target
++-          = glnx_readlinkat_malloc (self->sysroot_fd, "boot/loader", cancellable, error);
+++      target = glnx_readlinkat_malloc (self->sysroot_fd, "boot/loader", cancellable, error);
++       if (!target)
++         return FALSE;
++-      if (g_strcmp0 (target, "loader.0") == 0)
++-        ret_bootversion = 0;
++-      else if (g_strcmp0 (target, "loader.1") == 0)
++-        ret_bootversion = 1;
++-      else
++-        return glnx_throw (error, "Invalid target '%s' in boot/loader", target);
++     }
++ 
+++  if (g_strcmp0 (target, "loader.0") == 0)
+++    ret_bootversion = 0;
+++  else if (g_strcmp0 (target, "loader.1") == 0)
+++    ret_bootversion = 1;
+++  else
+++    return glnx_throw (error, "Invalid target '%s' in boot/loader", target);
+++
+++not_found:
++   *out_bootversion = ret_bootversion;
++   return TRUE;
++ }
++-- 
++2.49.0
++
+-- 
+2.49.0
+
