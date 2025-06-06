@@ -1,0 +1,361 @@
+From c659966e983af540e4499aec33a6e329b1bb3f30 Mon Sep 17 00:00:00 2001
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Fri, 6 Jun 2025 18:21:19 +0800
+Subject: [PATCH 2/3] [Endless] ostree: deploy: Handle efi blobs
+
+We can now deploy our custom initramfs + kernel efi blobs.
+
+This will only happen when we're running in a PAYG system
+(ie: the kernel cmdline contains eospayg) or when we set the env var
+OSTREE_DEPLOY_PAYG to force PAYG deployment during image build. This
+implements the security requirment of "Endless OS PAYG Handbook"'s
+Userspace Security Measures -> Protecting the Daemon.
+
+AC:
+* PAYG image can successfully upgrade when the kernel changes
+* ostree kernel deployment dirs ("/boot/ostree/eos-<hash>/") on PAYG
+  only contain the initramfs efi blob
+* ostree kernel deployment dirs ("/boot/ostree/eos-<hash>/") on non-PAYG
+  are exactly as before (no blob)
+* Deployed loader config (/boot/loader*/entries/*.conf) boots the
+  appropriate files
+* kernel command line for PAYG contains "eospayg"
+
+https://phabricator.endlessm.com/T27521
+https://phabricator.endlessm.com/T35831
+---
+ .../ostree/0002-deploy-Handle-efi-blobs.patch | 322 ++++++++++++++++++
+ 1 file changed, 322 insertions(+)
+ create mode 100644 patches/ostree/0002-deploy-Handle-efi-blobs.patch
+
+diff --git a/patches/ostree/0002-deploy-Handle-efi-blobs.patch b/patches/ostree/0002-deploy-Handle-efi-blobs.patch
+new file mode 100644
+index 000000000..be92d440e
+--- /dev/null
++++ b/patches/ostree/0002-deploy-Handle-efi-blobs.patch
+@@ -0,0 +1,322 @@
++From 6c0e9025e3ce5aeab21cb645658f3e395d6337c2 Mon Sep 17 00:00:00 2001
++From: Derek Foreman <derek@endlessm.com>
++Date: Thu, 22 Aug 2019 15:04:19 -0500
++Subject: [PATCH 2/3] deploy: Handle efi blobs
++
++We can now deploy our custom initramfs + kernel efi blobs.
++
++This will only happen when we're running in a PAYG system
++(ie: the kernel cmdline contains eospayg) or when we set
++the env var OSTREE_DEPLOY_PAYG to force PAYG deployment
++during image build.
++
++https://phabricator.endlessm.com/T27521
++
++Rebase 2020.8 (T31593): Fix conflicts from upstream overlay_initrds
++  feature and dropping flags argument to install_into_boot(). Added a
++  couple more `!payg` to ensure other boot artifacts aren't installed.
++
++Rebase 2023.5 (T35068): Fix conflicts from upstream aboot feature,
++  bootprefix handling and code reformatting. Added a couple more `!payg`
++  to ensure other boot artifacts aren't installed. Ran clang-format for
++  consistent upstream styling.
++
++Rebase 2025.2 (T35831): Fix conflicts from upstream simply
++---
++ src/libostree/ostree-sysroot-deploy.c | 183 ++++++++++++++++++--------
++ 1 file changed, 126 insertions(+), 57 deletions(-)
++
++diff --git a/src/libostree/ostree-sysroot-deploy.c b/src/libostree/ostree-sysroot-deploy.c
++index 5982509a..c5c56c51 100644
++--- a/src/libostree/ostree-sysroot-deploy.c
+++++ b/src/libostree/ostree-sysroot-deploy.c
++@@ -1108,6 +1108,8 @@ typedef struct
++   char *devicetree_namever;
++   char *aboot_srcpath;
++   char *aboot_namever;
+++  char *efi_blob_srcpath;
+++  char *efi_blob_namever;
++   char *bootcsum;
++ } OstreeKernelLayout;
++ static void
++@@ -1124,6 +1126,8 @@ _ostree_kernel_layout_free (OstreeKernelLayout *layout)
++   g_free (layout->devicetree_namever);
++   g_free (layout->aboot_srcpath);
++   g_free (layout->aboot_namever);
+++  g_free (layout->efi_blob_srcpath);
+++  g_free (layout->efi_blob_namever);
++   g_free (layout->bootcsum);
++   g_free (layout);
++ }
++@@ -1305,6 +1309,15 @@ get_kernel_from_tree_usrlib_modules (OstreeSysroot *sysroot, int deployment_dfd,
++   g_clear_object (&in);
++   glnx_close_fd (&fd);
++ 
+++  if (!ot_openat_ignore_enoent (ret_layout->boot_dfd, "payg-image.efi", &fd, error))
+++    return FALSE;
+++  if (fd != -1)
+++    {
+++      ret_layout->efi_blob_srcpath = g_strdup ("payg-image.efi");
+++      ret_layout->efi_blob_namever = g_strdup_printf ("payg-image-%s.efi", kver);
+++    }
+++  glnx_close_fd (&fd);
+++
++   /* And finally, look for any HMAC file. This is needed for FIPS mode on some distros. */
++   if (!glnx_fstatat_allow_noent (ret_layout->boot_dfd, ".vmlinuz.hmac", NULL, 0, error))
++     return FALSE;
++@@ -1851,6 +1864,25 @@ parse_os_release (const char *contents, const char *split)
++   return ret;
++ }
++ 
+++static gboolean
+++is_payg_deployment (GCancellable *cancellable)
+++{
+++  g_autoptr (GFile) cmdline_file = g_file_new_for_path ("/proc/cmdline");
+++  g_autofree char *cmdline = NULL;
+++  gsize cmdline_len;
+++
+++  if (g_getenv ("OSTREE_DEPLOY_PAYG"))
+++    return TRUE;
+++
+++  if (!g_file_load_contents (cmdline_file, cancellable, &cmdline, &cmdline_len, NULL, NULL))
+++    return FALSE;
+++
+++  if (g_strstr_len (cmdline, cmdline_len, "eospayg"))
+++    return TRUE;
+++
+++  return FALSE;
+++}
+++
++ /* Generate the filename we will use in /boot/loader/entries for this deployment.
++  * The provided n_deployments should be the total number of target deployments (which
++  * might be different from the cached value in the sysroot).
++@@ -1925,24 +1957,47 @@ install_deployment_kernel (OstreeSysroot *sysroot, int new_bootversion,
++ 
++   const char *bootprefix = repo->enable_bootprefix ? "/boot/" : "/";
++ 
+++  struct stat stbuf;
+++  /* If this is a payg deployment, we want the efi blob and nothing else */
+++  gboolean payg = kernel_layout->efi_blob_srcpath && is_payg_deployment (cancellable);
+++  /* If we're updating an old loader entry that doesn't use efi blobs
+++   * keep it the way it was. */
+++  payg = payg && !ostree_bootconfig_parser_get (bootconfig, "linux");
+++  if (payg)
+++    {
+++      g_assert (kernel_layout->efi_blob_namever);
+++      if (!glnx_fstatat_allow_noent (bootcsum_dfd, kernel_layout->efi_blob_namever, &stbuf, 0,
+++                                     error))
+++        return FALSE;
+++      if (errno == ENOENT)
+++        {
+++          if (!install_into_boot (repo, sepolicy, kernel_layout->boot_dfd,
+++                                  kernel_layout->efi_blob_srcpath, bootcsum_dfd,
+++                                  kernel_layout->efi_blob_namever, cancellable, error))
+++            return FALSE;
+++        }
+++    }
+++
++   /* Install (hardlink/copy) the kernel into /boot/ostree/osname-${bootcsum} if
++    * it doesn't exist already.
++    */
++-  struct stat stbuf;
++-  if (!glnx_fstatat_allow_noent (bootcsum_dfd, kernel_layout->kernel_namever, &stbuf, 0, error))
++-    return FALSE;
++-  if (errno == ENOENT)
+++  if (!payg)
++     {
++-      if (!install_into_boot (repo, sepolicy, kernel_layout->boot_dfd,
++-                              kernel_layout->kernel_srcpath, bootcsum_dfd,
++-                              kernel_layout->kernel_namever, cancellable, error))
+++      if (!glnx_fstatat_allow_noent (bootcsum_dfd, kernel_layout->kernel_namever, &stbuf, 0, error))
++         return FALSE;
+++      if (errno == ENOENT)
+++        {
+++          if (!install_into_boot (repo, sepolicy, kernel_layout->boot_dfd,
+++                                  kernel_layout->kernel_srcpath, bootcsum_dfd,
+++                                  kernel_layout->kernel_namever, cancellable, error))
+++            return FALSE;
+++        }
++     }
++ 
++   /* If we have an initramfs, then install it into
++    * /boot/ostree/osname-${bootcsum} if it doesn't exist already.
++    */
++-  if (kernel_layout->initramfs_srcpath)
+++  if (kernel_layout->initramfs_srcpath && !payg)
++     {
++       g_assert (kernel_layout->initramfs_namever);
++       if (!glnx_fstatat_allow_noent (bootcsum_dfd, kernel_layout->initramfs_namever, &stbuf, 0,
++@@ -1957,7 +2012,7 @@ install_deployment_kernel (OstreeSysroot *sysroot, int new_bootversion,
++         }
++     }
++ 
++-  if (kernel_layout->devicetree_srcpath)
+++  if (kernel_layout->devicetree_srcpath && !payg)
++     {
++       /* If devicetree_namever is set a single device tree is deployed */
++       if (kernel_layout->devicetree_namever)
++@@ -1984,7 +2039,7 @@ install_deployment_kernel (OstreeSysroot *sysroot, int new_bootversion,
++         }
++     }
++ 
++-  if (kernel_layout->kernel_hmac_srcpath)
+++  if (kernel_layout->kernel_hmac_srcpath && !payg)
++     {
++       if (!glnx_fstatat_allow_noent (bootcsum_dfd, kernel_layout->kernel_hmac_namever, &stbuf, 0,
++                                      error))
++@@ -1998,7 +2053,7 @@ install_deployment_kernel (OstreeSysroot *sysroot, int new_bootversion,
++         }
++     }
++ 
++-  if (kernel_layout->aboot_srcpath)
+++  if (kernel_layout->aboot_srcpath && !payg)
++     {
++       g_assert (kernel_layout->aboot_namever);
++       if (!glnx_fstatat_allow_noent (bootcsum_dfd, kernel_layout->aboot_namever, &stbuf, 0, error))
++@@ -2016,7 +2071,7 @@ install_deployment_kernel (OstreeSysroot *sysroot, int new_bootversion,
++   /* NOTE: if adding more things in bootcsum_dfd, also update get_kernel_layout_size() */
++ 
++   g_autoptr (GPtrArray) overlay_initrds = NULL;
++-  for (char **it = _ostree_deployment_get_overlay_initrds (deployment); it && *it; it++)
+++  for (char **it = _ostree_deployment_get_overlay_initrds (deployment); !payg && it && *it; it++)
++     {
++       char *checksum = *it;
++ 
++@@ -2125,68 +2180,75 @@ install_deployment_kernel (OstreeSysroot *sysroot, int new_bootversion,
++   g_autofree char *version_key
++       = g_strdup_printf ("%d", n_deployments - ostree_deployment_get_index (deployment));
++   ostree_bootconfig_parser_set (bootconfig, OSTREE_COMMIT_META_KEY_VERSION, version_key);
++-  g_autofree char *boot_relpath
++-      = g_strconcat (bootprefix, bootcsumdir, "/", kernel_layout->kernel_namever, NULL);
++-  ostree_bootconfig_parser_set (bootconfig, "linux", boot_relpath);
+++
+++  if (!payg)
+++    {
+++      g_autofree char *boot_relpath
+++          = g_strconcat (bootprefix, bootcsumdir, "/", kernel_layout->kernel_namever, NULL);
+++      ostree_bootconfig_parser_set (bootconfig, "linux", boot_relpath);
+++    }
++ 
++   val = ostree_bootconfig_parser_get (bootconfig, "options");
++   g_autoptr (OstreeKernelArgs) kargs = ostree_kernel_args_from_string (val);
++ 
++-  if (kernel_layout->initramfs_namever)
+++  if (!payg)
++     {
++-      g_autofree char *initrd_boot_relpath
++-          = g_strconcat (bootprefix, bootcsumdir, "/", kernel_layout->initramfs_namever, NULL);
++-      ostree_bootconfig_parser_set (bootconfig, "initrd", initrd_boot_relpath);
+++      if (kernel_layout->initramfs_namever)
+++        {
+++          g_autofree char *initrd_boot_relpath
+++              = g_strconcat (bootprefix, bootcsumdir, "/", kernel_layout->initramfs_namever, NULL);
+++          ostree_bootconfig_parser_set (bootconfig, "initrd", initrd_boot_relpath);
++ 
++-      if (overlay_initrds)
+++          if (overlay_initrds)
+++            {
+++              g_ptr_array_add (overlay_initrds, NULL);
+++              ostree_bootconfig_parser_set_overlay_initrds (bootconfig,
+++                                                            (char **)overlay_initrds->pdata);
+++            }
+++        }
+++      else
++         {
++-          g_ptr_array_add (overlay_initrds, NULL);
++-          ostree_bootconfig_parser_set_overlay_initrds (bootconfig,
++-                                                        (char **)overlay_initrds->pdata);
+++          g_autofree char *prepare_root_arg = NULL;
+++          prepare_root_arg = g_strdup_printf (
+++              "init=/ostree/boot.%d/%s/%s/%d/usr/lib/ostree/ostree-prepare-root", new_bootversion,
+++              osname, bootcsum, ostree_deployment_get_bootserial (deployment));
+++          ostree_kernel_args_replace_take (kargs, g_steal_pointer (&prepare_root_arg));
++         }
++-    }
++-  else
++-    {
++-      g_autofree char *prepare_root_arg = NULL;
++-      prepare_root_arg = g_strdup_printf (
++-          "init=/ostree/boot.%d/%s/%s/%d/usr/lib/ostree/ostree-prepare-root", new_bootversion,
++-          osname, bootcsum, ostree_deployment_get_bootserial (deployment));
++-      ostree_kernel_args_replace_take (kargs, g_steal_pointer (&prepare_root_arg));
++-    }
++ 
++-  const char *aboot_fn = NULL;
++-  if (kernel_layout->aboot_namever)
++-    {
++-      aboot_fn = kernel_layout->aboot_namever;
++-    }
++-  else if (kernel_layout->aboot_srcpath)
++-    {
++-      aboot_fn = kernel_layout->aboot_srcpath;
++-    }
+++      const char *aboot_fn = NULL;
+++      if (kernel_layout->aboot_namever)
+++        {
+++          aboot_fn = kernel_layout->aboot_namever;
+++        }
+++      else if (kernel_layout->aboot_srcpath)
+++        {
+++          aboot_fn = kernel_layout->aboot_srcpath;
+++        }
++ 
++-  if (aboot_fn)
++-    {
++-      g_autofree char *aboot_relpath = g_strconcat ("/", bootcsumdir, "/", aboot_fn, NULL);
++-      ostree_bootconfig_parser_set (bootconfig, "aboot", aboot_relpath);
++-    }
++-  else
++-    {
++-      g_autofree char *aboot_relpath
++-          = g_strconcat ("/", deployment_dirpath, "/usr/lib/ostree-boot/aboot.img", NULL);
++-      ostree_bootconfig_parser_set (bootconfig, "aboot", aboot_relpath);
++-    }
+++      if (aboot_fn)
+++        {
+++          g_autofree char *aboot_relpath = g_strconcat ("/", bootcsumdir, "/", aboot_fn, NULL);
+++          ostree_bootconfig_parser_set (bootconfig, "aboot", aboot_relpath);
+++        }
+++      else
+++        {
+++          g_autofree char *aboot_relpath
+++              = g_strconcat ("/", deployment_dirpath, "/usr/lib/ostree-boot/aboot.img", NULL);
+++          ostree_bootconfig_parser_set (bootconfig, "aboot", aboot_relpath);
+++        }
++ 
++-  g_autofree char *abootcfg_relpath
++-      = g_strconcat ("/", deployment_dirpath, "/usr/lib/ostree-boot/aboot.cfg", NULL);
++-  ostree_bootconfig_parser_set (bootconfig, "abootcfg", abootcfg_relpath);
+++      g_autofree char *abootcfg_relpath
+++          = g_strconcat ("/", deployment_dirpath, "/usr/lib/ostree-boot/aboot.cfg", NULL);
+++      ostree_bootconfig_parser_set (bootconfig, "abootcfg", abootcfg_relpath);
+++    }
++ 
++-  if (kernel_layout->devicetree_namever)
+++  if (kernel_layout->devicetree_namever && !payg)
++     {
++       g_autofree char *dt_boot_relpath
++           = g_strconcat (bootprefix, bootcsumdir, "/", kernel_layout->devicetree_namever, NULL);
++       ostree_bootconfig_parser_set (bootconfig, "devicetree", dt_boot_relpath);
++     }
++-  else if (kernel_layout->devicetree_srcpath)
+++  else if (kernel_layout->devicetree_srcpath && !payg)
++     {
++       /* If devicetree_srcpath is set but devicetree_namever is NULL, then we
++        * want to point to a whole directory of device trees.
++@@ -2197,6 +2259,13 @@ install_deployment_kernel (OstreeSysroot *sysroot, int new_bootversion,
++       ostree_bootconfig_parser_set (bootconfig, "fdtdir", dt_boot_relpath);
++     }
++ 
+++  if (payg)
+++    {
+++      g_autofree char *boot_relpath
+++          = g_strconcat (bootprefix, bootcsumdir, "/", kernel_layout->efi_blob_namever, NULL);
+++      ostree_bootconfig_parser_set (bootconfig, "efi", boot_relpath);
+++    }
+++
++   /* Note this is parsed in ostree-impl-system-generator.c */
++   g_autofree char *ostree_kernel_arg
++       = g_strdup_printf ("ostree=/ostree/boot.%d/%s/%s/%d", new_bootversion, osname, bootcsum,
++-- 
++2.49.0
++
+-- 
+2.49.0
+
