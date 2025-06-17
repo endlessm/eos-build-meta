@@ -1,0 +1,76 @@
+From 2cf50c3c3a9ca96e930b80b487d407dcbb2f816c Mon Sep 17 00:00:00 2001
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Tue, 17 Jun 2025 16:27:05 +0800
+Subject: [PATCH 2/6] [Endless] fsck: Do not fail when fsck returns an error
+
+The boot process relies on systemd-fsck return value when verifing the
+root filesystem in order to continue booting. Even if the root
+filesystem check fails with errors that can't be automatically recovered
+from, we should continue booting in read-only mode (per the filesystem
+mount options), to give the user the opportunity to backup their data
+before an manual recovery can be performed.
+
+This was working previously only with our downstream commit "fsck: disable fsck
+emergency mode", but a change in the code flow introduced by commit 9013653e3c
+"fsck: configure logging before use and define main through macro" affected the
+return value and half-disabled our downstream customization.
+
+AC: When fsck fails to check filesystem with errors during boot, system
+continues booting in read-only mode.
+
+https://phabricator.endlessm.com/T27126
+---
+ ...-not-fail-when-fsck-returns-an-error.patch | 41 +++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 patches/systemd/0002-Endless-fsck-Do-not-fail-when-fsck-returns-an-error.patch
+
+diff --git a/patches/systemd/0002-Endless-fsck-Do-not-fail-when-fsck-returns-an-error.patch b/patches/systemd/0002-Endless-fsck-Do-not-fail-when-fsck-returns-an-error.patch
+new file mode 100644
+index 000000000..798bfb6d1
+--- /dev/null
++++ b/patches/systemd/0002-Endless-fsck-Do-not-fail-when-fsck-returns-an-error.patch
+@@ -0,0 +1,41 @@
++From b8172d6a986dc4eb90c6963855ca528c719b8790 Mon Sep 17 00:00:00 2001
++From: =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>
++Date: Wed, 31 Jul 2019 13:18:21 -0700
++Subject: [PATCH 2/5] [Endless] fsck: Do not fail when fsck returns an error
++
++The boot process relies on systemd-fsck return value when verifing the
++root filesystem in order to continue booting. Even if the root
++filesystem check fails with errors that can't be automatically recovered
++from, we should continue booting in read-only mode (per the filesystem
++mount options), to give the user the opportunity to backup their data
++before an manual recovery can be performed.
++
++This was working previously only with our downstream commit "fsck: disable fsck
++emergency mode", but a change in the code flow introduced by commit 9013653e3c
++"fsck: configure logging before use and define main through macro" affected the
++return value and half-disabled our downstream customization.
++
++AC: When fsck fails to check filesystem with errors during boot, system
++continues booting in read-only mode.
++
++https://phabricator.endlessm.com/T27126
++---
++ src/fsck/fsck.c | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/src/fsck/fsck.c b/src/fsck/fsck.c
++index c8dea245c8..bba59f8c15 100644
++--- a/src/fsck/fsck.c
+++++ b/src/fsck/fsck.c
++@@ -409,7 +409,7 @@ static int run(int argc, char *argv[]) {
++         if (exit_status & FSCK_ERROR_CORRECTED)
++                 (void) touch("/run/systemd/quotacheck");
++ 
++-        return !!(exit_status & (FSCK_SYSTEM_SHOULD_REBOOT | FSCK_ERRORS_LEFT_UNCORRECTED));
+++        return EXIT_SUCCESS;
++ }
++ 
++ DEFINE_MAIN_FUNCTION_WITH_POSITIVE_FAILURE(run);
++-- 
++2.49.0
++
+-- 
+2.49.0
+
