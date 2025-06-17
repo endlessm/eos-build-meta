@@ -1,0 +1,91 @@
+From 4048164991b0a8d4d2417d19b0f15fd8c6afafe6 Mon Sep 17 00:00:00 2001
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Tue, 17 Jun 2025 16:24:48 +0800
+Subject: [PATCH 1/6] [Endless] dissect-image: Allow non-root to read the ESP
+ in /boot
+
+On PAYG images we mount the ESP to /boot and install the boot loader
+configuration and entries there, as this is a requirement of
+systemd-boot. The GPT auto generator finds the ESP and generates an
+automount unit for it at /boot in a way that makes it only accessible
+and readable by root. OSTree needs to read the contents of
+/boot/loader/entries for non-root `ostree admin status`, and probably
+other similar actions.
+
+This commit changes the umask used in boot.mount to allow for group and
+others to read files and access directories in the ESP mounted to /boot.
+
+AC: Non-root can execute `ostree admin status` directly.
+
+https://phabricator.endlessm.com/T29520
+https://phabricator.endlessm.com/T35070
+---
+ elements/include/systemd.yml                  |  2 +
+ ...image-Allow-non-root-to-read-the-ESP.patch | 45 +++++++++++++++++++
+ 2 files changed, 47 insertions(+)
+ create mode 100644 patches/systemd/0001-Endless-dissect-image-Allow-non-root-to-read-the-ESP.patch
+
+diff --git a/elements/include/systemd.yml b/elements/include/systemd.yml
+index 1da7b12cd..10176a878 100644
+--- a/elements/include/systemd.yml
++++ b/elements/include/systemd.yml
+@@ -5,3 +5,5 @@ sources:
+   exclude:
+   - '*rc*'
+   ref: v256.13-0-g64593b164d04514cbc06d6e717e513681f72166d
++- kind: patch_queue
++  path: patches/systemd
+diff --git a/patches/systemd/0001-Endless-dissect-image-Allow-non-root-to-read-the-ESP.patch b/patches/systemd/0001-Endless-dissect-image-Allow-non-root-to-read-the-ESP.patch
+new file mode 100644
+index 000000000..6aef94165
+--- /dev/null
++++ b/patches/systemd/0001-Endless-dissect-image-Allow-non-root-to-read-the-ESP.patch
+@@ -0,0 +1,45 @@
++From 24a89c1edf4a4204d1adefbc7b64aad1fe8a7296 Mon Sep 17 00:00:00 2001
++From: =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>
++Date: Mon, 18 Mar 2024 19:16:42 +0800
++Subject: [PATCH 1/5] [Endless] dissect-image: Allow non-root to read the ESP
++ in /boot
++
++On PAYG images we mount the ESP to /boot and install the boot loader
++configuration and entries there, as this is a requirement of
++systemd-boot. The GPT auto generator finds the ESP and generates an
++automount unit for it at /boot in a way that makes it only accessible
++and readable by root. OSTree needs to read the contents of
++/boot/loader/entries for non-root `ostree admin status`, and probably
++other similar actions.
++
++This commit changes the umask used in boot.mount to allow for group and
++others to read files and access directories in the ESP mounted to /boot.
++
++AC: Non-root can execute `ostree admin status` directly.
++
++https://phabricator.endlessm.com/T29520
++https://phabricator.endlessm.com/T35070
++---
++ src/shared/dissect-image.c | 4 ++--
++ 1 file changed, 2 insertions(+), 2 deletions(-)
++
++diff --git a/src/shared/dissect-image.c b/src/shared/dissect-image.c
++index e9c7f37dd1..536d115a90 100644
++--- a/src/shared/dissect-image.c
+++++ b/src/shared/dissect-image.c
++@@ -1887,10 +1887,10 @@ int partition_pick_mount_options(
++         case PARTITION_XBOOTLDR:
++                 flags |= MS_NOSUID|MS_NOEXEC|ms_nosymfollow_supported();
++ 
++-                /* The ESP might contain a pre-boot random seed. Let's make this unaccessible to regular
+++                /* The ESP might contain a pre-boot random seed. Let's make this accessible to regular
++                  * userspace. ESP/XBOOTLDR is almost certainly VFAT, hence if we don't know assume it is. */
++                 if (!fstype || fstype_can_umask(fstype))
++-                        if (!strextend_with_separator(&options, ",", "umask=0077"))
+++                        if (!strextend_with_separator(&options, ",", "umask=0022"))
++                                 return -ENOMEM;
++                 break;
++ 
++-- 
++2.49.0
++
+-- 
+2.49.0
+
