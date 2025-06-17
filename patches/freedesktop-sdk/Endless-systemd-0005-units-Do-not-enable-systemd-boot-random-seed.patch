@@ -1,0 +1,125 @@
+From 57e3002d46adf205c6e9f2b5f2600238674fc9e6 Mon Sep 17 00:00:00 2001
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Tue, 17 Jun 2025 16:38:03 +0800
+Subject: [PATCH 5/6] [Endless] units: Do not enable
+ systemd-boot-random-seed.service
+
+This service stores a random-seed in the ESP so it can be passed to the
+kernel by systemd-boot on the next boot, to seed the kernel's entropy
+pool. This unit is only active if a boot loader fully supporting the
+Boot Loader Specificiation is detected (via a LoaderFeatures EFI var),
+which currently is only true for Endless PAYG images, which use
+systemd-boot instead of GRUB. This random seed is stored in
+/boot/loader/random-seed, with /boot/loader being created if it does not
+exist.
+
+The problem here is that in our systemd-boot + OSTree setup on PAYG
+images we need /boot/loader to be a symbolic link pointing to either
+/boot/loader.1 or /boot/loader.0 (OSTree requirement) living in the ESP
+(systemd-boot requirement) which is FAT32 (UEFI spec) and does not
+support symlinks. To solve that we implemented a fake symlink as a file
+in /boot/loader.lnk containing the path that should be the /boot/loader
+target, and taught OSTree about it, giving higher precedence to the real
+/boot/loader in case it exists. So if systemd-boot-random-seed.service
+creates /boot/loader, most OSTree operations break, because the entries/
+directory is not found.
+
+Let's disable this service here to avoid that problem. This unit is
+enabled by the build system at install time instead of using the more
+traditional approach of having a [Install] section and using systemctl
+and the preset system, so we have to disable it in units/meson.build.
+
+There is also an accompanying commit in the packaging branch that
+removes the installation of the symbolic link in
+sysinit.target.wants/systemd-boot-random-seed.service.
+
+Note: According to NEWS [1], old "systemd-boot-system-token.service" is
+renamed as "systemd-boot-random-seed.service".
+
+[1]: https://github.com/systemd/systemd-stable/blob/v254.9/NEWS#L1019-L1022
+
+AC:
+* systemd-boot-random-seed.service is disabled.
+* EOS uning sd-boot as the boot loader can boot with OSTree directly.
+
+https://phabricator.endlessm.com/T29475
+https://phabricator.endlessm.com/T35070
+---
+ ...-not-enable-systemd-boot-random-seed.patch | 65 +++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+ create mode 100644 patches/systemd/0005-Endless-units-Do-not-enable-systemd-boot-random-seed.patch
+
+diff --git a/patches/systemd/0005-Endless-units-Do-not-enable-systemd-boot-random-seed.patch b/patches/systemd/0005-Endless-units-Do-not-enable-systemd-boot-random-seed.patch
+new file mode 100644
+index 000000000..f47bf9acb
+--- /dev/null
++++ b/patches/systemd/0005-Endless-units-Do-not-enable-systemd-boot-random-seed.patch
+@@ -0,0 +1,65 @@
++From d8c1cfc6145b7dd25942511552f2cf855fc8a83a Mon Sep 17 00:00:00 2001
++From: =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>
++Date: Mon, 26 Feb 2024 10:28:40 +0000
++Subject: [PATCH 5/5] [Endless] units: Do not enable
++ systemd-boot-random-seed.service
++
++This service stores a random-seed in the ESP so it can be passed to the
++kernel by systemd-boot on the next boot, to seed the kernel's entropy
++pool. This unit is only active if a boot loader fully supporting the
++Boot Loader Specificiation is detected (via a LoaderFeatures EFI var),
++which currently is only true for Endless PAYG images, which use
++systemd-boot instead of GRUB. This random seed is stored in
++/boot/loader/random-seed, with /boot/loader being created if it does not
++exist.
++
++The problem here is that in our systemd-boot + OSTree setup on PAYG
++images we need /boot/loader to be a symbolic link pointing to either
++/boot/loader.1 or /boot/loader.0 (OSTree requirement) living in the ESP
++(systemd-boot requirement) which is FAT32 (UEFI spec) and does not
++support symlinks. To solve that we implemented a fake symlink as a file
++in /boot/loader.lnk containing the path that should be the /boot/loader
++target, and taught OSTree about it, giving higher precedence to the real
++/boot/loader in case it exists. So if systemd-boot-random-seed.service
++creates /boot/loader, most OSTree operations break, because the entries/
++directory is not found.
++
++Let's disable this service here to avoid that problem. This unit is
++enabled by the build system at install time instead of using the more
++traditional approach of having a [Install] section and using systemctl
++and the preset system, so we have to disable it in units/meson.build.
++
++There is also an accompanying commit in the packaging branch that
++removes the installation of the symbolic link in
++sysinit.target.wants/systemd-boot-random-seed.service.
++
++Note: According to NEWS [1], old "systemd-boot-system-token.service" is
++renamed as "systemd-boot-random-seed.service".
++
++[1]: https://github.com/systemd/systemd-stable/blob/v254.9/NEWS#L1019-L1022
++
++AC:
++* systemd-boot-random-seed.service is disabled.
++* EOS uning sd-boot as the boot loader can boot with OSTree directly.
++
++https://phabricator.endlessm.com/T29475
++https://phabricator.endlessm.com/T35070
++---
++ units/meson.build | 1 -
++ 1 file changed, 1 deletion(-)
++
++diff --git a/units/meson.build b/units/meson.build
++index b231341a1f..9bd4a20ff4 100644
++--- a/units/meson.build
+++++ b/units/meson.build
++@@ -268,7 +268,6 @@ units = [
++         {
++           'file' : 'systemd-boot-random-seed.service',
++           'conditions' : ['ENABLE_BOOTLOADER'],
++-          'symlinks' : ['sysinit.target.wants/'],
++         },
++         {
++           'file' : 'systemd-boot-update.service',
++-- 
++2.49.0
++
+-- 
+2.49.0
+
