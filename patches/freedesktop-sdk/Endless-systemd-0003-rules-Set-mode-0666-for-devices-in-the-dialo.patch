@@ -1,0 +1,68 @@
+From 165e91a1b7795e1eb0ed9b84026b1e6bf45e5e73 Mon Sep 17 00:00:00 2001
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Tue, 17 Jun 2025 16:33:29 +0800
+Subject: [PATCH 3/6] [Endless] rules: Set mode 0666 for devices in the dialout
+ group
+
+Arduino devices expose a USB modem interface for communication. We want
+these to be accessible by all users in the system. Ideally we would add
+all real users to the dialout group, but this is not straightforward on
+an OSTree-based system at the moment.
+
+AC:
+1. Plug an USB to tty (or serial) cable
+2. Non-root users who are not in dialout can access the
+   /dev/tty(USB|AMA)[0-9] with minicom/picocom/Arduino IDE directly.
+
+https://phabricator.endlessm.com/T21435
+---
+ ...t-mode-0666-for-devices-in-the-dialo.patch | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 patches/systemd/0003-Endless-rules-Set-mode-0666-for-devices-in-the-dialo.patch
+
+diff --git a/patches/systemd/0003-Endless-rules-Set-mode-0666-for-devices-in-the-dialo.patch b/patches/systemd/0003-Endless-rules-Set-mode-0666-for-devices-in-the-dialo.patch
+new file mode 100644
+index 000000000..533b19a6e
+--- /dev/null
++++ b/patches/systemd/0003-Endless-rules-Set-mode-0666-for-devices-in-the-dialo.patch
+@@ -0,0 +1,37 @@
++From bd7b34c20b2aa1678a460c918b12982a883d2008 Mon Sep 17 00:00:00 2001
++From: =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>
++Date: Tue, 19 Jun 2018 13:00:23 -0700
++Subject: [PATCH 3/5] [Endless] rules: Set mode 0666 for devices in the dialout
++ group
++
++Arduino devices expose a USB modem interface for communication. We want
++these to be accessible by all users in the system. Ideally we would add
++all real users to the dialout group, but this is not straightforward on
++an OSTree-based system at the moment.
++
++AC:
++1. Plug an USB to tty (or serial) cable
++2. Non-root users who are not in dialout can access the
++   /dev/tty(USB|AMA)[0-9] with minicom/picocom/Arduino IDE directly.
++
++https://phabricator.endlessm.com/T21435
++---
++ rules.d/50-udev-default.rules.in | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/rules.d/50-udev-default.rules.in b/rules.d/50-udev-default.rules.in
++index 6f80feeecf..acfcbf2fdf 100644
++--- a/rules.d/50-udev-default.rules.in
+++++ b/rules.d/50-udev-default.rules.in
++@@ -39,7 +39,7 @@ SUBSYSTEM=="tty", KERNEL=="ptmx", GROUP="tty", MODE="0666"
++ SUBSYSTEM=="tty", KERNEL=="tty", GROUP="tty", MODE="0666"
++ SUBSYSTEM=="tty", KERNEL=="tty[0-9]*|hvc[0-9]*|sclp_line[0-9]*|ttysclp[0-9]*|3270/tty[0-9]*", GROUP="tty", MODE="0620"
++ SUBSYSTEM=="vc", KERNEL=="vcs*|vcsa*", GROUP="tty"
++-KERNEL=="tty[A-Z]*[0-9]|ttymxc[0-9]*|pppox[0-9]*|ircomm[0-9]*|noz[0-9]*|rfcomm[0-9]*", GROUP="dialout"
+++KERNEL=="tty[A-Z]*[0-9]|ttymxc[0-9]*|pppox[0-9]*|ircomm[0-9]*|noz[0-9]*|rfcomm[0-9]*", GROUP="dialout", MODE="0666"
++ 
++ SUBSYSTEM=="mem", KERNEL=="mem|kmem|port", GROUP="kmem", MODE="0640"
++ 
++-- 
++2.49.0
++
+-- 
+2.49.0
+
