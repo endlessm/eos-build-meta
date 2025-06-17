@@ -1,0 +1,39 @@
+From 6164682acb18cce32d01f1cb72e26fe1d5851296 Mon Sep 17 00:00:00 2001
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Tue, 17 Jun 2025 16:48:38 +0800
+Subject: [PATCH 6/6] [Endless] Add SBAT info for systemd-boot
+
+Use Endless specific generation in case any of our downstream patches
+are found to compromise secure boot.
+
+AC: EOS uning sd-boot as the boot loader can boot with enabled Secure
+Boot.
+
+https://phabricator.endlessm.com/T33712
+https://phabricator.endlessm.com/T35070
+---
+ elements/components/systemd-base.bst | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/elements/components/systemd-base.bst b/elements/components/systemd-base.bst
+index 4fde0830d..42ab0832b 100644
+--- a/elements/components/systemd-base.bst
++++ b/elements/components/systemd-base.bst
+@@ -95,10 +95,11 @@ variables:
+     -Dapparmor=enabled
+     -Dtpm=true
+     -Dtpm2=enabled
+-    -Dsbat-distro=freedesktop-sdk
++    -Dsbat-distro=endless
+     -Dsbat-distro-generation=1
+-    -Dsbat-distro-summary="Freedesktop SDK"
+-    -Dsbat-distro-url=https://gitlab.com/freedesktop-sdk/freedesktop-sdk/
++    -Dsbat-distro-summary="Endless OS Foundation LLC"
++    -Dsbat-distro-pkgname=systemd-boot
++    -Dsbat-distro-url=https://github.com/endlessm/eos-build-meta
+     -Dversion-tag="$(git describe --abbrev=7 | sed "s/^v//")"
+     -Dqrencode=enabled
+     -Dxkbcommon=enabled
+-- 
+2.49.0
+
