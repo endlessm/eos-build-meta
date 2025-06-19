@@ -4,6 +4,8 @@ sources:
 - kind: tar
   url: gnome_downloads:mutter/48/mutter-48.3.tar.xz
   ref: afb238b45ec40f8c3fa97ff31b36bf3ea4fa5630624e5b297fb83e2c59825dc1
+- kind: patch_queue
+  path: patches/mutter
 
 build-depends:
 - core-deps/python-argcomplete.bst
@@ -25,6 +27,7 @@ runtime-depends:
 depends:
 - core-deps/colord.bst
 - core-deps/libdisplay-info.bst
+- core-deps/malcontent.bst
 - core-deps/startup-notification.bst
 - core-deps/upower.bst
 - core/gnome-desktop.bst

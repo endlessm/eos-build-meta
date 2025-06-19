@@ -1,0 +1,197 @@
+From cb4d453d99ceefc383f5fa0942172289805751bb Mon Sep 17 00:00:00 2001
+From: Andre Moreira Magalhaes <andre@endlessm.com>
+Date: Tue, 16 Jul 2019 16:56:41 +0000
+Subject: [PATCH] Skip startup notifications for apps blacklisted by parental
+ controls
+
+Note that this does not skip notifications started from
+gtk_shell_notify_launch (wayland only) as that method does not contain
+enough information to build an app info needed to check the parental
+controls settings.
+
+AC:
+1. Create a non-administrotor account with enabled Parental Controls.
+   And, enable "Restrict Web Browsers".
+2. Login with the new created account. Open a PDF having an embedded
+   hyperlink.
+3. Click the hyperlink. There should be no browser luanched.
+
+Signed-off-by: Andre Moreira Magalhaes <andre@endlessm.com>
+
+https://phabricator.endlessm.com/T26990
+---
+ meson.build                             |  1 +
+ src/core/meta-launch-context.c          | 39 ++++++++++++++++
+ src/meson.build                         |  1 +
+ src/x11/meta-startup-notification-x11.c | 62 +++++++++++++++++++++++++
+ 4 files changed, 103 insertions(+)
+
+diff --git a/meson.build b/meson.build
+index b68906030..8e3867a51 100644
+--- a/meson.build
++++ b/meson.build
+@@ -131,6 +131,7 @@ libeis_dep = dependency('libeis-1.0', version: libei_req)
+ libei_dep = dependency('libei-1.0', version: libei_req)
+ gvdb_dep = dependency('gvdb')
+ libdisplay_info_dep = dependency('libdisplay-info', version: libdisplay_info_req)
++malcontent_dep = dependency('malcontent-0')
+ 
+ have_wayland = get_option('wayland')
+ have_x11 = get_option('x11')
+diff --git a/src/core/meta-launch-context.c b/src/core/meta-launch-context.c
+index 9d4b51eff..2db1f0c64 100644
+--- a/src/core/meta-launch-context.c
++++ b/src/core/meta-launch-context.c
+@@ -20,6 +20,7 @@
+ #include "config.h"
+ 
+ #include <gio/gdesktopappinfo.h>
++#include <libmalcontent/malcontent.h>
+ 
+ #include "core/display-private.h"
+ #include "meta/meta-launch-context.h"
+@@ -132,9 +133,47 @@ meta_launch_context_get_startup_notify_id (GAppLaunchContext *launch_context,
+ {
+   MetaLaunchContext *context = META_LAUNCH_CONTEXT (launch_context);
+   MetaDisplay *display = context->display;
++  g_autoptr(GDBusConnection) system_bus = NULL;
+   int workspace_idx = -1;
+   char *startup_id = NULL;
+ 
++  system_bus = g_bus_get_sync (G_BUS_TYPE_SYSTEM, NULL, NULL);
++  if (system_bus != NULL)
++    {
++      g_autoptr(MctManager) manager = NULL;
++      g_autoptr(MctAppFilter) app_filter = NULL;
++      g_autoptr(GError) error = NULL;
++
++      manager = mct_manager_new (system_bus);
++      app_filter = mct_manager_get_app_filter (manager, getuid (),
++                                               MCT_GET_APP_FILTER_FLAGS_NONE,
++                                               NULL, &error);
++      if (error != NULL)
++        {
++          if (g_error_matches (error, MCT_APP_FILTER_ERROR,
++                               MCT_APP_FILTER_ERROR_DISABLED))
++          {
++            g_debug ("Parental controls globally disabled");
++          }
++          else
++            {
++              g_warning ("Failed to get parental controls settings for app %s "
++                         "- skipping startup notification",
++                         g_app_info_get_name (info));
++              return NULL;
++            }
++        }
++
++      if (app_filter != NULL &&
++          !mct_app_filter_is_appinfo_allowed (app_filter, info))
++        {
++          g_warning ("Running app %s is not allowed by the policy set by "
++                     "your administrator - skipping startup notification",
++                     g_app_info_get_name (info));
++          return NULL;
++        }
++    }
++
+   if (context->workspace)
+     workspace_idx = meta_workspace_index (context->workspace);
+ 
+diff --git a/src/meson.build b/src/meson.build
+index b0c103b0c..71c0fde63 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -28,6 +28,7 @@ mutter_pkg_private_deps = [
+   gdk_pixbuf_dep,
+   libeis_dep,
+   libdisplay_info_dep,
++  malcontent_dep,
+ ]
+ 
+ if have_gnome_desktop
+diff --git a/src/x11/meta-startup-notification-x11.c b/src/x11/meta-startup-notification-x11.c
+index dbd2c38f9..1c5f71c6b 100644
+--- a/src/x11/meta-startup-notification-x11.c
++++ b/src/x11/meta-startup-notification-x11.c
+@@ -20,6 +20,7 @@
+ #include "meta-startup-notification-x11.h"
+ 
+ #include <gio/gdesktopappinfo.h>
++#include <libmalcontent/malcontent.h>
+ 
+ #include "core/display-private.h"
+ #include "core/startup-notification-private.h"
+@@ -231,8 +232,69 @@ meta_startup_notification_sn_event (SnMonitorEvent *event,
+     {
+     case SN_MONITOR_EVENT_INITIATED:
+       {
++        g_autoptr(GDesktopAppInfo) info = NULL;
++        const char *application_id;
+         const char *wmclass;
+ 
++        /* Try to build an app info from the sequence's application id (which is
++         * commonly set to the desktop file path) to run parental controls check.
++         * If an app info cannot be determined proceed with the notification.
++         */
++        application_id = sn_startup_sequence_get_application_id (sequence);
++        if (application_id &&
++            g_str_has_suffix (application_id, ".desktop"))
++          {
++            if (g_path_is_absolute (application_id))
++               info = g_desktop_app_info_new_from_filename (application_id);
++            else
++               info = g_desktop_app_info_new (application_id);
++          }
++
++        if (info)
++          {
++            g_autoptr(GDBusConnection) system_bus = NULL;
++
++            /* If parental controls is available and the app is blacklisted
++             * skip startup notification.
++             */
++            system_bus = g_bus_get_sync (G_BUS_TYPE_SYSTEM, NULL, NULL);
++            if (system_bus != NULL)
++              {
++                g_autoptr(MctManager) manager = NULL;
++                g_autoptr(MctAppFilter) app_filter = NULL;
++                g_autoptr(GError) error = NULL;
++
++                manager = mct_manager_new (system_bus);
++                app_filter = mct_manager_get_app_filter (manager, getuid (),
++                                                         MCT_GET_APP_FILTER_FLAGS_NONE,
++                                                         NULL, &error);
++                if (error != NULL)
++                  {
++                    if (g_error_matches (error, MCT_APP_FILTER_ERROR,
++                                         MCT_APP_FILTER_ERROR_DISABLED))
++                      {
++                        g_debug ("Parental controls globally disabled");
++                      }
++                    else
++                      {
++                        g_warning ("Failed to get parental controls settings for app %s "
++                                   "- skipping startup notification",
++                                   g_app_info_get_name (G_APP_INFO (info)));
++                        break;
++                      }
++                  }
++
++                if (app_filter != NULL &&
++                    !mct_app_filter_is_appinfo_allowed (app_filter, G_APP_INFO (info)))
++                  {
++                    g_warning ("Running app %s is not allowed by the policy set by "
++                               "your administrator - skipping startup notification",
++                               g_app_info_get_name (G_APP_INFO (info)));
++                    break;
++                  }
++              }
++          }
++
+         wmclass = sn_startup_sequence_get_wmclass (sequence);
+ 
+         meta_topic (META_DEBUG_STARTUP,
+-- 
+2.50.0
+
