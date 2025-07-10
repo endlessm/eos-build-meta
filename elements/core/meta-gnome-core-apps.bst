@@ -7,13 +7,13 @@
 # desktop applications from core. Current contact: Allan Day.
 kind: stack
 depends:
-- core/baobab.bst
-- core/evince.bst
-- core/gnome-clocks.bst
-- core/gnome-console.bst
-- core/gnome-disk-utility.bst
-- core/gnome-software.bst
-- core/gnome-system-monitor.bst
-- core/nautilus.bst
-- core/simple-scan.bst
-- sdk/yelp.bst
+- gnome-build-meta.bst:core/baobab.bst
+- gnome-build-meta.bst:core/evince.bst
+- gnome-build-meta.bst:core/gnome-clocks.bst
+- gnome-build-meta.bst:core/gnome-console.bst
+- gnome-build-meta.bst:core/gnome-disk-utility.bst
+- gnome-build-meta.bst:core/gnome-software.bst
+- gnome-build-meta.bst:core/gnome-system-monitor.bst
+- gnome-build-meta.bst:core/nautilus.bst
+- gnome-build-meta.bst:core/simple-scan.bst
+- gnome-build-meta.bst:sdk/yelp.bst

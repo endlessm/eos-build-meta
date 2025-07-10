@@ -1,21 +1,21 @@
 kind: manual
 
 build-depends:
-- core-deps/python-pefile.bst
-- gnomeos/os-release-user.bst
-- filename: freedesktop-sdk.bst:components/linux.bst
+- gnome-build-meta.bst:core-deps/python-pefile.bst
+- gnome-build-meta.bst:gnomeos/os-release-user.bst
+- filename: gnome-build-meta.bst:freedesktop-sdk.bst:components/linux.bst
   strict: true
-- filename: gnomeos/initramfs.bst
+- filename: gnome-build-meta.bst:gnomeos/initramfs.bst
   strict: true
-- filename: gnomeos/usr-image.bst
+- filename: gnome-build-meta.bst:gnomeos/usr-image.bst
   strict: true
   config:
     location: /usr-image
-- freedesktop-sdk.bst:components/sbsigntools.bst
-- freedesktop-sdk.bst:components/util-linux.bst
-- freedesktop-sdk.bst:components/systemd.bst
-- freedesktop-sdk.bst:components/tpm2-tss.bst
-- freedesktop-sdk.bst:components/jq.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/sbsigntools.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/util-linux.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/systemd.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/tpm2-tss.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/jq.bst
 
 variables:
   (?):

@@ -5,7 +5,7 @@ sources:
   path: files/boot-keys/import-pubring.gpg
 
 runtime-depends:
-- freedesktop-sdk.bst:components/systemd.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/systemd.bst
 
 config:
   target: /usr/lib/systemd

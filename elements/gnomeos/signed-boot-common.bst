@@ -1,9 +1,9 @@
 kind: manual
 
 build-depends:
-- gnomeos/initramfs.bst
-- freedesktop-sdk.bst:components/sbsigntools.bst
-- freedesktop-sdk.bst:components/util-linux.bst
+- gnome-build-meta.bst:gnomeos/initramfs.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/sbsigntools.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/util-linux.bst
 
 variables:
   (?):

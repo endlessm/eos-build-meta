@@ -16,10 +16,10 @@ sources:
   directory: boot-keys
 
 build-depends:
-- freedesktop-sdk.bst:bootstrap-import.bst
-- freedesktop-sdk.bst:components/git-minimal.bst
-- freedesktop-sdk.bst:components/openssl.bst
-- gnomeos-deps/efitools.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:bootstrap-import.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/git-minimal.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/openssl.bst
+- gnome-build-meta.bst:gnomeos-deps/efitools.bst
 
 variables:
   (?):

@@ -41,14 +41,14 @@ sources:
   directory: extra-db-mic
 
 build-depends:
-- freedesktop-sdk.bst:components/gnu-efi.bst
-- freedesktop-sdk.bst:components/help2man.bst
-- freedesktop-sdk.bst:components/perl-slurp.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/gnu-efi.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/help2man.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/perl-slurp.bst
 
 depends:
-- freedesktop-sdk.bst:bootstrap-import.bst
-- freedesktop-sdk.bst:components/openssl.bst
-- freedesktop-sdk.bst:components/sbsigntools.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:bootstrap-import.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/openssl.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/sbsigntools.bst
 
 variables:
   gnomeos-keys-uuid: 8dd6b2b4-3dc4-4ee2-a226-635467997f0e

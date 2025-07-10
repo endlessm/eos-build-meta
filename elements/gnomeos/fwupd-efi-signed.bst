@@ -1,8 +1,8 @@
 kind: manual
 
 build-depends:
-- freedesktop-sdk.bst:components/sbsigntools.bst
-- core-deps/fwupd-efi.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/sbsigntools.bst
+- gnome-build-meta.bst:core-deps/fwupd-efi.bst
 
 depends:
 - freedesktop-sdk.bst:bootstrap-import.bst

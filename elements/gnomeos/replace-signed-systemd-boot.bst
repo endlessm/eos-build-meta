@@ -1,8 +1,8 @@
 kind: manual
 
 build-depends:
-- freedesktop-sdk.bst:components/sbsigntools.bst
-- freedesktop-sdk.bst:components/systemd.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/sbsigntools.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/systemd.bst
 
 variables:
   (?):

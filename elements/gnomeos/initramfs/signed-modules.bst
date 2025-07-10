@@ -1,9 +1,9 @@
 kind: manual
 
 build-depends:
-- filename: freedesktop-sdk.bst:components/linux.bst
+- filename: gnome-build-meta.bst:freedesktop-sdk.bst:components/linux.bst
   strict: true
-- freedesktop-sdk.bst:components/sign-file.bst
+- gnome-build-meta.bst:freedesktop-sdk.bst:components/sign-file.bst
 
 config:
   install-commands:

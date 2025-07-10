@@ -1,7 +1,7 @@
 kind: manual
 
 build-depends:
-- filename: gnomeos-deps/nvidia-drivers-modules.bst
+- filename: gnome-build-meta.bst:gnomeos-deps/nvidia-drivers-modules.bst
   strict: true
 - freedesktop-sdk.bst:components/sign-file.bst
 
