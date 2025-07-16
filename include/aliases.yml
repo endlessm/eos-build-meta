@@ -1,0 +1,69 @@
+# Source aliases.
+#
+# These are used in the individual element.bst files in
+# place of specifying full uris.
+#
+# The location from where source code is downloaded can
+# be changed without triggering a rebuild.
+#
+aliases:
+  # file aliases (e.g. tarballs)
+  0pointer: https://0pointer.de/
+  cairo: https://cairographics.org/
+  cpan: https://cpan.metacpan.org/
+  crates: https://static.crates.io/
+  dbmx: https://dbmx.net/
+  debian_salsa: https://salsa.debian.org/
+  dotat: https://dotat.at/prog/
+  fedora_rpms: https://src.fedoraproject.org/rpms/
+  flathub: https://flathub.org/repo/
+  freedesktop_files: https://gitlab.freedesktop.org/
+  freedesktop_people: https://people.freedesktop.org/
+  freedesktop_software: https://www.freedesktop.org/software/
+  freerdp: https://pub.freerdp.com/
+  ftp_gnu_org: https://ftp.gnu.org/gnu/
+  gimp: https://download.gimp.org/pub/
+  github_files: https://github.com/
+  gitlab_files: https://gitlab.com/
+  gnome_downloads: https://download.gnome.org/sources/
+  gnome_gitlab_files: https://gitlab.gnome.org/
+  gnome_nightly: https://nightly.gnome.org/
+  gnupg: https://www.gnupg.org/
+  gstreamer: https://gstreamer.freedesktop.org/
+  infradead: https://www.infradead.org/
+  kerberos: https://kerberos.org/
+  kldp: https://kldp.net/
+  launchpad: https://launchpad.net/
+  libburnia: http://files.libburnia-project.org/releases/
+  libopenraw: https://libopenraw.freedesktop.org/
+  libraw: https://www.libraw.org/
+  libvirt: https://libvirt.org/sources/
+  linuxcontainers: https://linuxcontainers.org/downloads/
+  mozilla: https://ftp.mozilla.org/pub/
+  netfilter: https://www.netfilter.org/
+  nvidia: https://us.download.nvidia.com/
+  openldap: https://openldap.org/
+  openvpn: https://swupdate.openvpn.org/community/releases/
+  pagure_releases: https://releases.pagure.org/
+  purism_releases: https://storage.puri.sm/releases/
+  pypi: https://files.pythonhosted.org/packages/
+  qemu: https://download.qemu.org/
+  samba: https://download.samba.org/pub/
+  sourceforge: https://downloads.sourceforge.net/
+  spice: https://www.spice-space.org/download/
+  tcpdump: https://www.tcpdump.org/
+  tecnocode: https://tecnocode.co.uk/downloads/
+  thekelleys: http://www.thekelleys.org.uk/
+  videolan: https://download.videolan.org/
+  webkitgtk: https://webkitgtk.org/releases/
+  wpewebkit: https://wpewebkit.org/releases/
+  megous: https://megous.com/
+
+  # git aliases go here
+  freedesktop: https://gitlab.freedesktop.org/
+  github: https://github.com/
+  gitlab: https://gitlab.com/
+  gnome: https://gitlab.gnome.org/GNOME/
+  gnome_gitlab: https://gitlab.gnome.org/
+  kernel: https://git.kernel.org/pub/scm/
+  purism: https://source.puri.sm/
