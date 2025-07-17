@@ -1,0 +1,62 @@
+# This is derived from gnome-build-meta 48.2, ensure to update it when rebasing.
+
+kind: junction
+
+sources:
+- kind: git_repo
+  url: gitlab:freedesktop-sdk/freedesktop-sdk.git
+  track: freedesktop-sdk-24.08*
+  ref: freedesktop-sdk-24.08.19-0-gd469cb4641aadc7670a6fca0b843897514334d96
+- kind: patch
+  path: patches/freedesktop-sdk/shared-grpc.bst
+
+config:
+  options:
+    target_arch: '%{arch}'
+    (?):
+    - x86_64_v3:
+        x86_64_v3: true
+    - arch in ('x86_64', 'i686'):
+        bootstrap_build_arch: 'x86_64'
+    - arch in ('aarch64', 'arm'):
+        bootstrap_build_arch: 'aarch64'
+    - arch == "ppc64le":
+        bootstrap_build_arch: "ppc64le"
+    - arch == "riscv64":
+        bootstrap_build_arch: "x86_64"
+
+  overrides:
+    components/at-spi2-core.bst: gnome-build-meta.bst:sdk/at-spi2-core.bst
+    components/cairo.bst: gnome-build-meta.bst:sdk/cairo.bst
+    components/fcitx5.bst: gnome-build-meta.bst:sdk/fcitx5-gtk.bst
+    components/gcab.bst: gnome-build-meta.bst:sdk/gcab.bst
+    components/gdk-pixbuf.bst: gnome-build-meta.bst:sdk/gdk-pixbuf.bst
+    components/glib-networking.bst: gnome-build-meta.bst:sdk/glib-networking.bst
+    components/glib.bst: gnome-build-meta.bst:sdk/glib.bst
+    components/gobject-introspection.bst: gnome-build-meta.bst:sdk/gobject-introspection.bst
+    components/graphene.bst: gnome-build-meta.bst:sdk/graphene.bst
+    components/gsettings-desktop-schemas.bst: gnome-build-meta.bst:sdk/gsettings-desktop-schemas.bst
+    components/gtk-doc.bst: gnome-build-meta.bst:sdk/gtk-doc.bst
+    components/gtk3.bst: gnome-build-meta.bst:sdk/gtk+-3.bst
+    components/ibus.bst: gnome-build-meta.bst:sdk/libibus.bst
+    components/json-glib.bst: gnome-build-meta.bst:sdk/json-glib.bst
+    components/libnotify.bst: gnome-build-meta.bst:sdk/libnotify.bst
+    components/librsvg.bst: gnome-build-meta.bst:sdk/librsvg.bst
+    components/libsoup.bst: gnome-build-meta.bst:sdk/libsoup.bst
+    components/pango.bst: gnome-build-meta.bst:sdk/pango.bst
+    components/pipewire-base.bst: gnome-build-meta.bst:sdk-deps/pipewire.bst
+    components/pygobject.bst: gnome-build-meta.bst:sdk/pygobject.bst
+    components/vala.bst: gnome-build-meta.bst:sdk/vala.bst
+
+    # While freedesktop-sdk provides a zenity element, it's the
+    # gtk3 version which we don't want, and we also override it
+    # to a void element to avoid zenity ending up in our Runtime.
+    # However mutter depends on zenity when building the tests,
+    # so we will add it to core-deps, oci images and gnomeos but
+    # not the Flatpak runtime, as its easy to bundle when needed.
+    components/zenity.bst: gnome-build-meta.bst:void/zenity.bst
+
+    components/xdg-desktop-portal-base.bst: gnome-build-meta.bst:core-deps/xdg-desktop-portal.bst
+    components/linux-module-cert.bst: gnome-build-meta.bst:gnomeos/linux-module-cert.bst
+    components/systemd-base.bst: gnome-build-meta.bst:core-deps/systemd-base.bst
+    components/systemd.bst: gnome-build-meta.bst:core-deps/systemd.bst
