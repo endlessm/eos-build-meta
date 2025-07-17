@@ -10,6 +10,7 @@ sources:
 
 config:
   overrides:
+    core/meta-gnome-core-apps.bst: core/meta-gnome-core-apps.bst
     freedesktop-sdk.bst: freedesktop-sdk.bst
     gnomeos/fwupd-efi-signed.bst: gnomeos/fwupd-efi-signed.bst
     gnomeos/generate-initramfs.bst: gnomeos/generate-initramfs.bst
