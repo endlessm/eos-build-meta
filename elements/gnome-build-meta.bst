@@ -21,4 +21,5 @@ config:
     gnomeos/signed-boot-common.bst: gnomeos/signed-boot-common.bst
     gnomeos/replace-signed-systemd-boot.bst: gnomeos/replace-signed-systemd-boot.bst
     gnomeos-deps/efitools.bst: gnomeos-deps/efitools.bst
+    gnomeos-deps/nvidia-drivers.bst: gnomeos-deps/nvidia-drivers.bst
     gnomeos-deps/shim.bst: gnomeos-deps/shim.bst
