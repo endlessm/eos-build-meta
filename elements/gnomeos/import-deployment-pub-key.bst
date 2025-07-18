@@ -1,4 +1,4 @@
-# This is derived from gnome-build-meta 48.2, ensure to update it when rebasing.
+# This is derived from gnome-build-meta 48.3, ensure to update it when rebasing.
 
 kind: import
 

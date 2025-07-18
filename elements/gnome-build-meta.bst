@@ -1,4 +1,4 @@
-# This is derived from gnome-build-meta 48.2, ensure to update it when rebasing.
+# This is derived from gnome-build-meta 48.3, ensure to update it when rebasing.
 
 kind: junction
 
@@ -6,7 +6,7 @@ sources:
 - kind: git_repo
   url: gnome:gnome-build-meta.git
   track: 48*
-  ref: 48.2-0-g5d5d8f32365d766001d9b48a6643d6962a9dc94a
+  ref: 48.3-0-g4a74edcfcfc5b0bf5b55d56e2343900fc4f94aae
 
 config:
   overrides:
