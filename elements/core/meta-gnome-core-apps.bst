@@ -19,3 +19,5 @@ depends:
 - core/nautilus.bst
 - core/simple-scan.bst
 - sdk/yelp.bst
+
+- eos/deps.bst
