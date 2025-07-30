@@ -1,4 +1,4 @@
-# This is derived from gnome-build-meta 48.2, ensure to update it when rebasing.
+# This is derived from gnome-build-meta 48.3, ensure to update it when rebasing.
 
 kind: junction
 
@@ -6,9 +6,7 @@ sources:
 - kind: git_repo
   url: gitlab:freedesktop-sdk/freedesktop-sdk.git
   track: freedesktop-sdk-24.08*
-  ref: freedesktop-sdk-24.08.19-0-gd469cb4641aadc7670a6fca0b843897514334d96
-- kind: patch
-  path: patches/freedesktop-sdk/shared-grpc.bst
+  ref: freedesktop-sdk-24.08.22-0-gb586eff57a98db393c1ba25730a265e0b3900196
 
 config:
   options:
