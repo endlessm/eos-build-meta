@@ -23,3 +23,4 @@ config:
     gnomeos-deps/efitools.bst: gnomeos-deps/efitools.bst
     gnomeos-deps/nvidia-drivers.bst: gnomeos-deps/nvidia-drivers.bst
     gnomeos-deps/shim.bst: gnomeos-deps/shim.bst
+    iso/signed-image.bst: iso/signed-image.bst
