@@ -39,7 +39,12 @@ config:
 
   - install -Dm644 -t "%{install-root}/usr/lib/tmpfiles.d" ostree.conf
   - install -Dm644 -t "%{install-root}/etc/pki/ostree" eos-ostree-signing-key.gpg
-  - install -Dm644 -t "%{install-root}/etc/ostree/remotes.d" eos.conf
+
+  # This is a "modern" way to enable an OSTree remote. Existing EOS installations have
+  # a remote named `eos` defined in `/ostree/repo/config` that conflicts with this one.
+  # We can either add a new 'eos7' remote; or continue to define the 'eos' remote in
+  # `/ostree/repo/config` for new systems.
+  #- install -Dm644 -t "%{install-root}/etc/ostree/remotes.d" eos.conf
 
 sources:
 - kind: local
