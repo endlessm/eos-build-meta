@@ -19,5 +19,3 @@ depends:
 - gnome-build-meta.bst:core/nautilus.bst
 - gnome-build-meta.bst:core/simple-scan.bst
 - gnome-build-meta.bst:sdk/yelp.bst
-
-- eos/deps.bst
