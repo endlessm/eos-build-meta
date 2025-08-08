@@ -84,22 +84,24 @@ manually.
 You'll need to set up BuildStream with the necessary plugins and their
 dependencies.
 
-To build and checkout the OSTree repo containing the EOS filesystem, run:
+You can then use the Makefile to do the following:
 
-    bst build eos/repo.bst
-    bst artifact checkout eos/repo.bst --directory ./ostree-repo
-
-To deploy the tree, you'll need to serve it over HTTP to the target. One
-way is using the Caddy web server, as follows:
-
-    caddy file-server --listen :8000 --root ./ostree-repo/ostree/repo
+  * Create fake signing keys: `make ostree-gpg`
+  * Create/update a local OSTree repo from the `eos/repo.bst` element: `make ostree-repo`
+  * Serve the repo over HTTP: `make ostree-serve`
 
 On the target device, add an OSTree remote pointing to that machine.
-Disable GPG checking. Here's an example of how to do this on the
-target device. Replace `server` with the address or hostname of the machine
-serving the repo.
+Here's an example of how to do this on the target device.  The GPG public key
+used this available in file: ``.
 
-    sudo ostree remote add dev http://server:8000 --no-gpg-verify
+    # Replace `server` with address or hostname of the machine serving the repo. 
+    sudo ostree remote add dev http://server:8000
+
+    # Paste in public key from `files/ostree-config/eos.gpg`, then CTRL-D.
+    sudo ostree remote gpg-import dev --stdin
+
+You can now pull and deploy the new tree as follows:
+
     sudo ostree pull dev eos-buildstream
     sudo ostree admin deploy eos-buildstream
 
