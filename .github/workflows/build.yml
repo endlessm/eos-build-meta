@@ -23,7 +23,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Fetch secrets from Vault
+      - name: Fetch BuildStream cache credentials from Vault
         uses: hashicorp/vault-action@v3
         with:
           url: https://vault.endlessos.org
@@ -33,12 +33,31 @@ jobs:
           pki: |
             pki/issue/endless-client {"common_name": "github@endlessos.org", "ttl": "12h"} ;
 
-      - name: Write client certificates
+      - name: Fetch OSTree credentials from Vault
+        uses: hashicorp/vault-action@v3
+        with:
+          url: https://vault.endlessos.org
+          method: jwt
+          path: ghactions
+          role: endlessm-eos-build-meta
+          secrets: |
+            secret/ostree-builder/gpg/eoask1 private | OSTREE_BUILDER_GPG_PRIVATE ;
+            secret/ostree-builder/ssh private | OSTREE_BUILDER_SSH_PRIVATE ;
+
+      - name: Write secrets
         run: |
+          # Certificate for BuildStream cache
           echo "${ENDLESSCLIENT_CERT}" > client.crt
           echo "${ENDLESSCLIENT_CA_CHAIN}" >> client.crt
           echo "${ENDLESSCLIENT_KEY}" > client.key
           chmod 600 client.key
+          # Signing key for OSTree commits
+          mkdir ./ostree-gpg
+          chmod 700 ostree-gpg
+          echo "${OSTREE_BUILDER_GPG_PRIVATE}" | gpg --homedir ./ostree-gpg --import
+          # SSH key for OSTree pushes
+          echo "${OSTREE_BUILDER_SSH_PRIVATE}" > $HOME/.ssh/ostree_ssh
+          chmod 600 $HOME/.ssh/ostree_ssh
 
       - name: Install BuildStream and dependencies
         run: |
@@ -92,10 +111,6 @@ jobs:
                 client-key: $(pwd)/client.key
           EOF
 
-      - name: Generate development-only OSTree signing key (temporary)
-        run: |
-          make ostree-gpg
-
       - name: Enable unprivileged userns
         run: |
           source venv/bin/activate
@@ -105,8 +120,56 @@ jobs:
         with:
           sccache: s3
       - uses: mozilla-actions/sccache-action@v0.0.9
-      - name: Build filesystem and export to OSTree repo
+
+      - name: Build root filesystem
         run: |
           source venv/bin/activate
-          make files/ostree-config/eos.gpg
           bst build eos/repo.bst
+
+      - name: Export OSTree commit and push it
+        env:
+          product: eos
+          platform: amd64
+          branch: eos7
+
+          build_element: eos/repo.bst
+          build_ref: "eos-buildstream"
+
+          ostree_gpg_key_id: "00EA12D9A37DD2A7BD810643DFB958DC725AE7CA"
+
+          push_host: ostree.endlessm-sf.com
+          push_user: uploader
+          push_repo: "eos"
+        run: |
+          push_ref="os/${product}/${platform}/${branch}"
+
+          echo "Install ostree-push"
+          sudo apt-get install -y gir1.2-ostree-1.0 openssh-client
+          python3 -m venv --system-site-packages ./ostree-push.venv
+          # Pip will try to build pygobject and pycairo from source;
+          # passing --no-deps to avoid that.
+          ./ostree-push.venv/bin/pip install --no-deps ostree-push
+
+          echo "Check out repo to a temporary directory"
+          checkout="$(mktemp --suffix="-update-repo" -d -p "$(pwd)")"
+          ./venv/bin/bst artifact checkout --hardlinks "${build_element}" --directory "${checkout}"
+
+          commit="$(ostree --repo="${checkout}/ostree/repo" rev-parse "${build_ref}")"
+          echo "Create a new OSTree repo and import commit ${commit}"
+          ostree init --repo="./ostree-repo" --mode=archive
+          ostree pull-local --repo ./ostree-repo "${checkout}/ostree/repo" "${commit}"
+
+          echo "Sign and recommit the tree as ${push_ref}"
+          ostree commit --repo ./ostree-repo \
+            --gpg-homedir=ostree-gpg --gpg-sign="$ostree_gpg_key_id" \
+            --branch="${push_ref}" --tree=ref="${commit}"
+
+          # FIXME: Drop --command when ostree-receive is updated on the
+          # server.
+          target="${push_user}@${push_host}:${push_repo}"
+          echo "Push to $target"
+          ./ostree-push.venv/bin/ostree-push \
+            --command ostree-receive \
+            -i $HOME/.ssh/ostree_ssh \
+            -o StrictHostKeyChecking=no \
+            --repo ./ostree-repo "${target}" "${push_ref}"
