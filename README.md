@@ -11,29 +11,17 @@ project.
 
 ## Build outputs
 
-Some of the possible build outputs are documented below.
+All versions of Endless OS are deployed using OSTree.
 
-### Endless OS
+This repo contains one toplevel element, `eos/repo.bst` which outputs
+an artifact with an OSTree repo.
 
-To build the Endless OS "secure boot" image locally:
+The output is suitable for use with the existing Endless OS tooling,
+`eos-ostree-builder` and `eos-image-builder`, which respectively produce
+the final update trees and OS images.
 
-1. Generate keys:
-```
-$ make -C files/boot-keys clean
-$ make -C files/boot-keys
-```
-
-2. Build the disk image (first command) or the ISO installer (second command):
-```
-$ bst build gnome-build-meta.bst:gnomeos/image.bst
-$ bst build gnome-build-meta.bst:iso/image.bst
-```
-
-3. Checkout the image or installer:
-```
-$ bst artifact checkout gnome-build-meta.bst:gnomeos/image.bst --directory ./disk
-$ bst artifact checkout gnome-build-meta.bst:iso/image.bst --directory ./iso
-```
+The build and release workflows are implemented using Github Actions,
+in this repo.
 
 ## Maintaining
 
@@ -87,3 +75,35 @@ overriden be updated accordingly.
 
 If an element was overridden to backport some changes and there is nothing more
 to get from the junction, the junctioned element and its files can be removed.
+
+### Local builds
+
+It is possible to build and deploy development-only builds of Endless OS
+manually.
+
+You'll need to set up BuildStream with the necessary plugins and their
+dependencies.
+
+You can then use the Makefile to do the following:
+
+  * Create fake signing keys: `make ostree-gpg`
+  * Create/update a local OSTree repo from the `eos/repo.bst` element: `make ostree-repo`
+  * Serve the repo over HTTP: `make ostree-serve`
+
+On the target device, add an OSTree remote pointing to that machine.
+Here's an example of how to do this on the target device.  The GPG public key
+used this available in file: ``.
+
+    # Replace `server` with address or hostname of the machine serving the repo. 
+    sudo ostree remote add dev http://server:8000
+
+    # Paste in public key from `files/ostree-config/eos.gpg`, then CTRL-D.
+    sudo ostree remote gpg-import dev --stdin
+
+You can now pull and deploy the new tree as follows:
+
+    sudo ostree pull dev eos-buildstream
+    sudo ostree admin deploy eos-buildstream
+
+If the deploy succeeds, you can now reboot the target machine into your
+newly built OS.

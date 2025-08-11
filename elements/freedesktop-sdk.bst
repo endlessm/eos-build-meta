@@ -26,6 +26,11 @@ config:
         bootstrap_build_arch: "x86_64"
 
   overrides:
+    # Overrides applied in eos-build-meta
+    components/bash-config.bst: eos/config/bash-config.bst
+    vm/config/sudo.bst: eos/config/sudo.bst
+
+    # Overrides taken from gnome-build-meta
     components/at-spi2-core.bst: gnome-build-meta.bst:sdk/at-spi2-core.bst
     components/cairo.bst: gnome-build-meta.bst:sdk/cairo.bst
     components/fcitx5.bst: gnome-build-meta.bst:sdk/fcitx5-gtk.bst
