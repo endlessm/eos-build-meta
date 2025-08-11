@@ -1,4 +1,4 @@
-name: Build ISO Image
+name: Build filesystem and export to OSTree
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-iso:
+  build:
     # https://runs-on.com/configuration/job-labels/
     # https://aws.amazon.com/ec2/instance-types/
     runs-on:
@@ -92,10 +92,9 @@ jobs:
                 client-key: $(pwd)/client.key
           EOF
 
-      - name: Generate secure boot keys
+      - name: Generate development-only OSTree signing key (temporary)
         run: |
-          make -C files/boot-keys clean
-          make -C files/boot-keys IMPORT_MODE=snakeoil
+          make ostree-gpg
 
       - name: Enable unprivileged userns
         run: |
@@ -106,7 +105,8 @@ jobs:
         with:
           sccache: s3
       - uses: mozilla-actions/sccache-action@v0.0.9
-      - name: Build ISO image
+      - name: Build filesystem and export to OSTree repo
         run: |
           source venv/bin/activate
-          bst build gnome-build-meta.bst:iso/image.bst
+          make files/ostree-config/eos.gpg
+          bst build eos/repo.bst
