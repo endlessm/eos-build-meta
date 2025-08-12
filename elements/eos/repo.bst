@@ -54,6 +54,8 @@ config:
   # We post-processing the filesystem in preference to patching or
   # reconfiguring systemd.bst in order to reuse the systemd build from
   # Freedesktop SDK.
+  #
+  # See `doc/sysusers.md` for more information.
   - |
     # Rename 'wheel' group to 'sudo'
     sed -e 's/^g wheel/g  sudo/' -i /sysroot/usr/lib/sysusers.d/basic.conf
