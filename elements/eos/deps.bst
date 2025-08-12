@@ -19,6 +19,12 @@ depends:
 - gnome-build-meta.bst:gnomeos-deps/deps.bst
 - gnome-build-meta.bst:gnomeos/os-release-user.bst
 
+# Developer tools which are in the GNOME OS `devel` addon,
+# but in the core image of EOS.
+- freedesktop-sdk.bst:components/podman.bst
+- freedesktop-sdk.bst:components/podman-config.bst
+- gnome-build-meta.bst:gnomeos-deps/toolbox.bst
+
 # Endless additions to GNOME OS.
 - freedesktop-sdk.bst:components/git.bst
 - eos/eos-event-recorder-daemon.bst
