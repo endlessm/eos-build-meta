@@ -17,7 +17,11 @@ depends:
 - gnome-build-meta.bst:gnomeos/os-release-user.bst
 
 # Endless additions to GNOME OS.
+- eos/eos-event-recorder-daemon.bst
 - eos/eos-media.bst
 - eos/eos-meta.bst
+- eos/eos-metrics.bst
+- eos/eos-metrics-instrumentation.bst
+- eos/eos-phone-home.bst
 - eos/eos-shell-content.bst
 - eos/eos-theme.bst
