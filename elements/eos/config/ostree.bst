@@ -39,9 +39,6 @@ config:
 
   - install -Dm644 -t "%{install-root}/usr/lib/tmpfiles.d" ostree.conf
 
-  # Public part of the OSTree signing key.
-  - install -Dm644 -t "%{install-root}/etc/pki/ostree" eos.gpg
-
 sources:
 - kind: local
   path: files/ostree-config

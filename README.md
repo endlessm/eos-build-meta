@@ -14,11 +14,9 @@ project.
 All versions of Endless OS are deployed using OSTree.
 
 This repo contains one toplevel element, `eos/repo.bst` which outputs
-an artifact with an OSTree repo.
-
-The output is suitable for use with the existing Endless OS tooling,
-`eos-ostree-builder` and `eos-image-builder`, which respectively produce
-the final update trees and OS images.
+an artifact with an OSTree repo containing a filesystem tree. This tree
+can be deployed as an update to existing systems, or used to build a
+bootable image.
 
 The build and release workflows are implemented using Github Actions,
 in this repo.
