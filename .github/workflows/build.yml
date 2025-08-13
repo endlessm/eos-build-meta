@@ -127,6 +127,7 @@ jobs:
           bst build eos/repo.bst
 
       - name: Export OSTree commit and push it
+        if: github.ref == 'refs/heads/main'
         env:
           product: eos
           platform: amd64
