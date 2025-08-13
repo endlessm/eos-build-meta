@@ -13,6 +13,7 @@ build-depends:
 - freedesktop-sdk.bst:vm/deploy-tools.bst
 - freedesktop-sdk.bst:vm/prepare-image.bst
 - eos/initial-scripts.bst
+- tools/systemd-sysusers-override.bst
 - filename: eos/filesystem.bst
   config:
     location: '/sysroot'
@@ -44,6 +45,27 @@ config:
        --rootsource /dev/gpt-auto-root \
        --efisource LABEL=EFI \
        --efipath /boot
+
+  # Apply Endless OS specific configuration to systemd-sysusers config.
+  #
+  # These changes are needed for backwards compatibility with existing EOS6
+  # systems.
+  #
+  # We post-processing the filesystem in preference to patching or
+  # reconfiguring systemd.bst in order to reuse the systemd build from
+  # Freedesktop SDK.
+  - |
+    # Rename 'wheel' group to 'sudo'
+    sed -e 's/^g wheel/g  sudo/' -i /sysroot/usr/lib/sysusers.d/basic.conf
+  - |
+    systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/basic.conf --group adm --static-id 4
+    systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/basic.conf --group lp --static-id 7
+    systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/basic.conf --group sudo --static-id 27
+    systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/basic.conf --group utmp --static-id 43
+    systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/cups.conf --user lp --static-id 7
+    systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/polkit.conf --user polkitd --static-id 105
+    systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/systemd-journal.conf --group systemd-journal --static-id 121
+    systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/systemd-timesync.conf --user systemd-timesync --static-id 133
 
   - mkdir -p "${OSTREE_REPO}"
   - ostree init --repo="${OSTREE_REPO}" --mode=archive
