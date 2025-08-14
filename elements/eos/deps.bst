@@ -13,6 +13,7 @@ depends:
 - eos/eos-keyring.bst
 - eos/grub.bst
 - freedesktop-sdk.bst:components/dracut.bst
+- freedesktop-sdk.bst:components/fscrypt.bst
 - freedesktop-sdk.bst:vm/boot/efi-ostree.bst
 
 # GNOME OS elements.
