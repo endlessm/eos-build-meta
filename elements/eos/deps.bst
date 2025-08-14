@@ -19,6 +19,7 @@ depends:
 
 # Endless additions to GNOME OS.
 - eos/eos-event-recorder-daemon.bst
+- eos/eos-kolibri.bst
 - eos/eos-media.bst
 - eos/eos-meta.bst
 - eos/eos-metrics.bst
