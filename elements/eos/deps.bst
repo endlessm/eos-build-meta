@@ -18,6 +18,7 @@ depends:
 - gnome-build-meta.bst:gnomeos/os-release-user.bst
 
 # Endless additions to GNOME OS.
+- freedesktop-sdk.bst:components/git.bst
 - eos/eos-event-recorder-daemon.bst
 - eos/eos-kolibri.bst
 - eos/eos-media.bst
