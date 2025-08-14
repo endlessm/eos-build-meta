@@ -16,10 +16,13 @@ depends:
 config:
   install-commands:
   - mkdir -p '%{install-root}/%{prefix}/lib/sysusers.d/'
+  - install -Dm644 colord.conf '%{install-root}/%{prefix}/lib/sysusers.d/'
   - install -Dm644 placeholders.conf '%{install-root}/%{prefix}/lib/sysusers.d/'
   - install -Dm644 obsolete.conf '%{install-root}/%{prefix}/lib/sysusers.d/'
 
 sources:
+- kind: local
+  path: files/systemd-sysusers-config/colord.conf
 - kind: local
   path: files/systemd-sysusers-config/placeholders.conf
 - kind: local
