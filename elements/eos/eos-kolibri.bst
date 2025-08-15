@@ -5,9 +5,7 @@ description: |
 sources:
 - kind: git_repo
   url: github:endlessm/eos-kolibri.git
-  ref: 544be49145ffac7481273814e3e3e24b13a2b223
-- kind: local
-  path: files/eos-kolibri/sysusers.d/kolibri.conf
+  ref: c31e4183156b5e780895d84ed84add99b41fa13b
 
 build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
@@ -23,9 +21,3 @@ runtime-depends:
 - gnome-build-meta.bst:sdk/glib.bst
 - gnome-build-meta.bst:sdk/gobject-introspection.bst
 - gnome-build-meta.bst:sdk/pygobject.bst
-
-config:
-  install-commands:
-    (>):
-      - mkdir -p "%{install-root}"/%{prefix}/lib/sysusers.d
-      - install -Dm644 ./kolibri.conf "%{install-root}"/%{prefix}/lib/sysusers.d/
