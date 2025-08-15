@@ -11,6 +11,7 @@ depends:
 - eos/config/ostree.bst
 - eos/config/systemd-sysusers.bst
 - eos/eos-keyring.bst
+- eos/grub.bst
 - freedesktop-sdk.bst:components/dracut.bst
 - freedesktop-sdk.bst:vm/boot/efi-ostree.bst
 
