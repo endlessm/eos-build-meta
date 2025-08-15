@@ -9,6 +9,7 @@ description: |
 depends:
 # Low level OS elements.
 - eos/config/ostree.bst
+- eos/config/systemd-sysusers.bst
 - eos/eos-keyring.bst
 - freedesktop-sdk.bst:components/dracut.bst
 - freedesktop-sdk.bst:vm/boot/efi-ostree.bst
