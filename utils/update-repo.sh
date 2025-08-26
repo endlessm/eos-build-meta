@@ -111,6 +111,7 @@ if [ "${new_commit}" != "${prev_commit}" ]; then
     fi
 
     ostree summary \
+           ${collection_id:+--add-metadata=ostree.deploy-collection-id='"'"${collection_id}"'"'} \
            ${gpg_opts[*]} \
            --update
 fi
