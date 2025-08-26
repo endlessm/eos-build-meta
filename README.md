@@ -21,6 +21,25 @@ bootable image.
 The build and release workflows are implemented using Github Actions,
 in this repo.
 
+## Architectures and Variants
+
+EOS7 supports one architecture:
+
+  * `x86_64` (also known as `amd64`), with UEFI
+
+The eos-build-meta repo produces one OSTree which is used for all
+EOS7 variants.
+
+See the eos-image-builder documentation for details on the
+different variants of EOS7 produced there.
+
+See [doc/boot.md](./doc/boot.md) for information on how EOS7 boots.
+
+## Documentation
+
+The [docs/](./docs/) subdirectory has documentation for OS developers working
+on EOS7.
+
 ## Maintaining
 
 ### Overriding Elements
