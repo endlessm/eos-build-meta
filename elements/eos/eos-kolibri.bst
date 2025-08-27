@@ -5,7 +5,8 @@ description: |
 sources:
 - kind: git_repo
   url: github:endlessm/eos-kolibri.git
-  ref: c31e4183156b5e780895d84ed84add99b41fa13b
+  track: master
+  ref: Release_6.0.7-5-g87d87dd04291594c668bffa2bcb7283f875e456b
 
 build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
