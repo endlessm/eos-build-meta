@@ -134,7 +134,7 @@ jobs:
           branch: eos7
 
           build_element: eos/repo.bst
-          build_ref: "eos-buildstream"
+          build_ref: "os/eos/amd64/eos7"
 
           ostree_gpg_key_id: "00EA12D9A37DD2A7BD810643DFB958DC725AE7CA"
 

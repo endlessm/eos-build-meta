@@ -34,7 +34,7 @@ ostree-gpg:
 files/ostree-config/eos.gpg: ostree-gpg
 	gpg --homedir=ostree-gpg --export --armor >"$@"
 
-OSTREE_BRANCH=eos-buildstream
+OSTREE_BRANCH=os/eos/amd64/eos7
 
 update-ostree: ostree-gpg files/ostree-config/eos.gpg
 	env BST="$(BST)" utils/update-repo.sh      \

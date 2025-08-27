@@ -20,7 +20,7 @@ build-depends:
 
 variables:
   uuidnamespace: 731a6fa6-5071-4d7b-8e0d-b81a66a590bc
-  ostree-branch: "eos-buildstream"
+  ostree-branch: "os/eos/amd64/eos7"
 
 environment:
   OSTREE_REPO: "%{install-root}/ostree/repo"
