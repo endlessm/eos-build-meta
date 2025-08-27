@@ -5,6 +5,7 @@ description: |
 sources:
 - kind: git_repo
   url: github:endlessm/eos-kolibri.git
+  track: master
   ref: c31e4183156b5e780895d84ed84add99b41fa13b
 
 build-depends:
