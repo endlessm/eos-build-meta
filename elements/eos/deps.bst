@@ -22,6 +22,7 @@ depends:
 # Endless additions to GNOME OS.
 - freedesktop-sdk.bst:components/git.bst
 - eos/eos-event-recorder-daemon.bst
+- eos/eos-factory-tools.bst
 - eos/eos-kolibri.bst
 - eos/eos-media.bst
 - eos/eos-meta.bst
