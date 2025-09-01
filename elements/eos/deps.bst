@@ -11,11 +11,11 @@ depends:
 - eos/config/ostree.bst
 - eos/config/systemd-sysusers.bst
 - eos/efi-binaries.bst
+- eos/eos-boot-helper.bst
 - eos/eos-keyring.bst
 - eos/grub.bst
-- freedesktop-sdk.bst:components/dracut.bst
+- eos/initramfs.bst
 - freedesktop-sdk.bst:components/fscrypt.bst
-- freedesktop-sdk.bst:vm/boot/efi-ostree.bst
 
 # GNOME OS elements.
 - gnome-build-meta.bst:gnomeos-deps/deps.bst
