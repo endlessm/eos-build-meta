@@ -69,6 +69,11 @@ config:
     systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/systemd-journal.conf --group systemd-journal --static-id 121
     systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/systemd-timesync.conf --user systemd-timesync --static-id 133
 
+  # Update tmpfiles.d configs for 'wheel' group rename.
+  - |
+    sed -e 's/ wheel / sudo /' -i /sysroot/usr/lib/tmpfiles.d/cups.conf
+    sed -e 's/:group:wheel:/:group:sudo:/' -i /sysroot/usr/lib/tmpfiles.d/systemd.conf
+
   - mkdir -p "${OSTREE_REPO}"
   - ostree init --repo="${OSTREE_REPO}" --mode=archive
   - mv /sysroot/etc /sysroot/usr/etc
