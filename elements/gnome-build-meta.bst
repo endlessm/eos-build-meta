@@ -9,4 +9,5 @@ sources:
 config:
   overrides:
     core/meta-gnome-core-apps.bst: core/meta-gnome-core-apps.bst
+    core-deps/accountsservice.bst: components/accountsservice.bst
     freedesktop-sdk.bst: freedesktop-sdk.bst
