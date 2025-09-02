@@ -64,7 +64,6 @@ config:
     systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/basic.conf --group lp --static-id 7
     systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/basic.conf --group sudo --static-id 27
     systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/basic.conf --group utmp --static-id 43
-    systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/cups.conf --user lp --static-id 7
     systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/polkit.conf --user polkitd --static-id 105
     systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/systemd-journal.conf --group systemd-journal --static-id 121
     systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/systemd-timesync.conf --user systemd-timesync --static-id 133
