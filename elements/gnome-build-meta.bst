@@ -8,5 +8,6 @@ sources:
 
 config:
   overrides:
+    core/gnome-initial-setup.bst: components/gnome-initial-setup.bst
     core/meta-gnome-core-apps.bst: core/meta-gnome-core-apps.bst
     freedesktop-sdk.bst: freedesktop-sdk.bst
