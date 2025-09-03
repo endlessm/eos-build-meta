@@ -1,0 +1,45 @@
+From 500bc0a1f050df1223b5d2d17bfdba196cc952f9 Mon Sep 17 00:00:00 2001
+From: Zeeshan Ali Khan <zeenix@gmail.com>
+Date: Wed, 3 Sep 2025 18:00:23 +0200
+Subject: [PATCH] Hide GNOME sessions
+
+Hide the GNOME sessions (both Wayland and Xorg).
+
+https://phabricator.endlessm.com/T29401
+
+Based on a patch from Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+---
+ data/gnome-wayland.desktop.in.in | 1 +
+ data/gnome-xorg.desktop.in.in    | 1 +
+ data/gnome.desktop.in.in         | 1 +
+ 3 files changed, 3 insertions(+)
+
+diff --git a/data/gnome-wayland.desktop.in.in b/data/gnome-wayland.desktop.in.in
+index b747802d..f58e5844 100644
+--- a/data/gnome-wayland.desktop.in.in
++++ b/data/gnome-wayland.desktop.in.in
+@@ -7,3 +7,4 @@ Type=Application
+ DesktopNames=GNOME
+ X-GDM-SessionRegisters=true
+ X-GDM-CanRunHeadless=true
++Hidden=true
+diff --git a/data/gnome-xorg.desktop.in.in b/data/gnome-xorg.desktop.in.in
+index 9a76fac8..7c31b430 100644
+--- a/data/gnome-xorg.desktop.in.in
++++ b/data/gnome-xorg.desktop.in.in
+@@ -6,3 +6,4 @@ TryExec=@bindir@/gnome-session
+ Type=Application
+ DesktopNames=GNOME
+ X-GDM-SessionRegisters=true
++Hidden=true
+diff --git a/data/gnome.desktop.in.in b/data/gnome.desktop.in.in
+index e3d4edaf..bb48d1cc 100644
+--- a/data/gnome.desktop.in.in
++++ b/data/gnome.desktop.in.in
+@@ -7,3 +7,4 @@ Type=Application
+ DesktopNames=GNOME
+ X-GDM-SessionRegisters=true
+ X-GDM-CanRunHeadless=@canrunheadless@
++Hidden=true
+--
+2.51.0
