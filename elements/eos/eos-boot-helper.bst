@@ -14,6 +14,10 @@ build-depends:
 - freedesktop-sdk.bst:components/systemd.bst
 - freedesktop-sdk.bst:public-stacks/buildsystem-autotools.bst
 
+depends:
+# For `record-boot-success` program.
+- components/python3-systemd.bst
+
 variables:
   conf-local: "--with-modprobedir=%{prefix}/lib/modprobe.d --libexecdir=%{prefix}/lib/eos-boot-helper"
 
