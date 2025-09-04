@@ -6,6 +6,8 @@ description: |
   <https://gitlab.gnome.org/GNOME/gnome-build-meta/-/blob/master/elements/gnomeos/initramfs/deps.bst>.
 
 depends:
+- eos/initramfs/busybox.bst
+- eos/initramfs/dash.bst
 - freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
 - freedesktop-sdk.bst:components/btrfs-progs.bst
 - freedesktop-sdk.bst:components/cpio.bst
