@@ -48,8 +48,7 @@ config:
   - |
     version="$(ls -1 /lib/modules | head -n1)"
     mkdir -p "%{install-root}/usr/lib/modules/${version}"
-    dracut -v --xz --reproducible --fstab \
-           --no-machineid \
+    dracut -v --reproducible \
            --kver "${version}" \
            "%{install-root}/usr/lib/modules/${version}/initramfs"
   # Move the kernel where the initramfs will find it.
