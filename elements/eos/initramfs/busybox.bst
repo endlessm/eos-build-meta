@@ -14,13 +14,19 @@ variables:
   build-dir: "%{build-root}/build"
   make-args: >-
     KCONFIG_NOTIMESTAMP=1
+    CONFIG_PREFIX=%{install-root}%{prefix}
 
 config:
   configure-commands:
   - |
     mkdir %{build-dir}
-    # Busybox's default config has everything enabled
-    make O="%{build-dir}" defconfig
+  # Build the default config, with everything enabled.
+  - |
+    make O="%{build-dir}" %{make-args} defconfig
+  # Disable applet symlinks. The dracut 'busybox' module only needs the 'busybox' binary.
+  - |
+    sed -e 's@^CONFIG_INSTALL_APPLET_SYMLINKS=y@# CONFIG_INSTALL_APPLET_SYMLINKS is not set@' -i %{build-dir}/.config
+    sed -e 's@.*CONFIG_INSTALL_APPLET_DONT.*@CONFIG_INSTALL_APPLET_DONT=y@' -i %{build-dir}/.config
 
   build-commands:
   - |
@@ -28,4 +34,4 @@ config:
 
   install-commands:
   - |
-    cd %{build-dir} && make install CONFIG_PREFIX=%{install-root}
+    cd %{build-dir} && make install %{make-args}
