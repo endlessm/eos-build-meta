@@ -51,7 +51,3 @@ config:
     dracut -v --reproducible \
            --kver "${version}" \
            "%{install-root}/usr/lib/modules/${version}/initramfs"
-  # Move the kernel where the initramfs will find it.
-  - |
-    version="$(ls -1 /lib/modules | head -n1)"
-    cp /boot/vmlinuz "%{install-root}/usr/lib/modules/${version}/vmlinuz"
