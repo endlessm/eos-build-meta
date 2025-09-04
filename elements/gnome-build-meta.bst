@@ -9,4 +9,5 @@ sources:
 config:
   overrides:
     core/meta-gnome-core-apps.bst: core/meta-gnome-core-apps.bst
+    core/gnome-session.bst: core/gnome-session.bst
     freedesktop-sdk.bst: freedesktop-sdk.bst

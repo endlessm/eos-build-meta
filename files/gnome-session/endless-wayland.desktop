@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Endless on Wayland
+Comment=This session logs you into Endless
+Exec=env GNOME_SHELL_SESSION_MODE=endless /usr/bin/gnome-session --session=gnome
+TryExec=/usr/bin/gnome-shell
+Type=Application
+DesktopNames=Endless:GNOME
+X-GDM-SessionRegisters=true
