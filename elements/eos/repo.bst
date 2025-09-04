@@ -50,6 +50,7 @@ config:
   # Move the kernel where OSTree will find it.
   - |
     version="$(ls -1 /lib/modules | head -n1)"
+    mkdir -p "%{install-root}/usr/lib/modules/${version}"
     cp /boot/vmlinuz "%{install-root}/usr/lib/modules/${version}/vmlinuz"
 
   # Apply Endless OS specific configuration to systemd-sysusers config.
