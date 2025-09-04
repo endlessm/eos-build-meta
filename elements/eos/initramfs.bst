@@ -12,25 +12,13 @@ build-depends:
 - freedesktop-sdk.bst:components/dracut.bst
 - freedesktop-sdk.bst:components/linux.bst
 - freedesktop-sdk.bst:components/ostree.bst
-#- freedesktop-sdk.bst:vm/prepare-image.bst
-# FIXME: Requires FDSDK 25.08
-#- freedesktop-sdk.bst:components/fakecap.bst
-
-#environment:
-# FIXME: Requires FDSDK 25.08
-#  LD_PRELOAD: /usr/libexec/fakecap/fakecap.so
-#  FAKECAP_DB: /fakecap
 
 config:
 
   commands:
-  - mkdir -p /fakecap
   - mkdir -p /tmp
   - mkdir -p /var/tmp
   - mkdir -p /efi
-
-  #- |
-  #  prepare-image.sh >/tmp/vars
 
   - |
     initial_scripts=/etc/fdsdk/initial_scripts
@@ -53,13 +41,10 @@ config:
   - |
     mkdir -p "%{install-root}/usr/lib/"
     cp -r /usr/lib/modules "%{install-root}/usr/lib/"
-  #- |
-  # echo '%{libdir}' >/etc/ld.so.conf
 
   # Build the initramfs using dracut.
   #
   # Note that the Dracut config is installed into /etc/ from the `eos/eos-boot-helper.bst`.
-
   - |
     version="$(ls -1 /lib/modules | head -n1)"
     mkdir -p "%{install-root}/usr/lib/modules/${version}"
