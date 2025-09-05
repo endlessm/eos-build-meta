@@ -9,6 +9,7 @@ description: |
   repo in `archive` format with a single commit and a single branch.
 
 build-depends:
+- freedesktop-sdk.bst:components/linux.bst
 - freedesktop-sdk.bst:components/ostree.bst
 - freedesktop-sdk.bst:vm/deploy-tools.bst
 - freedesktop-sdk.bst:vm/prepare-image.bst
@@ -45,6 +46,12 @@ config:
        --rootsource /dev/gpt-auto-root \
        --efisource LABEL=EFI \
        --efipath /boot
+
+  # Move the kernel where OSTree will find it.
+  - |
+    version="$(ls -1 /lib/modules | head -n1)"
+    mkdir -p "/sysroot/usr/lib/modules/${version}"
+    cp /boot/vmlinuz "/sysroot/usr/lib/modules/${version}/vmlinuz"
 
   # Apply Endless OS specific configuration to systemd-sysusers config.
   #
