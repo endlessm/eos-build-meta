@@ -10,6 +10,7 @@ depends:
 # Low level OS elements.
 - eos/config/ostree.bst
 - eos/config/systemd-sysusers.bst
+- eos/efi-binaries.bst
 - eos/eos-keyring.bst
 - eos/grub.bst
 - freedesktop-sdk.bst:components/dracut.bst
