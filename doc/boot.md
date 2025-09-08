@@ -35,7 +35,11 @@ configuration.
 The ESP is the first partition of every EOS7 disk image. The partition is
 constructed by eos-image-builder.
 
+<<<<<<< Updated upstream
 Endless OS's ESP provides two entries:
+=======
+Endless OS's ESP provides two boot entries:
+>>>>>>> Stashed changes
 
   * `EFI/BOOT`: the "default" entry, expected to run on first boot.
   * `EFI/endless`: the "endless" entry, run on subsequent boots.
@@ -52,9 +56,82 @@ trusted signature. In practice, vendor firmwares only trust Microsoft's
 signature. So the main Shim binary is signed with Microsoft's key, requested
 via the [shim-review repo](https://github.com/endlessm/shim-review).
 
+<<<<<<< Updated upstream
 
 This is done
 
 As the first application loaded by the firmware, 
 
 having to sign binaries with 
+=======
+The Shim binary is configured to load the second stage bootloader, and check
+its signature against Endless's signing certificate.
+
+Shim provides two supplementary applications:
+
+  * `fbx64.efi`, the "fallback" bootloader. This runs if the machine's firmware
+    configuration is empty. 
+  * `mmx64.efi`, the MOK manager. This allows the machine owner to configure
+    Shim's chain of trust.
+
+Shim is currently not built from source in EOS7. Prebuilt signed binaries are
+committed to eos-build-meta.git. These are added to the filesystem tree at
+`/usr/share/efi_binaries`. From here, eos-image-builder copies them into the
+ESP.
+
+See also:
+
+  * Issue 94: ["Build and ship Shim binaries in eos-build-meta"](https://github.com/endlessm/eos-build-meta/issues/94)
+
+## 4. GRUB
+
+EOS7 uses GNU GRUB to boot. 
+
+The GRUB UEFI application is built by the element `eos/grub.bst` and installed
+to `/usr/share/efi_binaries`, where eos-image-builder moves it into the ESP.
+
+GRUB configuration is also defined in this repo, and installed to
+`/usr/lib/grub/conf` in the filesystem tree. This defines the path where
+GRUB loads the initramfs and kernel. As EOS7 is deployed using OSTree,
+the initramfs and kernel are deployed by OSTree to special paths.
+
+## 5. Linux
+
+The kernel is used directly from Freedesktop SDK. This is due to change
+in [issue #10](https://github.com/endlessm/eos-build-meta/issues/10).
+
+The built kernel is installed in the filesystem inside `/usr/lib/modules`
+in the final `eos/repo.bst` element. Its configuration is available
+alongside the kernel under the name `.config`.
+
+# 6. initramfs
+
+The initramfs is built specially for EOS7, and has some differences
+compared to GNOME OS. Configuration is found in the
+[eos-boot-helper](https://github.com/endlessm/eos-boot-helper) repo
+in the `dracut/` subdirectory.
+
+See the element `eos/initramfs.bst` for build rules.
+
+On first boot, the initramfs resizes the root partition using the
+`endless-repartition` module. This is similar to the more modern
+systemd-repart tool.
+
+The root filesystem is set up by the `switchroot` dracut module
+provided by OSTree, based on configuration on the kernel commandline.
+
+# 7. Root file system
+
+The root filesystem is deployed using OSTree. This means the root
+disk partition is not mounted at `/` like in most Linux systems, but
+at `/sysroot`.
+
+The top level directories found in `/` are created in the
+element `eos/config/ostree.bst` and become part of the root
+filesystem committed to OSTree. They are then recreated by
+OSTree when the tree is deployed.
+
+See also:
+
+  * [OSTree documentation](https://ostreedev.github.io/ostree/introduction/)
+>>>>>>> Stashed changes
