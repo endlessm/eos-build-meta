@@ -37,6 +37,12 @@ config:
   - ln -s var/roothome "%{install-root}/root"
   - ln -s run/media "%{install-root}/media"
 
+  # Special undocumented support for encrypted file systems using fscrypt.
+  # In Endless OS, the root partition is mounted at `/sysroot/`. The files in
+  # `/` are put there by OSTree when it checks out a tree. This symlink helps
+  # fscrypt to find its state directory.
+  - ln -s sysroot/.fscrypt "%{install-root}/.fscrypt"
+
   - install -Dm644 -t "%{install-root}/usr/lib/tmpfiles.d" ostree.conf
 
 sources:
