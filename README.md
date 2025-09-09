@@ -9,13 +9,14 @@ It is derived from [GNOME OS](https://os.gnome.org/), which is defined in the
 [GNOME Build Metadata](https://gitlab.gnome.org/GNOME/gnome-build-meta/)
 project.
 
-Documentation for developers working on EOS7 can be found:
+EOS7 has documentation in this repository, starting with this README.
 
-  * In this README, for an overview.
-  * In [`doc/boot.md`](./doc/boot.md), covering how components involved in
-    the EOS7 boot process are built and configured.
-  * In [`doc/sysusers.md`](./doc/sysusers.md), covering how system users IDs
-    are allocated.
+Overview documentation for understand the EOS7 architecture is in `doc/overview`:
+
+  * [`doc/overview/boot.md`](./doc/overview/boot.md), covering how
+    components involved in the EOS7 boot process are built and configured.
+  * [`doc/overview/sysusers.md`](./doc/sysusers.md), covering how system
+    users IDs are allocated.
 
 ## Build outputs
 
