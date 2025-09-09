@@ -1,7 +1,9 @@
 # Endless OS Build Metadata
 
-The Endless OS Build Metadata repository is where the Endless OS team manages
-build metadata for Endless OS.
+The EOS7 build process is split into two stages:
+
+  1. OSTree build (defined in [eos-build-meta.git](https://github.com/endlessm/eos-build-meta/))
+  2. Image build (defined in [eos-image-builder.git](https://github.com/endlessm/eos-image-builder))
 
 The content of this repository is a
 [BuildStream](https://www.buildstream.build/) project.
@@ -9,7 +11,14 @@ It is derived from [GNOME OS](https://os.gnome.org/), which is defined in the
 [GNOME Build Metadata](https://gitlab.gnome.org/GNOME/gnome-build-meta/)
 project.
 
+It also contains the Github Actions workflows that build official EOS builds.
+
 EOS7 has documentation in this repository, starting with this README.
+
+How to documentation for contributors:
+
+  * [`doc/howto/build.md`](./doc/howto/build.md), how to build EOS7
+  * [`doc/howto/test.md`](./doc/howto/test.md), how to test EOS7
 
 Overview documentation for understand the EOS7 architecture is in `doc/overview`:
 
@@ -17,18 +26,6 @@ Overview documentation for understand the EOS7 architecture is in `doc/overview`
     components involved in the EOS7 boot process are built and configured.
   * [`doc/overview/sysusers.md`](./doc/sysusers.md), covering how system
     users IDs are allocated.
-
-## Build outputs
-
-All versions of Endless OS are deployed using OSTree.
-
-This repo contains one toplevel element, `eos/repo.bst` which outputs
-an artifact with an OSTree repo containing a filesystem tree. This tree
-can be deployed as an update to existing systems, or used to build a
-bootable image.
-
-The build and release workflows are implemented using Github Actions,
-in this repo.
 
 ## Maintaining
 
@@ -82,35 +79,3 @@ overriden be updated accordingly.
 
 If an element was overridden to backport some changes and there is nothing more
 to get from the junction, the junctioned element and its files can be removed.
-
-### Local builds
-
-It is possible to build and deploy development-only builds of Endless OS
-manually.
-
-You'll need to set up BuildStream with the necessary plugins and their
-dependencies.
-
-You can then use the Makefile to do the following:
-
-  * Create fake signing keys: `make ostree-gpg`
-  * Create/update a local OSTree repo from the `eos/repo.bst` element: `make ostree-repo`
-  * Serve the repo over HTTP: `make ostree-serve`
-
-On the target device, add an OSTree remote pointing to that machine.
-Here's an example of how to do this on the target device.  The GPG public key
-used this available in file: ``.
-
-    # Replace `server` with address or hostname of the machine serving the repo. 
-    sudo ostree remote add dev http://server:8000
-
-    # Paste in public key from `files/ostree-config/eos.gpg`, then CTRL-D.
-    sudo ostree remote gpg-import dev --stdin
-
-You can now pull and deploy the new tree as follows:
-
-    sudo ostree pull dev eos-buildstream
-    sudo ostree admin deploy eos-buildstream
-
-If the deploy succeeds, you can now reboot the target machine into your
-newly built OS.
