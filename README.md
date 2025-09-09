@@ -12,6 +12,7 @@ project.
 EOS7 has documentation in this repository, starting with this README.
 
   * [`doc/howto/build.md`](./doc/howto/build.md), how to build EOS7
+  * [`doc/howto/test.md`](./doc/howto/test.md), how to test EOS7
 
 Overview documentation for understand the EOS7 architecture is in `doc/overview`:
 
