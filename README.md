@@ -9,6 +9,14 @@ It is derived from [GNOME OS](https://os.gnome.org/), which is defined in the
 [GNOME Build Metadata](https://gitlab.gnome.org/GNOME/gnome-build-meta/)
 project.
 
+Documentation for developers working on EOS7 can be found:
+
+  * In this README, for an overview.
+  * In [`doc/boot.md`](./doc/boot.md), covering how components involved in
+    the EOS7 boot process are built and configured.
+  * In [`doc/sysusers.md`](./doc/sysusers.md), covering how system users IDs
+    are allocated.
+
 ## Build outputs
 
 All versions of Endless OS are deployed using OSTree.
