@@ -9,6 +9,7 @@ description: |
   repo in `archive` format with a single commit and a single branch.
 
 build-depends:
+- freedesktop-sdk.bst:components/linux.bst
 - freedesktop-sdk.bst:components/ostree.bst
 - freedesktop-sdk.bst:vm/deploy-tools.bst
 - freedesktop-sdk.bst:vm/prepare-image.bst
@@ -46,6 +47,12 @@ config:
        --efisource LABEL=EFI \
        --efipath /boot
 
+  # Move the kernel where OSTree will find it.
+  - |
+    version="$(ls -1 /lib/modules | head -n1)"
+    mkdir -p "/sysroot/usr/lib/modules/${version}"
+    cp /boot/vmlinuz "/sysroot/usr/lib/modules/${version}/vmlinuz"
+
   # Apply Endless OS specific configuration to systemd-sysusers config.
   #
   # These changes are needed for backwards compatibility with existing EOS6
@@ -64,10 +71,14 @@ config:
     systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/basic.conf --group lp --static-id 7
     systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/basic.conf --group sudo --static-id 27
     systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/basic.conf --group utmp --static-id 43
-    systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/cups.conf --user lp --static-id 7
     systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/polkit.conf --user polkitd --static-id 105
     systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/systemd-journal.conf --group systemd-journal --static-id 121
     systemd_sysusers_override.py /sysroot/usr/lib/sysusers.d/systemd-timesync.conf --user systemd-timesync --static-id 133
+
+  # Update tmpfiles.d configs for 'wheel' group rename.
+  - |
+    sed -e 's/ wheel / sudo /' -i /sysroot/usr/lib/tmpfiles.d/cups.conf
+    sed -e 's/:group:wheel:/:group:sudo:/' -i /sysroot/usr/lib/tmpfiles.d/systemd.conf
 
   - mkdir -p "${OSTREE_REPO}"
   - ostree init --repo="${OSTREE_REPO}" --mode=archive
