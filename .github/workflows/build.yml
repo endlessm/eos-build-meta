@@ -131,10 +131,10 @@ jobs:
         env:
           product: eos
           platform: amd64
-          branch: eos7
+          branch: master
 
           build_element: eos/repo.bst
-          build_ref: "os/eos/amd64/eos7"
+          build_ref: "os/eos/amd64/master"
 
           ostree_gpg_key_id: "00EA12D9A37DD2A7BD810643DFB958DC725AE7CA"
 
