@@ -115,7 +115,6 @@ config:
     echo "Removing module signing key."
     rm %{modules-key}
 
-
   (?):
     - signed_boot == "snakeoil":
         configure-commands:

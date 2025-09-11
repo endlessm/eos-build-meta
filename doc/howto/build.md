@@ -87,6 +87,14 @@ The recommended way to install the BuildStream is in a venv, using
     uv venv ./_venv
     uv pip install -p ./_venv -r utils/requirements.txt
 
+Run BuildStream from inside the `./bst.venv/bin` directory as follows:
+
+    ./bst.venv/bin/bst
+
+(If you don't want to type out the full path every time, there are several ways
+to make this program run in your shell when you type `bst`, such as a shell
+alias, a symlink from ~/.local/bin, or by activating the venv).
+
 Depending on your operating system, you might need to install some system
 packages. You will need at least `make`.
 

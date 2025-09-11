@@ -12,6 +12,7 @@ build-depends:
 - freedesktop-sdk.bst:components/ostree.bst
 - freedesktop-sdk.bst:vm/deploy-tools.bst
 - freedesktop-sdk.bst:vm/prepare-image.bst
+- components/linux.bst
 - eos/initial-scripts.bst
 - tools/systemd-sysusers-override.bst
 - filename: eos/filesystem.bst
@@ -19,14 +20,14 @@ build-depends:
     location: '/sysroot'
 
 (?):
-  - signed_boot == "eos-sb-signer":
+  - signed_boot == "endless":
       build-depends:
         (>):
-          - eos/signed-kernel.bst
+          - signing/signed-kernel-endless.bst
   - signed_boot == "snakeoil":
       build-depends:
         (>):
-          - eos/signed-kernel-snakeoil.bst
+          - signing/signed-kernel-snakeoil.bst
 
 variables:
   uuidnamespace: 731a6fa6-5071-4d7b-8e0d-b81a66a590bc
@@ -60,7 +61,7 @@ config:
   - |
     version="$(ls -1 /sysroot/usr/lib/modules | head -n1)"
     mkdir -p "/sysroot/usr/lib/modules/${version}"
-    cp /boot/vmlinuz "/sysroot/usr/lib/modules/${version}/vmlinuz"
+    cp /boot/vmlinuz.signed "/sysroot/usr/lib/modules/${version}/vmlinuz"
 
   # Apply Endless OS specific configuration to systemd-sysusers config.
   #

@@ -11,6 +11,14 @@ click == 8.2.1
 # buildstream-plugins-community.
 dulwich
 
+# Required by eos-sb-signer element plugin, used when option `signed_boot` is
+# set to "endless"
+#
+# The `pypy13` package on PyPI is a temporary fork of `pypg` with
+# necessary modernizations as documented at:
+# <https://pypi.org/project/PGPy13/>
+pgpy13
+
 # Requests is required by various non-core BuildStream plugins.
 requests
 
