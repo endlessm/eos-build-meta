@@ -1,0 +1,9 @@
+sources:
+- kind: git_repo
+  url: kernel:linux/kernel/git/stable/linux.git
+  track: v*
+  exclude:
+  - '*-rc*'
+  ref: v6.16-0-g038d61fd642278bab63ee8ef722c50d10ab01e8f
+- kind: patch_queue
+  path: patches/linux
