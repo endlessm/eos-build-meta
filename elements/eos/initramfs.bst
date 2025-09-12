@@ -5,6 +5,11 @@ description: |
   The initramfs is systemd-based. It includes OSTree's Dracut module which runs
   `ostree-prepare-root.service` at boot time to set up the root filesystem.
 
+  Dracut builds the initramfs based on configuration files in `/etc/dracut`:
+
+    * endless.conf, from `eos/eos-boot-helper.bst`
+    * ostree.conf, from `freedesktop-sdk.bst:components/ostree.bst`
+
 build-depends:
 - eos/eos-boot-helper.bst
 - eos/initramfs/deps.bst
@@ -35,8 +40,6 @@ config:
     cp -r /usr/lib/modules "%{install-root}/usr/lib/"
 
   # Build the initramfs using dracut.
-  #
-  # Note that the Dracut config is installed into /etc/ from the `eos/eos-boot-helper.bst`.
   - |
     version="$(ls -1 /lib/modules | head -n1)"
     mkdir -p "%{install-root}/usr/lib/modules/${version}"
