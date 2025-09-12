@@ -11,8 +11,8 @@ depends:
 - freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
 - freedesktop-sdk.bst:components/btrfs-progs.bst
 - freedesktop-sdk.bst:components/cpio.bst
-- freedesktop-sdk.bst:components/dbus.bst
-- freedesktop-sdk.bst:components/fuse3.bst
+- freedesktop-sdk.bst:components/efivar.bst
+- freedesktop-sdk.bst:components/kmod.bst
 - freedesktop-sdk.bst:components/linux-firmware.bst
 - freedesktop-sdk.bst:components/pkg-config.bst
 - freedesktop-sdk.bst:components/shadow.bst
