@@ -39,6 +39,10 @@ config:
     mkdir -p "%{install-root}/usr/lib/"
     cp -r /usr/lib/modules "%{install-root}/usr/lib/"
 
+  # Dracut uses this information to find loadable shared objects.
+  - |
+    echo '%{libdir}' >> /etc/ld.so.conf
+
   # Build the initramfs using dracut.
   #
   # We tee stderr to a file for post-processing.
