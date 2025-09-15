@@ -15,7 +15,7 @@ It also contains the Github Actions workflows that build official EOS builds.
 
 EOS7 has documentation in this repository, starting with this README.
 
-How to documentation for contributors:
+Tutorial documentation for contributors is in `doc/howto`:
 
   * [`doc/howto/build.md`](./doc/howto/build.md), how to build EOS7
   * [`doc/howto/test.md`](./doc/howto/test.md), how to test EOS7
