@@ -11,12 +11,10 @@ The EOS7 build process is split into two stages, and so is this guide:
   2. Image build (defined in [eos-image-builder.git](https://github.com/endlessm/eos-image-builder))
 
 In many cases you only need to run the ostree build, as you can test a new
-ostree build by deploying it as an update to an existing machine.
+ostree build by deploying it as an update to an existing machine, as documented
+in `doc/howto/test.md`.
 
-See [doc/howto/test.md](./test.md) for a guide to testing builds of the
-ostree and the image stages.
-
-## Building the OSTree stage
+## OSTree build stage
 
 ### Automated Builds
 
@@ -197,4 +195,59 @@ output.
 
 ## Image build stage
 
-To be written separately in https://github.com/endlessm/eos-build-meta/issues/104
+### Automated builds
+
+Image builds of 'master' run nightly in a private Jenkins instance. (If you
+have access, look for the job "nightly-master-pipeline").
+
+If the nightly job succeeds, it uploads images to a private file server at
+images.endless.org, under `/files/nightly/`.
+
+### Local builds
+
+#### Prerequisites
+
+You need a fast x86_64 machine with plenty of disk space and IO.
+
+Note that the eos-image-builder tool needs to run as the `root` user. It cannot
+run inside of container tools like Podman or Toolbox.
+
+#### Setup steps
+
+Clone [eos-image-builder.git](https://github.com/endlessm/eos-image-builder).
+
+Set up your `config/local.ini` file, which overrides the default image build
+config. There are some suggestions below for what to configure, and see also
+`config/local.ini.example` for more guidance.
+
+##### `[ostree]`
+
+If you're building an image from the 'master' ostree branch, leave the
+`[ostree]` settings as their defaults.
+
+If you built the ostree stage locally, configure eos-image-builder to
+pull from wherever it is -- here's an example pulling from `localhost`:
+
+    [ostree]
+    deploy_server_url = http://127.0.0.1:8000
+    pull_server_url = http://127.0.0.1:8000
+    dev_repo_path =
+    repo =
+
+You'll need to replace the GPG key in `data/keys` with the locally generated
+public key, exported as plain text with a `.asc` extension.
+
+Note that while you can put multiple keys in `data/keys`, only the last one
+will be used. The image builder maintains a repo in its cache, which embeds
+the public key. It won't update the cache if you change files in `data/keys`,
+you need to do that, or you'll see OSTree pull failures if you switch between
+local and CI builds.
+
+#### Build steps
+
+Run this command in the eos-image-builder.git clone:
+
+    sudo ./eos-image-builder
+
+On success, it will tell you where to find your new image. See
+`docs/howto/test.md` for a guide to testing.

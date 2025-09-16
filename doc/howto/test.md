@@ -55,3 +55,39 @@ Reboot the machine to start the new version of EOS7.
 The `make ostree-serve` target runs `utils/run-local-repo.sh`. By default this
 uses a slow webserver built into Python. If `caddy` is available it'll use that
 and things will go much faster.
+
+## Testing the Image stage
+
+Image builds are under development. At time of writing you can test the following:
+
+  * Booting the disk image directly, from UEFI firmware with Secure Boot checks
+    disabled.
+
+The following is coming later:
+
+  * Booting the disk image directly, with UEFI Secure Boot checks enabled.
+  * Bootable media (live USBs), with option to install as the main OS.
+
+It's possible to test in a virtual machine, or on real hardware.
+
+### Virtual machines
+
+The following options are options you have for setting up virtual machines.
+
+1. Use QEMU directly. Some guidance on its many commandline options are
+   available in freedesktop-sdk
+   [BOOTABLE_IMAGES.md](https://gitlab.com/freedesktop-sdk/freedesktop-sdk/-/blob/master/BOOTABLE_IMAGES.md).
+2. Use libvirt and virt-manager.
+3. Use GNOME Boxes.
+
+Note that QEMU and libvirt will boot to an old-school BIOS firmware by default.
+You need to opt in explicitly to the newer TianoCore OMVF2 firmware which
+implements UEFI. GNOME Boxes defaults to UEFI.
+
+### Test steps
+
+1. Boot the disk image.
+
+2. Run through initial setup to create a user.
+
+3. Ensure the desktop works as you expect.
