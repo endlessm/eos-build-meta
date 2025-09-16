@@ -1,0 +1,14 @@
+NAME="Endless OS"
+VERSION=@SDK_BRANCH@
+VERSION_ID=@SDK_BRANCH@
+ID="endless"
+ID_LIKE="org.gnome.os org.freedesktop.platform"
+PRETTY_NAME="@FULL_NAME@ @SDK_BRANCH@"
+BUG_REPORT_URL="https://github.com/endlessm/eos-build-meta/issues/new"
+HOME_URL="https://endlessos.com/"
+LOGO=endlessos
+VARIANT="@VARIANT@"
+VARIANT_ID=@VARIANT_ID@
+IMAGE_VERSION=@IMAGE_VERSION@
+DEFAULT_HOSTNAME=eos
+EOS_COMMIT=@EOS_COMMIT@

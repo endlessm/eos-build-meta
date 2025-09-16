@@ -1,0 +1,4 @@
+option('branch', type : 'string', value : 'master')
+option('image-version', type : 'string')
+option('variant',  type : 'combo',
+       choices : ['user', 'devel'], value : 'user')
