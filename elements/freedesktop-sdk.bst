@@ -30,6 +30,7 @@ config:
     components/bash-config.bst: eos/config/bash-config.bst
     components/cups-base.bst: components/cups-base.bst
     components/dracut.bst: components/dracut.bst
+    components/flatpak.bst: components/flatpak.bst
     vm/config/sudo.bst: eos/config/sudo.bst
 
     # Overrides taken from gnome-build-meta

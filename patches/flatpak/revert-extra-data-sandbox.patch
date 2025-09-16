@@ -1,0 +1,47 @@
+commit 7f6177f3c786ee8752069620453f5b3847301d7b (HEAD -> main)
+Author: Sam Thursfield <sam.thursfield@codethink.co.uk>
+Date:   Mon Sep 15 18:27:25 2025 +0200
+
+    Revert "dir: Document the apply_extra_data run flags"
+    
+    This reverts commit bbac52e6afafdd664461f3ca94f5a816afc46282.
+    
+    The given commit adds `FLATPAK_RUN_FLAG_SANDBOX` to the call used
+    to run the extra_data install program.
+    
+    In EOS7 image builds, this extra level of security is a problem as we
+    run flatpak installs inside a chroot which doesn't allow creating
+    user namespaces.
+
+diff --git a/common/flatpak-dir.c b/common/flatpak-dir.c
+index a4575128..deb8bc4d 100644
+--- a/common/flatpak-dir.c
++++ b/common/flatpak-dir.c
+@@ -8798,22 +8798,15 @@ apply_extra_data (FlatpakDir   *self,
+                           "--cap-drop", "ALL",
+                           NULL);
+ 
+-  /* Run flags which equal flatpak run --sandbox */
+-  run_flags = (FLATPAK_RUN_FLAG_SANDBOX |
++  /* Might need multiarch in apply_extra (see e.g. #3742).
++   * Should be pretty safe in this limited context */
++  run_flags = (FLATPAK_RUN_FLAG_MULTIARCH |
+                FLATPAK_RUN_FLAG_NO_SESSION_HELPER |
++               FLATPAK_RUN_FLAG_NO_PROC |
+                FLATPAK_RUN_FLAG_NO_SESSION_BUS_PROXY |
+                FLATPAK_RUN_FLAG_NO_SYSTEM_BUS_PROXY |
+                FLATPAK_RUN_FLAG_NO_A11Y_BUS_PROXY);
+ 
+-  /* Might need multiarch in apply_extra (see e.g. #3742).
+-   * Should be pretty safe in this limited context. */
+-  run_flags |= FLATPAK_RUN_FLAG_MULTIARCH;
+-
+-  /* This sandbox is run as root and /proc/self/exe can sometimes be used to
+-   * access outside files (see cd21428).
+-   * Disable /proc entirely in this context. */
+-  run_flags |= FLATPAK_RUN_FLAG_NO_PROC;
+-
+   if (!flatpak_run_setup_base_argv (bwrap, runtime_files, NULL, runtime_arch,
+                                     run_flags, error))
+     return FALSE;
+
