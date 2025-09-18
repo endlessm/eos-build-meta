@@ -22,7 +22,7 @@ build-depends:
 
 depends:
 - freedesktop-sdk.bst:components/libgsystemservice.bst
-- freedesktop-sdk.bst:components/networkmanager.bst
+- gnome-build-meta.bst:core-deps/NetworkManager.bst
 - gnome-build-meta.bst:sdk/glib.bst
 
 public:
