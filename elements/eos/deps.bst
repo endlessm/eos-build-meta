@@ -43,6 +43,7 @@ depends:
 
 # Used by eos-image-builder. This could move into a separate tree.
 # See: <https://github.com/endlessm/eos-build-meta/issues/81>
+- freedesktop-sdk.bst:components/squashfs-tools.bst
 - components/pigz.bst
 
 # GNOME Shell Extensions
