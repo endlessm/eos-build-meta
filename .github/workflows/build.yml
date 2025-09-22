@@ -59,6 +59,21 @@ jobs:
           echo "${OSTREE_BUILDER_SSH_PRIVATE}" > $HOME/.ssh/ostree_ssh
           chmod 600 $HOME/.ssh/ostree_ssh
 
+      - name: Setup image version
+        run: |
+          build_num="${GITHUB_RUN_ID}"
+          if [ "${GITHUB_REF_NAME-}" = main ]; then
+            IMAGE_VERSION="nightly.$build_num"
+          else
+            # Assume this will always be a stable branch string like "gnome-44"
+            IMAGE_VERSION=$(echo "${GITHUB_REF_NAME:-unknown}.$build_num" | sed "s|/|_|g" | sed "s|-|_|g")
+          fi
+          echo "image-version: ${IMAGE_VERSION}" > include/image-version.yml
+          export IMAGE_VERSION
+          commit_time=$(git log -1 --format=format:%ct)
+          echo "filesystem-time: ${commit_time}" >> include/image-version.yml
+          cat include/image-version.yml
+
       - name: Install BuildStream and dependencies
         run: |
           sudo apt-get update
