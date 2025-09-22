@@ -74,7 +74,7 @@ jobs:
             ostree flatpak-builder
           python3 -m venv venv
           source venv/bin/activate
-          pip install BuildStream buildstream-plugins dulwich requests tomlkit
+          pip install BuildStream buildstream-plugins Click==8.2.1 dulwich requests tomlkit
 
       - name: Configure BuildStream
         run: |
