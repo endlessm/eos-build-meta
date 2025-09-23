@@ -50,5 +50,9 @@ depends:
 - freedesktop-sdk.bst:components/mtools.bst
 - gnome-build-meta.bst:iso-deps/libisoburn.bst
 
+# Used by eos-image-builder to create VM image.
+# This could move into a separate tree.
+- gnome-build-meta.bst:core-deps/qemu.bst
+
 # GNOME Shell Extensions
 - eos/gnome-shell-extensions.bst
