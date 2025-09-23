@@ -81,12 +81,7 @@ jobs:
             python3-pip python3-venv bubblewrap \
             lzip xz-utils bzip2 gzip \
             git wget curl \
-            build-essential pkg-config \
-            autotools-dev automake autoconf libtool \
-            cmake ninja-build meson \
-            flex bison gettext \
-            libssl-dev libffi-dev \
-            ostree flatpak-builder
+            ostree
           python3 -m venv venv
           source venv/bin/activate
           pip install BuildStream buildstream-plugins Click==8.2.1 dulwich requests tomlkit
