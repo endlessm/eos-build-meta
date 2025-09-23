@@ -43,8 +43,12 @@ depends:
 
 # Used by eos-image-builder. This could move into a separate tree.
 # See: <https://github.com/endlessm/eos-build-meta/issues/81>
-- freedesktop-sdk.bst:components/squashfs-tools.bst
 - components/pigz.bst
+
+# Used by eos-image-builder to create ISO. This could move into a separate tree.
+- freedesktop-sdk.bst:components/squashfs-tools.bst
+- freedesktop-sdk.bst:components/mtools.bst
+- gnome-build-meta.bst:iso-deps/libisoburn.bst
 
 # GNOME Shell Extensions
 - eos/gnome-shell-extensions.bst
