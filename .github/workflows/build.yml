@@ -84,7 +84,7 @@ jobs:
             ostree
           python3 -m venv venv
           source venv/bin/activate
-          pip install BuildStream buildstream-plugins Click==8.2.1 dulwich requests tomlkit
+          pip install -r ./utils/requirements.txt
 
       - name: Configure BuildStream
         run: |
