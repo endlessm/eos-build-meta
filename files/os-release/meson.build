@@ -5,8 +5,6 @@ if branch_name == 'master'
   branch_name = 'Nightly'
 endif
 
-vcs_tag = run_command('git', 'rev-parse', '--short', '@', check: false).stdout().strip()
-
 conf_data = configuration_data({
   'SDK_BRANCH': branch_name
 })
@@ -14,7 +12,6 @@ conf_data = configuration_data({
 conf_data.set('ISSUE_NAME', 'Endless OS')
 conf_data.set('VARIANT_ID', get_option('variant'))
 conf_data.set('IMAGE_VERSION', get_option('image-version'))
-conf_data.set('EOS_COMMIT', vcs_tag)
 if get_option('variant') == 'devel'
   conf_data.set('VARIANT', 'Development')
   conf_data.set('FULL_NAME', 'Endless OS Development')
