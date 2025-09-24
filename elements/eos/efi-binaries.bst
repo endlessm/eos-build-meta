@@ -15,8 +15,13 @@ description: |
 build-depends:
   - freedesktop-sdk.bst:bootstrap-import.bst
 
-depends:
-  - eos/grub/grub-x86_64-efi.bst
+(?):
+  - signed_boot == "eos-sb-signer":
+      depends:
+        - eos/signed-grub.bst
+  - signed_boot == "snakeoil":
+      depends:
+        - eos/signed-grub-snakeoil.bst
 
 sources:
   # See `files/shim/README.md` for context about these files.
