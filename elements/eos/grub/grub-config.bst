@@ -2,7 +2,11 @@ kind: manual
 description: |
   Configuration files for GRUB.
 
-  These are used by `grub-install` at bootloader install time.
+  These are used by `grub-install` when installing the legacy BIOS
+  bootloader.
+
+  Note that all new EOS7 installs use UEFI, but existing systems with BIOS boot
+  are still supported.
 
 depends:
 - freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
