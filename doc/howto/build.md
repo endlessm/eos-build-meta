@@ -39,6 +39,8 @@ network connection.
   * A laptop is not a good choice unless it's very powerful. 
   * At least 100GB of disk space is recommended.
 
+The machine needs to run a modern Linux distribution.
+
 #### Important: Don't accept slow builds!
 
 The BuildStream elements in eos-build-meta define a pipeline that builds
@@ -71,15 +73,24 @@ Read the following before building to ensure you don't waste time:
 
 #### Setup steps
 
-##### Install BuildStream
+##### Install build tools
 
-Install BuildStream and the necessary plugins and dependencies. It's recommended
-to do this in venv, using [uv](https://docs.astral.sh/uv/), as follows:
+EOS7 uses BuildStream with various 3rd party plugins, all which are implemented
+in Python. Use `utils/requirements.txt` to get a set of known-good dependencies.
 
-    uv venv ./bst.venv
-    uv pip install -p ./bst.venv dulwich requests tomlkit
+The recommended way to install the BuildStream is in a venv, using
+[uv](https://docs.astral.sh/uv/), as follows:
 
-You might need to add more packages on your machine. See also:
+    uv venv ./_venv
+    uv pip install -p ./_venv -r utils/requirements.txt
+
+Depending on your operating system, you might need to install some system
+packages. You will need at least `make`.
+
+You can run BuildStream inside of a suitably configured container.
+[Toolbx](https://containertoolbx.org/) is known to work.
+
+See also:
 
   * The BuildStream reference manual's
     ["Installing Dependencies"](https://docs.buildstream.build/master/main_install.html#installing-dependencies)
