@@ -18,7 +18,13 @@ depends:
 - gnome-build-meta.bst:gnomeos-deps/plymouth-gnome-theme.bst
 - gnome-build-meta.bst:gnomeos-deps/intel-ucode.bst
 - gnome-build-meta.bst:gnomeos/os-release-user.bst
-# FIXME: Signing modules will be useful. In EOS7 we need to do this
-# differently vs GNOME OS.
-#- gnome-build-meta.bst:gnomeos/initramfs/signed-modules.bst
-#- gnomeos/initramfs/signed-nvidia-modules.bst
+
+(?):
+  - signed_boot == "eos-sb-signer":
+      depends:
+        (>):
+          - eos/signed-modules.bst
+  - signed_boot == "snakeoil":
+      depends:
+        (>):
+          - eos/signed-modules-snakeoil.bst

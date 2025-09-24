@@ -32,6 +32,7 @@ config:
     components/dracut.bst: components/dracut.bst
     components/flatpak.bst: components/flatpak.bst
     components/linux.bst: components/linux.bst
+    components/linux-module-cert.bst: eos/linux-module-cert.bst
     vm/config/sudo.bst: eos/config/sudo.bst
 
     # Overrides taken from gnome-build-meta
@@ -66,6 +67,5 @@ config:
     components/zenity.bst: gnome-build-meta.bst:void/zenity.bst
 
     components/xdg-desktop-portal-base.bst: gnome-build-meta.bst:core-deps/xdg-desktop-portal.bst
-    components/linux-module-cert.bst: gnome-build-meta.bst:gnomeos/linux-module-cert.bst
     components/systemd-base.bst: gnome-build-meta.bst:core-deps/systemd-base.bst
     components/systemd.bst: gnome-build-meta.bst:core-deps/systemd.bst

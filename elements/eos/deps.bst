@@ -57,3 +57,13 @@ depends:
 
 # GNOME Shell Extensions
 - eos/gnome-shell-extensions.bst
+
+(?):
+  - signed_boot == "eos-sb-signer":
+      depends:
+        (>):
+          - eos/signed-modules.bst
+  - signed_boot == "snakeoil":
+      depends:
+        (>):
+          - eos/signed-modules-snakeoil.bst

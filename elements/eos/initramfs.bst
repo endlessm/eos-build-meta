@@ -14,7 +14,6 @@ build-depends:
 - eos/eos-boot-helper.bst
 - eos/initramfs/deps.bst
 - freedesktop-sdk.bst:components/dracut.bst
-- freedesktop-sdk.bst:components/linux.bst
 - freedesktop-sdk.bst:components/ostree.bst
 
 config:
@@ -32,12 +31,6 @@ config:
     for version in $(ls "${sysroot}"/lib/modules/); do
         depmod -b "${sysroot}" -a "${version}";
     done
-
-  # FIXME: Installing kernel modules should move to a separate element. And we
-  # need to sign them with the linux modules cert as done in GNOME OS.
-  - |
-    mkdir -p "%{install-root}/usr/lib/"
-    cp -r /usr/lib/modules "%{install-root}/usr/lib/"
 
   # Dracut uses this information to find loadable shared objects.
   - |
