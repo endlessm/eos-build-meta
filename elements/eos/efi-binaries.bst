@@ -15,14 +15,6 @@ description: |
 build-depends:
   - freedesktop-sdk.bst:bootstrap-import.bst
 
-(?):
-  - signed_boot == "eos-sb-signer":
-      depends:
-        - eos/signed-grub.bst
-  - signed_boot == "snakeoil":
-      depends:
-        - eos/signed-grub-snakeoil.bst
-
 sources:
   # See `files/shim/README.md` for context about these files.
   - kind: local
@@ -33,6 +25,22 @@ sources:
     path: files/shim/mmx64.efi
   - kind: local
     path: files/shim/shimx64.efi
+
+(?):
+  - signed_boot == "eos-sb-signer":
+      depends:
+        - eos/signed-grub.bst
+
+  - signed_boot == "snakeoil":
+      depends:
+        - eos/signed-grub-snakeoil.bst
+      build-depends:
+        (>):
+          - freedesktop-sdk.bst:components/openssl.bst
+      sources:
+        (>):
+          - kind: local
+            path: files/boot-keys/VENDOR-snakeoil.crt
 
 config:
   install-commands:
@@ -52,3 +60,12 @@ config:
       install -D -m644 ./shimx64.efi %{install-root}/usr/lib/efi_binaries/EFI/BOOT/BOOTX64.EFI
       install -D -m644 ./fbx64.efi %{install-root}/usr/lib/efi_binaries/EFI/BOOT/
       install -D -m644 ./mmx64.efi %{install-root}/usr/lib/efi_binaries/EFI/BOOT/
+
+    - |
+      if [ -e "./VENDOR-snakeoil.crt" ]; then
+        echo "Development build: installing VENDOR-snakeoil certificate into ESP"
+        openssl x509 -in VENDOR-snakeoil.crt -outform DER -out VENDOR-snakeoil.der
+        install -D -m644 ./VENDOR-snakeoil.der %{install-root}/usr/lib/efi_binaries/EFI/
+      fi
+
+  strip-commands: []
