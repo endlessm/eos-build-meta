@@ -1,0 +1,77 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Zeeshan Ali Khan <zeenix@codethink.co.uk>
+Date: Tue, 24 Sep 2025 13:00:00 +0000
+Subject: [PATCH] [Endless] linux-pam: Add fscrypt support for home directory
+ encryption
+
+Add pam_fscrypt.so module to PAM configuration to enable automatic
+unlocking of fscrypt-encrypted home directories during login. This
+allows users with encrypted home directories to have them automatically
+decrypted using their login password.
+
+The pam_fscrypt module is added as optional to:
+- Auth stack: Captures the password during authentication.
+- Password stack: Updates fscrypt encryption when password changes.
+- Session stack: Manages encryption policies with drop_caches and
+  lock_policies options to properly clean up when sessions end.
+
+This patch must be applied after the other Endless PAM patches.
+
+https://github.com/endlessm/eos-build-meta/issues/33
+---
+ files/linux-pam-config/password-auth | 3 +++
+ files/linux-pam-config/system-auth   | 3 +++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/files/linux-pam-config/password-auth b/files/linux-pam-config/password-auth
+index 0e9e0f2a5..1234567890 100644
+--- a/files/linux-pam-config/password-auth
++++ b/files/linux-pam-config/password-auth
+@@ -1,6 +1,7 @@
+ auth        required      pam_env.so
+ -auth       sufficient    pam_systemd_home.so
+ auth        sufficient    pam_unix.so try_first_pass nullok_secure
++auth        optional      pam_fscrypt.so
+ auth        required      pam_deny.so
+
+ -account    sufficient    pam_systemd_home.so
+@@ -8,6 +9,7 @@ account     required      pam_unix.so
+
+ -password   sufficient    pam_systemd_home.so
+ password    sufficient    pam_unix.so try_first_pass nullok sha512 shadow
++password    optional      pam_fscrypt.so
+ password    required      pam_deny.so
+
+ -session    optional      pam_systemd_home.so
+@@ -20,3 +22,4 @@ session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet
+ # See "man pam_umask".
+ session     optional      pam_umask.so
+ session     required      pam_unix.so
++session     optional      pam_fscrypt.so drop_caches lock_policies
+diff --git a/files/linux-pam-config/system-auth b/files/linux-pam-config/system-auth
+index 0e9e0f2a5..1234567890 100644
+--- a/files/linux-pam-config/system-auth
++++ b/files/linux-pam-config/system-auth
+@@ -1,6 +1,7 @@
+ auth        required      pam_env.so
+ -auth       sufficient    pam_systemd_home.so
+ auth        sufficient    pam_unix.so try_first_pass nullok_secure
++auth        optional      pam_fscrypt.so
+ auth        required      pam_deny.so
+
+ -account    sufficient    pam_systemd_home.so
+@@ -8,6 +9,7 @@ account     required      pam_unix.so
+
+ -password   sufficient    pam_systemd_home.so
+ password    sufficient    pam_unix.so try_first_pass nullok sha512 shadow
++password    optional      pam_fscrypt.so
+ password    required      pam_deny.so
+
+ -session    optional      pam_systemd_home.so
+@@ -20,3 +22,4 @@ session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet
+ # See "man pam_umask".
+ session     optional      pam_umask.so
+ session     required      pam_unix.so
++session     optional      pam_fscrypt.so drop_caches lock_policies
+--
+2.49.0

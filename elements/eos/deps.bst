@@ -15,7 +15,7 @@ depends:
 - eos/eos-keyring.bst
 - eos/grub.bst
 - eos/initramfs.bst
-- freedesktop-sdk.bst:components/fscrypt.bst
+- eos/fscrypt.bst
 
 # GNOME OS elements.
 - gnome-build-meta.bst:gnomeos-deps/deps.bst
