@@ -18,6 +18,9 @@ debugged, read on.
 
 See below for a note on old-school BIOS boot.
 
+Some of these components are signed. For details on the signing processes,
+see [`doc/overview/signing.md`](./signing.md).
+
 ## 1. Machine firmware
 
 The firmware is provided by the machine vendor.  Vendors can ship firmware
@@ -155,3 +158,5 @@ involved in booting are as follows:
   5. Linux
   6. The initramfs
   7. The root filesystem.
+
+Note that there's no concept of "Secure Boot" when using BIOS boot.
