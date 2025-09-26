@@ -19,6 +19,10 @@ Note that local builds use an insecure signing key in all cases. See
 
 ## OSTree build stage
 
+See `doc/overview/build.md` for an overview of the OSTree build process and
+links to external documentation. Read on for instructions on how to run the
+OSTree build.
+
 ### Automated Builds
 
 Github Actions runs the OSTree build stage for each pull request open in
@@ -209,6 +213,10 @@ output.
 
 ## Image build stage
 
+See `doc/overview/build.md` for an overview of the image build process and
+links to external documentation. Read on for instructions on how to run the
+image build.
+
 ### Automated builds
 
 Image builds of 'master' run nightly in a private Jenkins instance. (If you
@@ -231,8 +239,11 @@ run inside of container tools like Podman or Toolbox.
 Clone [eos-image-builder.git](https://github.com/endlessm/eos-image-builder).
 
 Set up your `config/local.ini` file, which overrides the default image build
-config. There are some suggestions below for what to configure, and see also
-`config/local.ini.example` for more guidance.
+config. There are some suggestions below for what to configure.
+
+For more guidance, see the Endless Support & Training page
+["Endless OS Image Builder](https://support.endlessos.org/en/deployment/image-builder),
+and also check the `config/local.ini.example` file.
 
 ##### `[ostree]`
 
