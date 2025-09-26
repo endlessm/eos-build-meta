@@ -13,7 +13,8 @@ depends:
 - eos/efi-binaries.bst
 - eos/eos-boot-helper.bst
 - eos/eos-keyring.bst
-- eos/grub.bst
+- eos/grub/grub-i386-pc.bst
+- eos/grub/grub-config.bst
 - eos/initramfs.bst
 - freedesktop-sdk.bst:components/fscrypt.bst
 
@@ -56,3 +57,13 @@ depends:
 
 # GNOME Shell Extensions
 - eos/gnome-shell-extensions.bst
+
+(?):
+  - signed_boot == "eos-sb-signer":
+      depends:
+        (>):
+          - eos/signed-modules.bst
+  - signed_boot == "snakeoil":
+      depends:
+        (>):
+          - eos/signed-modules-snakeoil.bst

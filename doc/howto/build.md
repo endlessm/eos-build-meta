@@ -14,6 +14,9 @@ In many cases you only need to run the ostree build, as you can test a new
 ostree build by deploying it as an update to an existing machine, as documented
 in `doc/howto/test.md`.
 
+Note that local builds use an insecure signing key in all cases. See
+`doc/overview/signing.md` for details on how signing works in EOS7.
+
 ## OSTree build stage
 
 ### Automated Builds
@@ -259,6 +262,15 @@ local and CI builds.
 Run this command in the eos-image-builder.git clone:
 
     sudo ./eos-image-builder
+
+That's all :-)
+
+#### Outputs
+
+The image builder writes images to `tmp/out` inside the configured `cachedir`.
+By default this means images are at the following path:
+
+    /var/cache/eos-image-builder/tmp/out
 
 On success, it will tell you where to find your new image. See
 `docs/howto/test.md` for a guide to testing.

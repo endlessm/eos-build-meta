@@ -19,6 +19,7 @@ Tutorial documentation for contributors is in `doc/howto`:
 
   * [`doc/howto/build.md`](./doc/howto/build.md), how to build EOS7
   * [`doc/howto/test.md`](./doc/howto/test.md), how to test EOS7
+  * [`doc/howto/vm.md`](./doc/howto/vm.md), guidance for using virtual machines to test
 
 Overview documentation for understand the EOS7 architecture is in `doc/overview`:
 

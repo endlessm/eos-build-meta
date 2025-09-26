@@ -8,6 +8,11 @@ documenting how to test in-development versions.
 See [TEST_MATRIX.md](../../TEST_MATRIX.md) for a formal list of the
 deployment scenarios we test for EOS7.
 
+It's possible to test in a virtual machine and on real hardware. Specific
+guidance for virtual machines is written up separately here:
+
+  * [`doc/howto/vm.md`](./vm.md)
+
 ## Testing the OSTree stage: Deploying as an upgrade to the latest eos6 or eos7 release
 
 ### Prerequisites
@@ -58,36 +63,52 @@ and things will go much faster.
 
 ## Testing the Image stage
 
-Image builds are under development. At time of writing you can test the following:
+### Prerequisites
 
-  * Booting the disk image directly, from UEFI firmware with Secure Boot checks
-    disabled.
-
-The following is coming later:
-
-  * Booting the disk image directly, with UEFI Secure Boot checks enabled.
-  * Bootable media (live USBs), with option to install as the main OS.
-
-It's possible to test in a virtual machine, or on real hardware.
-
-### Virtual machines
-
-The following options are options you have for setting up virtual machines.
-
-1. Use QEMU directly. Some guidance on its many commandline options are
-   available in freedesktop-sdk
-   [BOOTABLE_IMAGES.md](https://gitlab.com/freedesktop-sdk/freedesktop-sdk/-/blob/master/BOOTABLE_IMAGES.md).
-2. Use libvirt and virt-manager.
-3. Use GNOME Boxes.
-
-Note that QEMU and libvirt will boot to an old-school BIOS firmware by default.
-You need to opt in explicitly to the newer TianoCore OMVF2 firmware which
-implements UEFI. GNOME Boxes defaults to UEFI.
+For testing in a VM, see: [`doc/howto/vm.md`](./vm.md).
 
 ### Test steps
 
 1. Boot the disk image.
 
-2. Run through initial setup to create a user.
+2. If necessary, enrol the 'snakeoil' certificate in the chain of trust. (See below).
 
-3. Ensure the desktop works as you expect.
+3. Run through initial setup to create a user.
+
+4. Ensure the desktop works as you expect.
+
+### Enrolling the 'snakeoil' certificate in the UEFI Secure Boot chain of trust
+
+Official builds of Endless OS are signed with a secret key that is signed by
+Microsoft. You shouldn't need any extra setup in this case, assuming the
+machine firmware has the default Microsoft chain of trust set up.
+
+Local builds sign the boot components with an untrusted 'snakeoil' key that
+anyone can use to sign software. When testing local builds, you can enrol the
+corresponding certificate as a Machine Owner Key on first boot.
+
+**NOTE: This bypasses any security guarantees you might get from Secure Boot. As
+always, don't keep valuable data on machines that you use for testing software.**
+
+The 'snakeoil' certificate is included in the EFI System Partition in local
+builds, at `EFI/VENDOR-snakeoil.dep`. Here's how to enrol it in the chain of
+trust:
+
+1. Boot the machine. You should see the Shim "fallback" bootloader, followed by
+   a "Verification failed" error from Shim itself.
+
+2. Press "Enter" to continue, then press "Enter" again to open Mokmanager.
+
+3. In the main "Perform MOK management" menu, select "Enroll key from disk".
+
+4. Navigate to `EFI/VENDOR-snakeoil.dir` and select it.
+
+5. Select "Continue" to reach the "Enrol the key?" menu. Then select "Yes".
+
+6. Select "Reboot".
+
+There is a video available showing the process:
+[test-enrol-snakeoil-cert.webm](./test-enrol-snakeoil-cert.webm).
+
+For an overview of the components involved in booting Endless OS, see:
+[`doc/overview/boot.md`](../overview/boot.md).

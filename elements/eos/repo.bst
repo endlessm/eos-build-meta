@@ -9,7 +9,6 @@ description: |
   repo in `archive` format with a single commit and a single branch.
 
 build-depends:
-- freedesktop-sdk.bst:components/linux.bst
 - freedesktop-sdk.bst:components/ostree.bst
 - freedesktop-sdk.bst:vm/deploy-tools.bst
 - freedesktop-sdk.bst:vm/prepare-image.bst
@@ -18,6 +17,16 @@ build-depends:
 - filename: eos/filesystem.bst
   config:
     location: '/sysroot'
+
+(?):
+  - signed_boot == "eos-sb-signer":
+      build-depends:
+        (>):
+          - eos/signed-kernel.bst
+  - signed_boot == "snakeoil":
+      build-depends:
+        (>):
+          - eos/signed-kernel-snakeoil.bst
 
 variables:
   uuidnamespace: 731a6fa6-5071-4d7b-8e0d-b81a66a590bc
@@ -49,7 +58,7 @@ config:
 
   # Move the kernel where OSTree will find it.
   - |
-    version="$(ls -1 /lib/modules | head -n1)"
+    version="$(ls -1 /sysroot/usr/lib/modules | head -n1)"
     mkdir -p "/sysroot/usr/lib/modules/${version}"
     cp /boot/vmlinuz "/sysroot/usr/lib/modules/${version}/vmlinuz"
 

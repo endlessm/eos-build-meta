@@ -11,6 +11,9 @@ description: |
   The `grub-install` program is also used by eos-image-builder when creating
   the disk images.
 
+  Note that all new EOS7 installs use UEFI, but existing systems with BIOS boot
+  are still supported.
+
 depends:
 - filename: freedesktop-sdk.bst:bootstrap-import.bst
 - filename: freedesktop-sdk.bst:components/bison.bst
