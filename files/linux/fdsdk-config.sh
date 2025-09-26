@@ -1965,8 +1965,7 @@ enable IMA_ARCH_POLICY
 # Module signing
 enable MODULE_SIG
 enable MODULE_SIG_ALL
-# Instead we use lsm=lockdown on command line
-remove MODULE_SIG_FORCE
+enable MODULE_SIG_FORCE
 
 # sha512 signing only
 remove MODULE_SIG_SHA1
