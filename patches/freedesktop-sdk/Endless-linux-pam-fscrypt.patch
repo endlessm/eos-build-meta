@@ -31,7 +31,7 @@ index 0e9e0f2a5..1234567890 100644
  auth        required      pam_env.so
  -auth       sufficient    pam_systemd_home.so
  auth        sufficient    pam_unix.so try_first_pass nullok_secure
-+auth        optional      pam_fscrypt.so
++auth        optional      pam_fscrypt.so debug
  auth        required      pam_deny.so
 
  -account    sufficient    pam_systemd_home.so
@@ -47,7 +47,7 @@ index 0e9e0f2a5..1234567890 100644
  # See "man pam_umask".
  session     optional      pam_umask.so
  session     required      pam_unix.so
-+session     optional      pam_fscrypt.so drop_caches lock_policies
++session     optional      pam_fscrypt.so drop_caches lock_policies debug
 diff --git a/files/linux-pam-config/system-auth b/files/linux-pam-config/system-auth
 index 0e9e0f2a5..1234567890 100644
 --- a/files/linux-pam-config/system-auth
@@ -56,7 +56,7 @@ index 0e9e0f2a5..1234567890 100644
  auth        required      pam_env.so
  -auth       sufficient    pam_systemd_home.so
  auth        sufficient    pam_unix.so try_first_pass nullok_secure
-+auth        optional      pam_fscrypt.so
++auth        optional      pam_fscrypt.so debug
  auth        required      pam_deny.so
 
  -account    sufficient    pam_systemd_home.so
@@ -72,6 +72,6 @@ index 0e9e0f2a5..1234567890 100644
  # See "man pam_umask".
  session     optional      pam_umask.so
  session     required      pam_unix.so
-+session     optional      pam_fscrypt.so drop_caches lock_policies
++session     optional      pam_fscrypt.so drop_caches lock_policies debug
 --
 2.49.0
