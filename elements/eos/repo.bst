@@ -54,7 +54,7 @@ config:
        --seed "%{uuidnamespace}" \
        --rootsource /dev/gpt-auto-root \
        --efisource LABEL=EFI \
-       --efipath /boot
+       --efipath /efi
 
   # Move the kernel where OSTree will find it.
   - |
