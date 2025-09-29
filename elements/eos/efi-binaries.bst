@@ -14,6 +14,7 @@ description: |
 
 build-depends:
   - freedesktop-sdk.bst:bootstrap-import.bst
+  - freedesktop-sdk.bst:components/openssl.bst
 
 sources:
   # See `files/shim/README.md` for context about these files.
@@ -27,16 +28,17 @@ sources:
     path: files/shim/shimx64.efi
 
 (?):
-  - signed_boot == "eos-sb-signer":
+  - signed_boot == "endless":
       depends:
-        - eos/signed-grub.bst
+        - signing/signed-grub-endless.bst
+      sources:
+        (>):
+          - kind: local
+            path: files/boot-keys/test-ca.crt
 
   - signed_boot == "snakeoil":
       depends:
-        - eos/signed-grub-snakeoil.bst
-      build-depends:
-        (>):
-          - freedesktop-sdk.bst:components/openssl.bst
+        - signing/signed-grub-snakeoil.bst
       sources:
         (>):
           - kind: local
@@ -66,6 +68,13 @@ config:
         echo "Development build: installing VENDOR-snakeoil certificate into ESP"
         openssl x509 -in VENDOR-snakeoil.crt -outform DER -out VENDOR-snakeoil.der
         install -D -m644 ./VENDOR-snakeoil.der %{install-root}/usr/lib/efi_binaries/EFI/
+      fi
+
+    - |
+      if [ -e "./test-ca.crt" ]; then
+        echo "Development build: installing test-ca certificate into ESP"
+        openssl x509 -in test-ca.crt -outform DER -out test-ca.der
+        install -D -m644 ./test-ca.der %{install-root}/usr/lib/efi_binaries/EFI/
       fi
 
   strip-commands: []

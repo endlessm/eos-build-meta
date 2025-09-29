@@ -6,6 +6,7 @@ description: |
   <https://gitlab.gnome.org/GNOME/gnome-build-meta/-/blob/master/elements/gnomeos/initramfs/deps.bst>.
 
 depends:
+- components/linux.bst
 - eos/initramfs/busybox.bst
 - eos/initramfs/dash.bst
 - freedesktop-sdk.bst:components/cpio.bst
@@ -18,13 +19,3 @@ depends:
 - gnome-build-meta.bst:gnomeos-deps/plymouth-gnome-theme.bst
 - gnome-build-meta.bst:gnomeos-deps/intel-ucode.bst
 - gnome-build-meta.bst:gnomeos/os-release-user.bst
-
-(?):
-  - signed_boot == "eos-sb-signer":
-      depends:
-        (>):
-          - eos/signed-modules.bst
-  - signed_boot == "snakeoil":
-      depends:
-        (>):
-          - eos/signed-modules-snakeoil.bst
