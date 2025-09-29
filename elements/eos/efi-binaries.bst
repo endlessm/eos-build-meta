@@ -27,14 +27,14 @@ sources:
   - kind: local
     path: files/shim/shimx64.efi
 
+variables:
+  # Certificate to install in the ESP for testing.
+  vendor-cert: ''
+
 (?):
   - signed_boot == "endless":
       depends:
         - signing/signed-grub-endless.bst
-      sources:
-        (>):
-          - kind: local
-            path: files/boot-keys/test-ca.crt
 
   - signed_boot == "snakeoil":
       depends:
@@ -43,6 +43,8 @@ sources:
         (>):
           - kind: local
             path: files/boot-keys/VENDOR-snakeoil.crt
+      variables:
+        vendor-cert: VENDOR-snakeoil.crt
 
 config:
   install-commands:
@@ -64,17 +66,10 @@ config:
       install -D -m644 ./mmx64.efi %{install-root}/usr/lib/efi_binaries/EFI/BOOT/
 
     - |
-      if [ -e "./VENDOR-snakeoil.crt" ]; then
-        echo "Development build: installing VENDOR-snakeoil certificate into ESP"
-        openssl x509 -in VENDOR-snakeoil.crt -outform DER -out VENDOR-snakeoil.der
-        install -D -m644 ./VENDOR-snakeoil.der %{install-root}/usr/lib/efi_binaries/EFI/
-      fi
-
-    - |
-      if [ -e "./test-ca.crt" ]; then
-        echo "Development build: installing test-ca certificate into ESP"
-        openssl x509 -in test-ca.crt -outform DER -out test-ca.der
-        install -D -m644 ./test-ca.der %{install-root}/usr/lib/efi_binaries/EFI/
+      if [ -e "%{vendor-cert}" ]; then
+        echo "Development build: installing %{vendor-cert} into ESP as `VENDOR-insecure.der`"
+        openssl x509 -in %{vendor-cert} -outform DER -out VENDOR-insecure.der
+        install -D -m644 ./VENDOR-insecure.der %{install-root}/usr/lib/efi_binaries/EFI/
       fi
 
   strip-commands: []
