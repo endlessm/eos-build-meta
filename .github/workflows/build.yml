@@ -33,7 +33,7 @@ jobs:
           pki: |
             pki/issue/endless-client {"common_name": "github@endlessos.org", "ttl": "12h"} ;
 
-      - name: Fetch OSTree credentials from Vault
+      - name: Fetch signing credentials from Vault
         uses: hashicorp/vault-action@v3
         with:
           url: https://vault.endlessos.org
@@ -43,6 +43,8 @@ jobs:
           secrets: |
             secret/ostree-builder/gpg/eoask1 private | OSTREE_BUILDER_GPG_PRIVATE ;
             secret/ostree-builder/ssh private | OSTREE_BUILDER_SSH_PRIVATE ;
+            secret/secure-boot-signer/api-users/ostree-builder password | SBSIGNER_PASSWORD ;
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
       - name: Configure BuildStream
         run: |
@@ -51,7 +53,6 @@ jobs:
           echo "${ENDLESSCLIENT_CA_CHAIN}" >> client.crt
           echo "${ENDLESSCLIENT_KEY}" > client.key
           chmod 600 client.key
-          source venv/bin/activate
           mkdir -p ~/.config
           cat > ~/.config/buildstream.conf << EOF
           # BuildStream user configuration
@@ -121,10 +122,38 @@ jobs:
           sccache: s3
       - uses: mozilla-actions/sccache-action@v0.0.9
 
-      - name: Build root filesystem
+      - name: Build root filesystem (signed_boot=endless)
+        run: |
+          echo "Set up ~/.netrc"
+          cat >> ~/.netrc << EOF
+          machine sb-signer.endlessm-sf.com
+          login ostree-builder
+          password ${SBSIGNER_PASSWORD}
+          EOF
+          chmod 600 ~/.netrc
+
+          echo "Set up private key for eos-sb-signer"
+          echo "${OSTREE_BUILDER_GPG_PRIVATE}" > files/apitrustedkey.gpg
+          chmod 600 files/apitrustedkey.gpg
+
+          echo "Set up eos_sb_signer element plugin"
+          cat > include/eos_sb_signer.yml << EOF
+          elements:
+            eos_sb_signer:
+              config:
+                endpoint: https://sb-signer.endlessm-sf.com
+                private-key-file: files/apitrustedkey.gpg
+                timeout: 30
+          EOF
+          source venv/bin/activate
+          bst -o signed_boot endless build --retry-failed eos/repo.bst
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+
+      - name: Build root filesystem (signed_boot=snakeoil)
         run: |
           source venv/bin/activate
-          bst build eos/repo.bst
+          bst -o signed_boot snakeoil build eos/repo.bst
+        if: ${{ github.event_name == 'pull_request' || github.ref != 'refs/heads/main' }}
 
       - name: Export OSTree commit and push it
         if: github.ref == 'refs/heads/main'
@@ -162,7 +191,7 @@ jobs:
 
           echo "Check out repo to a temporary directory"
           checkout="$(mktemp --suffix="-update-repo" -d -p "$(pwd)")"
-          ./venv/bin/bst artifact checkout --hardlinks "${build_element}" --directory "${checkout}"
+          ./venv/bin/bst -o signed_boot endless artifact checkout --hardlinks "${build_element}" --directory "${checkout}"
 
           commit="$(ostree --repo="${checkout}/ostree/repo" rev-parse "${build_ref}")"
           echo "Create a new OSTree repo and import commit ${commit}"
