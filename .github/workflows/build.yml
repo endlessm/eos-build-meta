@@ -44,50 +44,13 @@ jobs:
             secret/ostree-builder/gpg/eoask1 private | OSTREE_BUILDER_GPG_PRIVATE ;
             secret/ostree-builder/ssh private | OSTREE_BUILDER_SSH_PRIVATE ;
 
-      - name: Write secrets
+      - name: Configure BuildStream
         run: |
           # Certificate for BuildStream cache
           echo "${ENDLESSCLIENT_CERT}" > client.crt
           echo "${ENDLESSCLIENT_CA_CHAIN}" >> client.crt
           echo "${ENDLESSCLIENT_KEY}" > client.key
           chmod 600 client.key
-          # Signing key for OSTree commits
-          mkdir ./ostree-gpg
-          chmod 700 ostree-gpg
-          echo "${OSTREE_BUILDER_GPG_PRIVATE}" | gpg --homedir ./ostree-gpg --import
-          # SSH key for OSTree pushes
-          echo "${OSTREE_BUILDER_SSH_PRIVATE}" > $HOME/.ssh/ostree_ssh
-          chmod 600 $HOME/.ssh/ostree_ssh
-
-      - name: Setup image version
-        run: |
-          build_num="${GITHUB_RUN_ID}"
-          if [ "${GITHUB_REF_NAME-}" = main ]; then
-            IMAGE_VERSION="nightly.$build_num"
-          else
-            # Assume this will always be a stable branch string like "gnome-44"
-            IMAGE_VERSION=$(echo "${GITHUB_REF_NAME:-unknown}.$build_num" | sed "s|/|_|g" | sed "s|-|_|g")
-          fi
-          echo "image-version: ${IMAGE_VERSION}" > include/image-version.yml
-          export IMAGE_VERSION
-          commit_time=$(git log -1 --format=format:%ct)
-          echo "filesystem-time: ${commit_time}" >> include/image-version.yml
-          cat include/image-version.yml
-
-      - name: Install BuildStream and dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            python3-pip python3-venv bubblewrap \
-            lzip xz-utils bzip2 gzip \
-            git wget curl \
-            ostree
-          python3 -m venv venv
-          source venv/bin/activate
-          pip install -r ./utils/requirements.txt
-
-      - name: Configure BuildStream
-        run: |
           source venv/bin/activate
           mkdir -p ~/.config
           cat > ~/.config/buildstream.conf << EOF
@@ -121,6 +84,33 @@ jobs:
                 client-key: $(pwd)/client.key
           EOF
 
+      - name: Setup image version
+        run: |
+          build_num="${GITHUB_RUN_ID}"
+          if [ "${GITHUB_REF_NAME-}" = main ]; then
+            IMAGE_VERSION="nightly.$build_num"
+          else
+            # Assume this will always be a stable branch string like "gnome-44"
+            IMAGE_VERSION=$(echo "${GITHUB_REF_NAME:-unknown}.$build_num" | sed "s|/|_|g" | sed "s|-|_|g")
+          fi
+          echo "image-version: ${IMAGE_VERSION}" > include/image-version.yml
+          export IMAGE_VERSION
+          commit_time=$(git log -1 --format=format:%ct)
+          echo "filesystem-time: ${commit_time}" >> include/image-version.yml
+          cat include/image-version.yml
+
+      - name: Install BuildStream and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            python3-pip python3-venv bubblewrap \
+            lzip xz-utils bzip2 gzip \
+            git wget curl \
+            ostree
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install -r ./utils/requirements.txt
+
       - name: Enable unprivileged userns
         run: |
           source venv/bin/activate
@@ -153,6 +143,15 @@ jobs:
           push_repo: "eos"
         run: |
           push_ref="os/${product}/${platform}/${branch}"
+
+          echo "Signing key for OSTree commits"
+          mkdir ./ostree-gpg
+          chmod 700 ostree-gpg
+          echo "${OSTREE_BUILDER_GPG_PRIVATE}" | gpg --homedir ./ostree-gpg --import
+
+          echo "SSH key for OSTree pushes"
+          echo "${OSTREE_BUILDER_SSH_PRIVATE}" > $HOME/.ssh/ostree_ssh
+          chmod 600 $HOME/.ssh/ostree_ssh
 
           echo "Install ostree-push"
           sudo apt-get install -y gir1.2-ostree-1.0 openssh-client
