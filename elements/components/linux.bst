@@ -1,29 +1,32 @@
 # Copied from Freedesktop SDK 24.08.22
 
 kind: make
-description: Linux kernel configured for use in Endless OS 7.
+description: |
+  Linux kernel configured for use in Endless OS 7.
+
+  See `doc/overview/signing.md` for an overview of how module signing works.
 
 depends:
 - freedesktop-sdk.bst:components/kmod.bst
 
 build-depends:
 - freedesktop-sdk.bst:bootstrap-import.bst
+- freedesktop-sdk.bst:components/bc.bst
 - freedesktop-sdk.bst:components/bison.bst
 - freedesktop-sdk.bst:components/cpio.bst  # loongarch64 build enabled CONFIG_IKHEADERS by default
 - freedesktop-sdk.bst:components/flex.bst
-- freedesktop-sdk.bst:components/bc.bst
 - freedesktop-sdk.bst:components/gzip.bst
+- freedesktop-sdk.bst:components/openssl.bst
 - freedesktop-sdk.bst:components/python3.bst
 - freedesktop-sdk.bst:components/rsync.bst
 - freedesktop-sdk.bst:components/util-linux.bst
-- filename: freedesktop-sdk.bst:components/linux-module-cert.bst
-  strict: true
 
 variables:
   bootdir: /boot
   kernel_arch: '%{arch}'
   src-arch: x86
   image-name: '$(make -s image_name)'
+  modules-key: certs/signing_key.pem
 
 environment:
   ARCH: '%{kernel_arch}'
@@ -105,6 +108,27 @@ config:
 
     ln -sr "${targetdir}" "%{install-root}%{indep-libdir}/modules/${release}/build"
 
+  # BuildStream can cache the content of the buildtree in some cases.
+  # For successful builds, we must ensure the private key is deleted so that it
+  # can't be pushed to the public artifact cache server.
+  - |
+    echo "Removing module signing key."
+    rm %{modules-key}
+
+  (?):
+    - signed_boot == "snakeoil":
+        configure-commands:
+          (<):
+            - |
+              mkdir -p ./certs
+              cat ./MODULES-snakeoil.key ./MODULES-snakeoil.crt > %{modules-key}
+    - signed_boot == "endless":
+        configure-commands:
+          (<):
+            - |
+             mkdir -p ./certs
+             cp x509.genkey ./certs/x509.genkey
+
 public:
   bst:
     integration-commands:
@@ -121,3 +145,17 @@ public:
 
 (@):
 - elements/include/linux.yml
+
+(?):
+  - signed_boot == "endless":
+      sources:
+        (>):
+          - kind: local
+            path: files/linux/x509.genkey
+  - signed_boot == "snakeoil":
+      sources:
+        (>):
+          - kind: local
+            path: files/boot-keys/MODULES-snakeoil.key
+          - kind: local
+            path: files/boot-keys/MODULES-snakeoil.crt

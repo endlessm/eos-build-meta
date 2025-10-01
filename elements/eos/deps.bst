@@ -8,6 +8,7 @@ description: |
 
 depends:
 # Low level OS elements.
+- components/linux.bst
 - eos/config/ostree.bst
 - eos/config/systemd-sysusers.bst
 - eos/efi-binaries.bst
@@ -20,6 +21,7 @@ depends:
 
 # GNOME OS elements.
 - gnome-build-meta.bst:gnomeos-deps/deps.bst
+- gnome-build-meta.bst:gnomeos-deps/mokutil.bst
 - gnome-build-meta.bst:gnomeos/os-release-user.bst
 
 # Developer tools which are in the GNOME OS `devel` addon,
@@ -57,13 +59,3 @@ depends:
 
 # GNOME Shell Extensions
 - eos/gnome-shell-extensions.bst
-
-(?):
-  - signed_boot == "eos-sb-signer":
-      depends:
-        (>):
-          - eos/signed-modules.bst
-  - signed_boot == "snakeoil":
-      depends:
-        (>):
-          - eos/signed-modules-snakeoil.bst

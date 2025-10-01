@@ -14,7 +14,7 @@ config:
     sbsign \
         --key VENDOR-snakeoil.key \
         --cert VENDOR-snakeoil.crt \
-        --output "%{install-root}/boot/vmlinuz" \
+        --output "%{install-root}/boot/vmlinuz.signed" \
         "/boot/vmlinuz"
 
 sources:
