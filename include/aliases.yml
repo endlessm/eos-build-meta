@@ -37,6 +37,7 @@ aliases:
   kldp: https://kldp.net/
   launchpad: https://launchpad.net/
   libburnia: http://files.libburnia-project.org/releases/
+  libsodium: https://download.libsodium.org/libsodium/releases/
   libopenraw: https://libopenraw.freedesktop.org/
   libraw: https://www.libraw.org/
   libvirt: https://libvirt.org/sources/

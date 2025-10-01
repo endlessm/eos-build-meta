@@ -43,6 +43,7 @@ depends:
 - eos/eos-shell-content.bst
 - eos/eos-theme.bst
 - eos/eos-updater.bst
+- eos/payg/deps.bst
 
 # Used by eos-image-builder. This could move into a separate tree.
 # See: <https://github.com/endlessm/eos-build-meta/issues/81>

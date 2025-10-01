@@ -5,9 +5,12 @@ description: |
   This element collects all the UEFI applications and configuration involved in
   booting EOS7.
 
-  These are installed to the well-known path `/usr/lib/efi_binaries` in the
-  filesystem. When building images, eos-image-builder copies them into the
-  EFI System Partition.
+  UEFI binaries for variants using GRUB are installed to the well-known path
+  `/usr/lib/efi_binaries` in the filesystem. When building images,
+  eos-image-builder copies them into the EFI System Partition.
+
+  UEFI binaries for variants using systemd-boot are installed to
+  `/usr/lib/systemd/boot/efi`.
 
   At time of writing, the ESP is not updated on existing systems in any case.
   It could be done, using coreos bootupd or something similar.
