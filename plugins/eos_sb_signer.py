@@ -44,12 +44,13 @@ class EosSbSignerElement(Element):
             raise ElementError(f"Missing private key file {self.private_key_file}")
 
     def get_unique_key(self):
+        private_key, _ = PGPKey.from_file(self.private_key_file)
+        fingerprint = private_key.fingerprint
         key = {
             'input': self.input_path,
             'endpoint': self.endpoint,
             'output': self.output_path,
-            # FIXME: hash the file
-            'private-key-file': self.private_key_file,
+            'key-fingerprint': fingerprint,
         }
         return key
 
