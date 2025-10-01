@@ -1,13 +1,11 @@
 sources:
 - kind: git_repo
-  url: kernel:linux/kernel/git/stable/linux.git
+  url: github:endlessm/linux.git
   track: v*
   exclude:
   - '*-rc*'
-  ref: v6.15.1-0-g3ef49626da6dd67013fc2cf0a4e4c9e158bb59f7
+  ref: Release_6.0.7-0-g7e061bb6897622861dfd36b41ce83079982080ea
 - kind: local
   path: files/linux/config-utils.sh
 - kind: local
   path: files/linux/fdsdk-config.sh
-- kind: patch_queue
-  path: patches/linux
