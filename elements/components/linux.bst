@@ -27,6 +27,11 @@ variables:
   src-arch: x86
   image-name: '$(make -s image_name)'
   modules-key: certs/signing_key.pem
+  (?):
+  - arch == "x86_64":
+      debian_arch: amd64
+  - arch == "aarch64":
+      debian_arch: arm64
 
 environment:
   ARCH: '%{kernel_arch}'
@@ -45,29 +50,13 @@ config:
     make defconfig
 
   - |
-    . ./config-utils.sh
-    rm -f expected-configs
-    . ./fdsdk-config.sh "%{arch}"
+    python3 debian/scripts/misc/annotations --export --arch "%{debian_arch}" --flavour generic > .config
 
   - |
     make -j1 olddefconfig
 
   - |
-    . ./config-utils.sh
-
-    missing_configs=0
-    for config in $(cat expected-configs); do
-      if ! has "${config}"; then
-        echo "Missing ${config}" 1>&2
-        missing_configs=1
-      fi
-    done
-    # Only fail for...
-    case "%{arch}" in
-      x86_64|i686|aarch64)
-        [ "${missing_configs}" = 0 ]
-      ;;
-    esac
+    python3 debian/scripts/misc/annotations -f debian.master/config/annotations --arch "%{debian_arch}" --flavour generic --check .config
 
   install-commands:
   - |
