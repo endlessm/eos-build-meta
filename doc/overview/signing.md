@@ -83,13 +83,13 @@ under:
 
 ## Signing the OSTree commit
 
-The final OSTree commit is built in `eos/repo.bst`. At this point it isn't
+The final OSTree commit is built in `repo.bst`. At this point it isn't
 signed.
 
 In local builds using the Makefile, the user needs to run `make ostree-gpg`
 the first time they build. This creates a new PGP keypair. The `update-ostree`
 make target then calls `utils/update-repo.sh`, which checks out the
-`eos/repo.bst` artifact and imports it into the local OSTree repo `./ostree-repo`.
+`repo.bst` artifact and imports it into the local OSTree repo `./ostree-repo`.
 The commit in `ostree-repo.bst` is signed with the local private key.
 
 When deploying a locally built OSTree stage, the public part of the key is

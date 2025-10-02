@@ -41,7 +41,7 @@ update-ostree: ostree-gpg files/ostree-config/eos.gpg
 	  --gpg-homedir=ostree-gpg                 \
 	  --gpg-sign=$$(cat ostree-gpg/default-id) \
 	  --collection-id=com.endlessm.Os          \
-	  ostree-repo eos/repo.bst                 \
+	  ostree-repo repo.bst                     \
 	  $(OSTREE_BRANCH)
 
 ostree-repo:

@@ -98,7 +98,7 @@ The kernel is used directly from Freedesktop SDK. This is due to change
 in [issue #10](https://github.com/endlessm/eos-build-meta/issues/10).
 
 The built kernel is installed in the filesystem inside `/usr/lib/modules`
-in the final `eos/repo.bst` element. Its configuration is available
+in the final `repo.bst` element. Its configuration is available
 alongside the kernel under the name `.config`.
 
 ## 6. initramfs

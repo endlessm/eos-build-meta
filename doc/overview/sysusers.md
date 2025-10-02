@@ -215,7 +215,7 @@ The `eos/config/systemd-sysusers-config.bst` element installs some additional
 `sysusers.d` config files to reserve certain user IDs for backwards and forwards
 compatibility.
 
-In the `eos/repo.bst` element, some of the existing sysusers.d config files are
+In the `repo.bst` element, some of the existing sysusers.d config files are
 modified to set static UIDs or GIDs, to match what was used in EOS6. This is
 done with a simple helper tool named `systemd_sysusers_override.py`.
 

@@ -31,9 +31,11 @@ can't use it directly. It does push all artifacts to the Endless cache server,
 and you should pull these when building locally.
 
 When a pull request lands in eos-build-meta's `main` branch, Github Actions
-runs the OSTree build stage, and pushes the result to `os/eos/amd64/master`.
-So if you need to test something already merged to eos-build-meta's
-`main` branch you don't need to build it yourself.
+runs the OSTree build stage, and pushes the resulting trees to the Endless
+ostree dev repo.
+
+If you need to test something already merged to eos-build-meta's `main` branch
+you can look for a prebuilt tree in the dev repo such as `os/eos/amd64/master`.
 
 ### Local builds
 
@@ -211,13 +213,13 @@ local GPG key for the OSTree repo. You only need to do this once.
 
 At this point, running the build pipeline to produce an OSTree is one command:
 
-    bst build eos/repo.bst
+    bst build repo.bst
 
 As noted above, this should mostly pull artifacts from the Endless cache, and will
 only build locally where you have local changes. (Since the OSTree signing key is
-locally generated, you will always see a local build of `eos/repo.bst`.)
+locally generated, you will always see a local build of `repo.bst`.)
 
-The `eos/repo.bst` element produces an OSTree repo with a single commit, containing
+The `repo.bst` element produces an OSTree repo with a single commit, containing
 the new eos7 filesystem.
 
 There is a helper in the Makefile which maintains a local OSTree repo in `./ostree-repo`.
