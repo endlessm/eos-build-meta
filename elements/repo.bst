@@ -2,10 +2,10 @@
 
 kind: script
 description: |
-  Prepare the filesystem tree and convert it to an OSTree commit.
+  Prepare the filesystem trees and convert them to OSTree commits.
 
   The output artifact contains a `ostree/repo` directory which is an OSTree
-  repo in `archive` format with a single commit and a single branch.
+  repo in `archive` format, with commits for each published tree.
 
   The element diverged significantly from the one we derived it from, so it may
   not make sense to include further changes from the source element, include
@@ -20,11 +20,15 @@ build-depends:
 - eos/systemd-sysusers-override.bst
 - filename: eos/filesystem.bst
   config:
-    location: '/sysroot'
+    location: '/sysroot-eos'
+- filename: eosdev/filesystem.bst
+  config:
+    location: '/sysroot-eosdev'
 
 variables:
   uuidnamespace: 731a6fa6-5071-4d7b-8e0d-b81a66a590bc
-  ostree-branch: "os/eos/amd64/master"
+  eos-branch: "os/eos/amd64/master"
+  eosdev-branch: "os/eosdev/amd64/master"
 
 environment:
   OSTREE_REPO: "%{install-root}/ostree/repo"
@@ -53,12 +57,21 @@ config:
   #   * Creating an empty /etc/machine-id (from 'etc-machine-id.bst' element)
   - |
     prepare-image.sh \
-       --sysroot /sysroot \
+       --sysroot /sysroot-eos \
        --seed "%{uuidnamespace}" \
        --rootsource /dev/gpt-auto-root \
        --noboot
+    mv /sysroot-eos/etc /sysroot-eos/usr/etc
+  - |
+    prepare-image.sh \
+       --sysroot /sysroot-eosdev \
+       --seed "%{uuidnamespace}" \
+       --rootsource /dev/gpt-auto-root \
+       --noboot
+    mv /sysroot-eosdev/etc /sysroot-eosdev/usr/etc
 
   - mkdir -p "${OSTREE_REPO}"
   - ostree init --repo="${OSTREE_REPO}" --mode=archive
-  - mv /sysroot/etc /sysroot/usr/etc
-  - ostree commit --branch=%{ostree-branch} /sysroot
+
+  - ostree commit --branch=%{eos-branch} /sysroot-eos
+  - ostree commit --branch=%{eosdev-branch} /sysroot-eosdev

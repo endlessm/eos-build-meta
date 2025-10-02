@@ -160,7 +160,7 @@ jobs:
                 timeout: 30
           EOF
           source venv/bin/activate
-          bst -o payg true -o signed_boot endless build --retry-failed eos/repo.bst
+          bst -o payg true -o signed_boot endless build --retry-failed repo.bst
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
       - name: Build root filesystem (signed_boot=snakeoil)
@@ -174,18 +174,17 @@ jobs:
           chmod 600 ~/.netrc
 
           source venv/bin/activate
-          bst -o payg true -o signed_boot snakeoil build --retry-failed eos/repo.bst
+          bst -o payg true -o signed_boot snakeoil build repo.bst
         if: ${{ github.event_name == 'pull_request' || github.ref != 'refs/heads/main' }}
 
-      - name: Export OSTree commit and push it
+      - name: Export OSTree commits and push them
         if: github.ref == 'refs/heads/main'
         env:
-          product: eos
+          product_list: "eos eosdev"
           platform: amd64
           branch: master
 
-          build_element: eos/repo.bst
-          build_ref: "os/eos/amd64/master"
+          build_element: repo.bst
 
           ostree_gpg_key_id: "00EA12D9A37DD2A7BD810643DFB958DC725AE7CA"
 
@@ -193,8 +192,6 @@ jobs:
           push_user: uploader
           push_repo: "eos"
         run: |
-          push_ref="os/${product}/${platform}/${branch}"
-
           echo "Signing key for OSTree commits"
           mkdir ./ostree-gpg
           chmod 700 ostree-gpg
@@ -211,26 +208,34 @@ jobs:
           # passing --no-deps to avoid that.
           ./ostree-push.venv/bin/pip install --no-deps ostree-push
 
-          echo "Check out repo to a temporary directory"
+          echo "Check out built repo to a temporary directory"
           checkout="$(mktemp --suffix="-update-repo" -d -p "$(pwd)")"
           ./venv/bin/bst -o payg true -o signed_boot endless artifact checkout --hardlinks "${build_element}" --directory "${checkout}"
 
-          commit="$(ostree --repo="${checkout}/ostree/repo" rev-parse "${build_ref}")"
-          echo "Create a new OSTree repo and import commit ${commit}"
-          ostree init --repo="./ostree-repo" --mode=archive
-          ostree pull-local --repo ./ostree-repo "${checkout}/ostree/repo" "${commit}"
+          echo "Create new local repo"
+          local_repo="./ostree-repo"
+          ostree init --repo="${local_repo}" --mode=archive
 
-          echo "Sign and recommit the tree as ${push_ref}"
-          ostree commit --repo ./ostree-repo \
-            --gpg-homedir=ostree-gpg --gpg-sign="$ostree_gpg_key_id" \
-            --branch="${push_ref}" --tree=ref="${commit}"
+          for product in ${product_list}; do
+            build_ref="os/${product}/${platform}/${branch}"
+            push_ref="os/${product}/${platform}/${branch}"
 
-          # FIXME: Drop --command when ostree-receive is updated on the
-          # server.
-          target="${push_user}@${push_host}:${push_repo}"
-          echo "Push to $target"
-          ./ostree-push.venv/bin/ostree-push \
-            --command ostree-receive \
-            -i $HOME/.ssh/ostree_ssh \
-            -o StrictHostKeyChecking=no \
-            --repo ./ostree-repo "${target}" "${push_ref}"
+            commit="$(ostree --repo="${checkout}/ostree/repo" rev-parse "${build_ref}")"
+            echo "Import commit ${commit}"
+            ostree pull-local --repo ${local_repo} "${checkout}/ostree/repo" "${commit}"
+
+            echo "Sign and recommit the tree as ${push_ref}"
+            ostree commit --repo ${local_repo} \
+              --gpg-homedir=ostree-gpg --gpg-sign="$ostree_gpg_key_id" \
+              --branch="${push_ref}" --tree=ref="${commit}"
+
+            # FIXME: Drop --command when ostree-receive is updated on the
+            # server.
+            target="${push_user}@${push_host}:${push_repo}"
+            echo "Push to $target"
+            ./ostree-push.venv/bin/ostree-push \
+              --command ostree-receive \
+              -i $HOME/.ssh/ostree_ssh \
+              -o StrictHostKeyChecking=no \
+              --repo ./ostree-repo "${target}" "${push_ref}"
+          done
