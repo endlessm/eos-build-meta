@@ -5,3 +5,5 @@ sources:
   exclude:
   - '*-rc*'
   ref: Release_6.0.7-0-g7e061bb6897622861dfd36b41ce83079982080ea
+- kind: patch_queue
+  path: patches/linux
