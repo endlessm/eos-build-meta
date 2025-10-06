@@ -1,0 +1,13 @@
+diff --git a/debian.master/config/annotations b/debian.master/config/annotations
+index dc2c447109bf..9eb26dd18b14 100644
+--- a/debian.master/config/annotations
++++ b/debian.master/config/annotations
+@@ -8534,7 +8534,7 @@ CONFIG_MODULE_FORCE_UNLOAD                      policy<{'amd64': 'n', 'arm64': '
+ CONFIG_MODULE_SECTIONS                          policy<{'riscv64': 'y'}>
+ CONFIG_MODULE_SIG                               policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'y', 'ppc64el': 'y', 'riscv64': 'y', 's390x': 'y'}>
+ CONFIG_MODULE_SIG_ALL                           policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'y', 'ppc64el': 'y', 'riscv64': 'y', 's390x': 'y'}>
+-CONFIG_MODULE_SIG_FORCE                         policy<{'amd64': 'n', 'arm64': 'n', 'armhf': 'n', 'ppc64el': 'n', 'riscv64': 'n', 's390x': 'n'}>
++CONFIG_MODULE_SIG_FORCE                         policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'y', 'ppc64el': 'y', 'riscv64': 'y', 's390x': 'y'}>
+ CONFIG_MODULE_SIG_FORMAT                        policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'y', 'ppc64el': 'y', 'riscv64': 'y', 's390x': 'y'}>
+ CONFIG_MODULE_SIG_HASH                          policy<{'amd64': '"sha512"', 'arm64': '"sha512"', 'armhf': '"sha512"', 'ppc64el': '"sha512"', 'riscv64': '"sha512"', 's390x': '"sha512"'}>
+ CONFIG_MODULE_SIG_KEY                           policy<{'amd64': '"certs/signing_key.pem"', 'arm64': '"certs/signing_key.pem"', 'armhf': '"certs/signing_key.pem"', 'ppc64el': '"certs/signing_key.pem"', 'riscv64': '"certs/signing_key.pem"', 's390x': '"certs/signing_key.pem"'}>
