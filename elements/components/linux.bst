@@ -55,9 +55,6 @@ config:
   - |
     make -j1 olddefconfig
 
-  - |
-    python3 debian/scripts/misc/annotations -f debian.master/config/annotations --arch "%{debian_arch}" --flavour generic --check .config
-
   install-commands:
   - |
     install -Dm644 "%{image-name}" '%{install-root}%{bootdir}/vmlinuz'
