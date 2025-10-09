@@ -3,9 +3,18 @@
 kind: meson
 
 sources:
-- kind: tar
-  url: gnome_downloads:gnome-shell/48/gnome-shell-48.3.tar.xz
-  ref: fb0203fc748593f14e51732618e1f042525fd719764a0fdb0ee3f6fe413a9b2b
+- kind: git_repo
+  url: github:endlessm/gnome-shell.git
+  track: 12-gnome-shell-48.4
+  ref: c2960e06e3fa72b70d159643cebdc59eb0efad76
+- kind: git_module
+  url: gnome:gi-docgen.git
+  path: subprojects/gi-docgen
+  ref: 58433f82d1187f11c25311c6c68c44739d9b3b00
+- kind: git_module
+  url: gnome:libgnome-volume-control.git
+  path: subprojects/gvc
+  ref: 5f9768a2eac29c1ed56f1fbb449a77a3523683b6
 
 build-depends:
 - gnome-build-meta.bst:sdk-deps/sassc.bst
@@ -13,6 +22,7 @@ build-depends:
 - freedesktop-sdk.bst:components/python3-docutils.bst
 - freedesktop-sdk.bst:components/perl.bst
 - freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
+- eos/eos-metrics.bst
 
 runtime-depends:
 - gnome-build-meta.bst:core-deps/libgweather.bst
