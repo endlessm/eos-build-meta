@@ -49,13 +49,14 @@ config:
   #   * Setting up files in `/etc`
   #   * Runing `systemd-firstboot` and `systemctl preset-all` against the tree
   #   * Creating initial `/etc/fstab` with the root and boot partitions
+  #
+  # The `--noboot` option means: "Don't auto-mount the ESP via /etc/fstab".
   - |
     prepare-image.sh \
        --sysroot /sysroot \
        --seed "%{uuidnamespace}" \
        --rootsource /dev/gpt-auto-root \
-       --efisource LABEL=EFI \
-       --efipath /efi
+       --noboot
 
   # Move the kernel where OSTree will find it.
   - |
