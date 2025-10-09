@@ -10,6 +10,7 @@ config:
   overrides:
     core/meta-gnome-core-apps.bst: core/meta-gnome-core-apps.bst
     core/gnome-session.bst: core/gnome-session.bst
+    core/gnome-shell.bst: core/gnome-shell.bst
     core-deps/accountsservice.bst: components/accountsservice.bst
     core-deps/colord.bst: components/colord.bst
     core-deps/systemd-base.bst: components/systemd-base.bst
