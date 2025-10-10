@@ -122,6 +122,7 @@ This stage is defined in [eos-image-builder.git](https://github.com/endlessm/eos
 
 For more information on this stage, see:
 
+  * [`doc/overview/images.md`](./doc/overview/images.md)
   * The eos-image-builder
     [README](https://github.com/endlessm/eos-image-builder/blob/master/README.md)
   * The Endless Support & Training page

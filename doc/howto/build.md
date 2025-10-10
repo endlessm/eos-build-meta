@@ -221,9 +221,11 @@ output.
 
 ## Image build stage
 
-See `doc/overview/build.md` for an overview of the image build process and
-links to external documentation. Read on for instructions on how to run the
-image build.
+See `doc/overview/images.md` for an overview of the different Endless OS images
+variants and links for further reading.
+
+This document covers how to build the `eos-amd64-amd64-base` variant. The PAYG variant
+can only be built inside Endless.
 
 ### Automated builds
 
