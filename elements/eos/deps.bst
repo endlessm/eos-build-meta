@@ -44,6 +44,7 @@ depends:
 - eos/eos-theme.bst
 - eos/eos-updater.bst
 - eos/payg/deps.bst
+- eos/update-ca-certificates-symlink.bst
 
 # Used by eos-image-builder. This could move into a separate tree.
 # See: <https://github.com/endlessm/eos-build-meta/issues/81>
