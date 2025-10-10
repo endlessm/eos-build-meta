@@ -40,4 +40,4 @@ There is 1 variant of the image stage:
 
 The following scenarios need to be tested for the image:
 
-  1. Boot the disk image in a VM, using UEFI firmware, with Secure Boot disabled.
+  1. Boot the disk image in a VM, using UEFI firmware with Secure Boot enabled.
