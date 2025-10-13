@@ -11,10 +11,17 @@ description: |
     * ostree.conf, from `freedesktop-sdk.bst:components/ostree.bst`
 
 build-depends:
-- eos/eos-boot-helper.bst
-- eos/initramfs/deps.bst
 - freedesktop-sdk.bst:components/dracut.bst
+
+# These build-depends provide dracut modules.
+- eos/eos-boot-helper.bst
 - freedesktop-sdk.bst:components/ostree.bst
+
+# These build-depends provide programs used in the initramfs.
+# We separate these from / as we want to avoid GPL3 binaries within /sysroot.
+- filename: eos/initramfs/deps.bst
+  config:
+    location: /sysroot
 
 config:
 
@@ -24,8 +31,8 @@ config:
   - mkdir -p /efi
 
   - |
-    sysroot=/
-    version="$(ls -1 /lib/modules | head -n1)"
+    sysroot=/sysroot
+    version="$(ls -1 ${sysroot}/lib/modules | head -n1)"
     echo "Running depmod" 1>&2
 
     for version in $(ls "${sysroot}"/lib/modules/); do
@@ -40,10 +47,13 @@ config:
   #
   # We tee stderr to a file for post-processing.
   - |
-    version="$(ls -1 /lib/modules | head -n1)"
+    sysroot=/sysroot
+    version="$(ls -1 ${sysroot}/lib/modules | head -n1)"
     mkdir -p "%{install-root}/usr/lib/modules/${version}"
     dracut -v --reproducible \
            --kver "${version}" \
+           --sysroot "${sysroot}" \
+           --tmpdir /var/tmp \
            "%{install-root}/usr/lib/modules/${version}/initramfs" \
            2> >(tee /var/tmp/dracut.log >&2)
 
@@ -54,3 +64,5 @@ config:
         echo "Errors detected in Dracut log file."
         exit 1
     fi
+
+  - false
