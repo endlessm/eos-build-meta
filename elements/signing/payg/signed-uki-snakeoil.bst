@@ -9,13 +9,12 @@ build-depends:
 config:
   install-commands:
   - |
-    version="$(ls -1 /lib/modules | head -n1)"
-    mkdir -p "%{install-root}/usr/lib/modules/${version}"
+    mkdir -p "%{install-root}/usr/share/efi_binaries_payg/"
     sbsign \
         --key VENDOR-snakeoil.key \
         --cert VENDOR-snakeoil.crt \
-        --output=%{install-root}/usr/lib/modules/${version}/payg-image.efi \
-        "/usr/lib/modules/${version}/payg-image.efi"
+        --output=%{install-root}/usr/share/efi_binaries_payg/payg-image-signed.efi \
+        "/usr/share/efi_binaries_payg/payg-image.efi"
 
 sources:
 - kind: local

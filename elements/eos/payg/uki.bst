@@ -10,10 +10,8 @@ description: |
     * endless.conf, from `eos/eos-boot-helper.bst`
     * ostree.conf, from `freedesktop-sdk.bst:components/ostree.bst`
 
-  The UKI is written inside `/usr/lib/modules/` alongside the regular initramfs,
-  and signed by a later element. The signed binary is deployed to the ESP by a
-  codepath in the custom Endless version of OSTree, when `OSTREE_DEPLOY_PAYG`
-  is set in the environment.
+  The UKI is written to %{install-path} by this element. The final UKI
+  installed in place by `uki-signed.bst`
 
 build-depends:
 - eos/eos-boot-helper.bst
@@ -24,6 +22,10 @@ build-depends:
 - freedesktop-sdk.bst:components/ostree.bst
 - freedesktop-sdk.bst:components/python3-pefile.bst
 - gnome-build-meta.bst:core-deps/systemd.bst
+
+variables:
+  # The UKI is installed into its final location in a later element after signing.
+  install-path: "/usr/share/efi_binaries_payg/"
 
 config:
   commands:
@@ -49,8 +51,8 @@ config:
   # We tee stderr to a file for post-processing.
   - |
     version="$(ls -1 /lib/modules | head -n1)"
-    mkdir -p "%{install-root}/usr/lib/modules/${version}"
-    dracut %{install-root}/usr/lib/modules/${version}/payg-image.efi ${version} \
+    mkdir -p "%{install-root}%{install-path}"
+    dracut %{install-root}%{install-path}/payg-image.efi ${version} \
         -k /usr/lib/modules/${version} --uefi \
         --uefi-stub=%{install-root}/usr/lib/systemd/boot/efi/linuxx64.efi.stub \
         --kernel-cmdline "eospayg efi_no_storage_paranoia rd.shell=0" \
