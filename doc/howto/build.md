@@ -86,14 +86,14 @@ EOS7 uses BuildStream with various 3rd party plugins, all which are implemented
 in Python. Use `utils/requirements.txt` to get a set of known-good dependencies.
 
 The recommended way to install the BuildStream is in a venv, using
-[uv](https://docs.astral.sh/uv/), as follows:
+[uv](https://docs.astral.sh/uv/) and the `requirements.txt` file in eos-build-meta.git, as follows:
 
     uv venv ./_venv
     uv pip install -p ./_venv -r utils/requirements.txt
 
-Run BuildStream from inside the `./bst.venv/bin` directory as follows:
+Run BuildStream from inside the `./_venv/bin` directory as follows:
 
-    ./bst.venv/bin/bst
+    ./_venv/bin/bst
 
 (If you don't want to type out the full path every time, there are several ways
 to make this program run in your shell when you type `bst`, such as a shell
