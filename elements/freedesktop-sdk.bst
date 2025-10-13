@@ -26,13 +26,14 @@ config:
         bootstrap_build_arch: "x86_64"
 
   overrides:
-    # Overrides applied in eos-build-meta
+    # Overrides applied in eos-build-meta.
     components/bash-config.bst: eos/config/bash-config.bst
     components/cups-base.bst: components/cups-base.bst
     components/dracut.bst: components/dracut.bst
     components/flatpak.bst: components/flatpak.bst
     components/linux.bst: components/linux.bst
     components/linux-module-cert.bst: eos/linux-module-cert.bst
+    components/ostree.bst: components/ostree.bst
     vm/config/sudo.bst: eos/config/sudo.bst
 
     # Overrides taken from gnome-build-meta
