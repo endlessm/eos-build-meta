@@ -13,3 +13,6 @@ config:
     core-deps/accountsservice.bst: components/accountsservice.bst
     freedesktop-sdk.bst: freedesktop-sdk.bst
     gnomeos/os-release-user.bst: eos/os-release-user.bst
+
+    plugins/buildstream-plugins.bst: plugins/buildstream-plugins.bst
+    plugins/buildstream-plugins-community.bst: plugins/buildstream-plugins-community.bst
