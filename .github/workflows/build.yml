@@ -46,6 +46,16 @@ jobs:
             secret/secure-boot-signer/api-users/ostree-builder password | SBSIGNER_PASSWORD ;
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
+      - name: Fetch Github read credentials from Vault
+        uses: hashicorp/vault-action@v3
+        with:
+          url: https://vault.endlessos.org
+          method: jwt
+          path: ghactions
+          role: endlessm-eos-build-meta
+          secrets: |
+            secret/github/users/eos-backup token | EOS_BACKUP_TOKEN ;
+
       - name: Configure BuildStream
         run: |
           # Certificate for BuildStream cache
@@ -129,6 +139,10 @@ jobs:
           machine sb-signer.endlessm-sf.com
           login ostree-builder
           password ${SBSIGNER_PASSWORD}
+
+          machine github.com
+          login eos-backup
+          password ${EOS_BACKUP_TOKEN}
           EOF
           chmod 600 ~/.netrc
 
@@ -146,13 +160,21 @@ jobs:
                 timeout: 30
           EOF
           source venv/bin/activate
-          bst -o signed_boot endless build --retry-failed eos/repo.bst
+          bst -o payg true -o signed_boot endless build --retry-failed eos/repo.bst
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
       - name: Build root filesystem (signed_boot=snakeoil)
         run: |
+          echo "Set up ~/.netrc"
+          cat >> ~/.netrc << EOF
+          machine github.com
+          login eos-backup
+          password ${EOS_BACKUP_TOKEN}
+          EOF
+          chmod 600 ~/.netrc
+
           source venv/bin/activate
-          bst -o signed_boot snakeoil build eos/repo.bst
+          bst -o payg true -o signed_boot snakeoil build eos/repo.bst
         if: ${{ github.event_name == 'pull_request' || github.ref != 'refs/heads/main' }}
 
       - name: Export OSTree commit and push it
