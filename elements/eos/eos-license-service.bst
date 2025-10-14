@@ -12,5 +12,5 @@ build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-autotools.bst
 
 depends:
-- gnome-build-meta.bst:sdk/gjs.bst
 - freedesktop-sdk.bst:components/systemd.bst
+- gnome-build-meta.bst:sdk/gjs.bst

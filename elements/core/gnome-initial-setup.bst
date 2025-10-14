@@ -1,9 +1,10 @@
 kind: meson
 
 sources:
-- kind: tar
-  url: gnome_downloads:gnome-initial-setup/48/gnome-initial-setup-48.1.tar.xz
-  ref: b3dabf7e79b665ff12241fbdba615489513d886224759986af8f48657592315e
+- kind: git_repo
+  url: github:endlessm/gnome-initial-setup.git
+  track: 166-gnome-initial-setup-48.1
+  ref: 4e809a869293eb6995a8252e13df90724bf06143
 build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
 
@@ -30,6 +31,8 @@ depends:
 - freedesktop-sdk.bst:components/gstreamer.bst
 - freedesktop-sdk.bst:components/pwquality.bst
 - freedesktop-sdk.bst:bootstrap-import.bst
+- eos/eos-license-service.bst
+- eos/eos-metrics.bst
 
 variables:
   meson-local: >-
