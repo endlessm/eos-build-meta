@@ -34,10 +34,13 @@ hardware support is working. Others can be on a laptop or VM.
 
 ## Testing the Image stage
 
-There is 1 variant of the image stage:
+Image variants are listed in [`doc/overview/images.md`](./doc/overview/images.md).
 
-  * product=eos flavor=base platform=amd64
+We currently test two of these variants:
 
-The following scenarios need to be tested for the image:
+  1. eos-amd64-amd64-base
+  2. eosimpact-amd64-payg-base
+
+The following scenarios need to be tested for each image:
 
   1. Boot the disk image in a VM, using UEFI firmware with Secure Boot enabled.

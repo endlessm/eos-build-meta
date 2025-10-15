@@ -24,13 +24,14 @@ class EosSbSignerElement(Element):
     BST_FORBID_SOURCES = True
 
     def configure(self, node):
-        node.validate_keys(['input', 'endpoint', 'output', 'private-key-file', 'timeout'])
+        node.validate_keys(['input', 'endpoint', 'output', 'private-key-file', 'timeout', 'certificate'])
 
         self.input_path = node.get_str('input')
         self.endpoint = node.get_str('endpoint')
         self.output_path = node.get_str('output')
         self.private_key_file = node.get_str('private-key-file')
         self.timeout = node.get_int('timeout', default=30)
+        self.certificate = node.get_str('certificate')
 
         if not self.input_path:
             raise ElementError("'input' configuration is required")
@@ -38,6 +39,8 @@ class EosSbSignerElement(Element):
             raise ElementError("'endpoint' configuration is required")
         if not self.private_key_file:
             raise ElementError("'private-key-file' configuration is required")
+        if not self.certificate:
+            raise ElementError("'certificate' configuration is required")
 
     def preflight(self):
         if not Path(self.private_key_file).is_file():
@@ -51,6 +54,7 @@ class EosSbSignerElement(Element):
             'endpoint': self.endpoint,
             'output': self.output_path,
             'key-fingerprint': fingerprint,
+            'certificate': self.certificate,
         }
         return key
 
@@ -90,6 +94,9 @@ class EosSbSignerElement(Element):
             'file': ('binary.efi', binary_data, 'application/octet-stream'),
             'signature': ('signature.sig', bytes(signature), 'application/octet-stream'),
         }
+        data = {
+            'certificate': self.certificate
+        }
 
         signing_url = f"{self.endpoint.rstrip('/')}/api/sign"
         self.info(f"Sending POST request to signer service at {signing_url}")
@@ -97,6 +104,7 @@ class EosSbSignerElement(Element):
         try:
             response = requests.post(
                 signing_url,
+                data=data,
                 files=files,
                 timeout=self.timeout
             )
