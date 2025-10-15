@@ -174,7 +174,7 @@ jobs:
           chmod 600 ~/.netrc
 
           source venv/bin/activate
-          bst -o payg true -o signed_boot snakeoil build eos/repo.bst
+          bst -o payg true -o signed_boot snakeoil build --retry-failed eos/repo.bst
         if: ${{ github.event_name == 'pull_request' || github.ref != 'refs/heads/main' }}
 
       - name: Export OSTree commit and push it
