@@ -1,8 +1,9 @@
 # Global configuration for eos_sb_signer element plugin.
+#
+# Note: This file is overwritten in CI builds.
 elements:
   eos_sb_signer:
     config:
       endpoint: http://localhost:5000
       private-key-file: files/eos-sb-signer/apitrustedkey-secret.gpg
       timeout: 30
-      certificate: eos_uefi
