@@ -76,7 +76,7 @@ jobs:
             max-jobs: 4
           logging:
             key-length: 0
-            verbose: false
+            verbose: true
             error-lines: 20
             message-lines: 20
             debug: false
