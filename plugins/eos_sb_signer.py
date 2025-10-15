@@ -31,7 +31,7 @@ class EosSbSignerElement(Element):
         self.output_path = node.get_str('output')
         self.private_key_file = node.get_str('private-key-file')
         self.timeout = node.get_int('timeout', default=30)
-        self.certificate = node.get_str('certificate')
+        self.certificate = node.get_str('certificate', default="eos_uefi")
 
         if not self.input_path:
             raise ElementError("'input' configuration is required")
@@ -39,8 +39,6 @@ class EosSbSignerElement(Element):
             raise ElementError("'endpoint' configuration is required")
         if not self.private_key_file:
             raise ElementError("'private-key-file' configuration is required")
-        if not self.certificate:
-            raise ElementError("'certificate' configuration is required")
 
     def preflight(self):
         if not Path(self.private_key_file).is_file():
