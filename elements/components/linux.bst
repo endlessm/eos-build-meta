@@ -65,10 +65,6 @@ config:
 
   - |
     release=$(make -s kernelrelease)
-    find "%{install-root}%{indep-libdir}/modules/${release}" -type f -name '*.ko' | xargs -P $MAXJOBS -n 2 -r xz;
-
-  - |
-    release=$(make -s kernelrelease)
     targetdir="%{install-root}%{prefix}/src/linux-${release}"
 
     rm "%{install-root}%{indep-libdir}/modules/${release}"/build
