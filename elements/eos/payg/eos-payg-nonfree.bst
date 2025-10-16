@@ -18,7 +18,7 @@ sources:
 - kind: git_repo
   url: github:endlessm/eos-payg-nonfree
   track: master
-  ref: Release_6.0.7-6-ge1a4545cf194cae4cd047d6896995764e6b6cdca
+  ref: Release_6.0.7-8-g4dc4892a7fad5129324f279a9a1e702f178d7e9a
 
 variables:
   meson-local: >-
