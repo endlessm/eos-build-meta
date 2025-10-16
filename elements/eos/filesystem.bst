@@ -1,3 +1,5 @@
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.3 gnomeos/filesystem.bst
+
 kind: compose
 description: |
   Apply split-rules to the `eos/deps.bst` artifact.

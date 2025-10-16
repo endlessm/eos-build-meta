@@ -1,4 +1,4 @@
-# This is derived from gnome-build-meta 48.3, ensure to update it when rebasing.
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.3 freedesktop-sdk.bst
 
 kind: junction
 

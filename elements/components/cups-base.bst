@@ -1,4 +1,4 @@
-# Based on elements/components/cups-base.bst from Freedesktop SDK 24.08.23.
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.23 components/cups-base.bst
 
 kind: autotools
 description:

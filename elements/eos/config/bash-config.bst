@@ -1,5 +1,5 @@
-# Based on `components/bash-config.bst` from Freedesktop SDK 24.08.22.
-#
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.22 components/bash-config.bst
+
 # Adapted to avoid installing files in `/root`, which is not the correct
 # place on an OSTree system.
 #

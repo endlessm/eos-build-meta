@@ -1,3 +1,5 @@
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.3 gnomeos/linux-module-cert.bst
+
 kind: manual
 description: |
   Linux kernel module certificates.

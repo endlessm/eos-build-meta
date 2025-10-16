@@ -1,4 +1,5 @@
-# Copied from gnome-build-meta 48.3 file `elements/core-deps/accountsservice.bst`.
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.3 core-deps/accountsservice.bst
+
 kind: meson
 description: |
   UNIX account management tool, from the pre-systemd days.
