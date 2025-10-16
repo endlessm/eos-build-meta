@@ -61,7 +61,7 @@ config:
     install -Dm644 "%{image-name}" '%{install-root}%{bootdir}/vmlinuz'
     install -Dm644 System.map '%{install-root}%{bootdir}/System.map'
     install -Dm644 .config '%{install-root}%{bootdir}/config'
-    make -j1 INSTALL_MOD_PATH='%{install-root}%{prefix}' modules_install
+    make INSTALL_MOD_PATH='%{install-root}%{prefix}' modules_install
 
   - |
     release=$(make -s kernelrelease)
