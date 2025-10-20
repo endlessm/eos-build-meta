@@ -54,6 +54,9 @@ config:
     python3 debian/scripts/misc/annotations --export --arch "%{debian_arch}" --flavour generic > .config
 
   - |
+    scripts/config -e DEBUG_INFO_NONE
+
+  - |
     make -j1 olddefconfig
 
   install-commands:
