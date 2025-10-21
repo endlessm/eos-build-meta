@@ -21,6 +21,7 @@ build-depends:
 - freedesktop-sdk.bst:components/dracut.bst
 - freedesktop-sdk.bst:components/ostree.bst
 - freedesktop-sdk.bst:components/python3-pefile.bst
+- freedesktop-sdk.bst:components/zstd.bst
 - gnome-build-meta.bst:core-deps/systemd.bst
 
 variables:
@@ -52,13 +53,17 @@ config:
   - |
     version="$(ls -1 /lib/modules | head -n1)"
     mkdir -p "%{install-root}%{install-path}"
-    dracut %{install-root}%{install-path}/payg-image.efi ${version} \
+    dracut %{install-root}%{install-path}/payg-image.efi \
+        --kver ${version} \
         -k /usr/lib/modules/${version} --uefi \
         --uefi-stub=%{install-root}/usr/lib/systemd/boot/efi/linuxx64.efi.stub \
         --kernel-cmdline "eospayg efi_no_storage_paranoia rd.shell=0" \
         --kernel-image /boot/vmlinuz \
         --force-drivers "endlessdog" \
-        --add "eos-payg eos-payg-nonfree"
+        --add "eos-payg eos-payg-nonfree" \
+        --stdlog 6 \
+        --keep \
+        2> >(tee /var/tmp/dracut.log >&2)
 
   # Dracut treats errors as warnings. In practice, errors often mean a
   # broken initramfs, so we detect them here and raise an error.

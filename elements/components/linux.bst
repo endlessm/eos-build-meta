@@ -54,6 +54,9 @@ config:
     python3 debian/scripts/misc/annotations --export --arch "%{debian_arch}" --flavour generic > .config
 
   - |
+    scripts/config -e DEBUG_INFO_NONE
+
+  - |
     make -j1 olddefconfig
 
   install-commands:
@@ -61,11 +64,7 @@ config:
     install -Dm644 "%{image-name}" '%{install-root}%{bootdir}/vmlinuz'
     install -Dm644 System.map '%{install-root}%{bootdir}/System.map'
     install -Dm644 .config '%{install-root}%{bootdir}/config'
-    make -j1 INSTALL_MOD_PATH='%{install-root}%{prefix}' modules_install
-
-  - |
-    release=$(make -s kernelrelease)
-    find "%{install-root}%{indep-libdir}/modules/${release}" -type f -name '*.ko' | xargs -P $MAXJOBS -n 2 -r xz;
+    make INSTALL_MOD_PATH='%{install-root}%{prefix}' modules_install
 
   - |
     release=$(make -s kernelrelease)
