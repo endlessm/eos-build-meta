@@ -1,4 +1,4 @@
-# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.3 gnomeos/os-release-user.bst
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.5 gnomeos/os-release-user.bst
 
 kind: meson
 sources:

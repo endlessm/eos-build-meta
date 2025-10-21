@@ -1,4 +1,4 @@
-# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.3 freedesktop-sdk.bst
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.5 freedesktop-sdk.bst
 
 kind: junction
 description: |
@@ -8,7 +8,7 @@ sources:
 - kind: git_repo
   url: gitlab:freedesktop-sdk/freedesktop-sdk.git
   track: freedesktop-sdk-24.08*
-  ref: freedesktop-sdk-24.08.22-0-gb586eff57a98db393c1ba25730a265e0b3900196
+  ref: freedesktop-sdk-24.08.25-0-g2ebdfee96782e1b2ce14a6585da1eb16463deb5f
 
 config:
   options:
@@ -29,7 +29,6 @@ config:
     # Overrides applied in eos-build-meta.
     components/bash-config.bst: eos/config/bash-config.bst
     components/cups-base.bst: components/cups-base.bst
-    components/dracut.bst: components/dracut.bst
     components/flatpak.bst: components/flatpak.bst
     components/linux.bst: components/linux.bst
     components/linux-pam.bst: components/linux-pam.bst

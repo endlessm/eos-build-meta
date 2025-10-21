@@ -1,4 +1,4 @@
-# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.3 core/meta-gnome-core-apps.bst
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.5 core/meta-gnome-core-apps.bst
 
 # The core set is not expected to change as frequently as core-deps.
 # Adding or removing elements from here should be approved by

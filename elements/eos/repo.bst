@@ -1,8 +1,8 @@
-# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.22 vm/minimal-ostree/repo.bst
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.25 vm/minimal-ostree/repo.bst
 
 kind: script
 description: |
-  Prepare the filesystem tree and convert it to OSTree commit.
+  Prepare the filesystem tree and convert it to an OSTree commit.
 
   The output artifact contains a `ostree/repo` directory which is an OSTree
   repo in `archive` format with a single commit and a single branch.
