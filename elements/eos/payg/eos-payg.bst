@@ -25,3 +25,8 @@ sources:
   path: subprojects/libgsystemservice
   url: gnome_gitlab:pwithnall/libgsystemservice.git
   ref: 58468f2622e1415b5d1d2ffa06864ab31ab12c9a
+
+variables:
+  meson-local: >-
+    -Ddefault_library=both
+    -Dlibgsystemservice:default_library=static
