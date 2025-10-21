@@ -9,6 +9,13 @@ description:
   scheduling daemon which prioritises downloads to minimise cost, and a tariff
   library which describes different data plans.
 
+  Borrowed to access a more up-to-date and unpatched version. It has been
+  removed in GNOME 49.
+
+  The element diverged significantly from the one we derived it from, so it may
+  not make sense to include further changes from the source element, include
+  them at your discretion.
+
 sources:
 - kind: git_repo
   url: github:endlessm/mogwai.git

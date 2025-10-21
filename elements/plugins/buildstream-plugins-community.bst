@@ -1,6 +1,8 @@
 # utils/update-elements.sh: Derived from gnome-build-meta.bst 48.5 plugins/buildstream-plugins-community.bst
 
 kind: junction
+description: |
+  Borrowed so we can access it in project.conf, overridden for consistency.
 
 sources:
 - kind: tar

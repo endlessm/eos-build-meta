@@ -4,8 +4,8 @@ kind: meson
 description: |
   UNIX account management tool, from the pre-systemd days.
 
-  EOS7 overrides this element so we can set the admin group name to `sudo`,
-  for EOS6 compatibility.
+  Overridden so we can name the admin group "sudo" for backwards compatibility
+  with Endless OS 6.
 
 sources:
 - kind: tar
@@ -26,6 +26,7 @@ depends:
 
 variables:
   meson: meson %{build-dir} */ %{meson-args}
+  # Overridde: name the admin group "sudo".
   meson-local: >-
     -Dadmin_group=sudo
   local_flags: >-

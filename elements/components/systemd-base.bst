@@ -1,6 +1,9 @@
 # utils/update-elements.sh: Derived from gnome-build-meta.bst 48.3 core-deps/systemd-base.bst
 
 kind: meson
+description:
+  Overridden to use a newer version to which to apply patches, including for
+  PAYG support.
 
 sources:
 - kind: git_repo

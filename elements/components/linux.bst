@@ -6,6 +6,13 @@ description: |
 
   See `doc/overview/signing.md` for an overview of how module signing works.
 
+  Overridden to use Endless' Ubuntu-derived kernel instead. See also
+  elements/include/linux.yml.
+
+  The element diverged significantly from the one we derived it from, so it may
+  not make sense to include further changes from the source element, include
+  them at your discretion.
+
 depends:
 - freedesktop-sdk.bst:components/kmod.bst
 
@@ -16,19 +23,20 @@ build-depends:
 - freedesktop-sdk.bst:components/cpio.bst  # loongarch64 build enabled CONFIG_IKHEADERS by default
 - freedesktop-sdk.bst:components/flex.bst
 - freedesktop-sdk.bst:components/gzip.bst
-- freedesktop-sdk.bst:components/openssl.bst
+- freedesktop-sdk.bst:components/openssl.bst # Override: Added.
 - freedesktop-sdk.bst:components/python3.bst
 - freedesktop-sdk.bst:components/rsync.bst
 - freedesktop-sdk.bst:components/util-linux.bst
-- freedesktop-sdk.bst:components/zstd.bst
+- freedesktop-sdk.bst:components/zstd.bst # Override: Added.
+# Override: Dropped components/linux-module-cert.bst
 
 variables:
   bootdir: /boot
   kernel_arch: '%{arch}'
-  src-arch: x86
+  src-arch: x86 # Override: We explicitely only support x86.
   image-name: '$(make -s image_name)'
-  modules-key: certs/signing_key.pem
-  (?):
+  modules-key: certs/signing_key.pem # Override: Added.
+  (?): # Override: Debian-style arch names for debian/scripts/misc/annotations.
   - arch == "x86_64":
       debian_arch: amd64
   - arch == "aarch64":
