@@ -8,7 +8,6 @@ build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
 - freedesktop-sdk.bst:components/bison.bst
 - freedesktop-sdk.bst:components/docbook-xsl.bst
-- freedesktop-sdk.bst:components/xmlto.bst
 - freedesktop-sdk.bst:components/gettext.bst
 - freedesktop-sdk.bst:components/gobject-introspection.bst
 - freedesktop-sdk.bst:components/libxslt.bst
