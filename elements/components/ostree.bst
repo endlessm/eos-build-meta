@@ -1,4 +1,4 @@
-# Based on compoments/ostree.bst from Freedesktop SDK 24.08.26.
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.26 components/ostree.bst
 
 kind: autotools
 description: |

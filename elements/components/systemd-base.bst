@@ -1,3 +1,5 @@
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.22 components/systemd-base.bst
+
 kind: meson
 
 sources:

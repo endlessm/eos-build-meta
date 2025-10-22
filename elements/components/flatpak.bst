@@ -1,4 +1,4 @@
-# Copied from Freedesktop SDK 24.08.23 in order to patch Flatpak.
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.23 components/flatpak.bst
 
 kind: meson
 

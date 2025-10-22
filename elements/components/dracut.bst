@@ -1,5 +1,4 @@
-# Taken from Freedesktop SDK 25.08. Remove this when
-# we update the freedesktop-sdk and GNOME OS base versions
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.24 components/dracut.bst
 
 kind: autotools
 

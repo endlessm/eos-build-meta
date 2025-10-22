@@ -1,3 +1,5 @@
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.3 gnomeos/initial-scripts.bst
+
 kind: collect_initial_scripts
 description: |
   Collects any `initial-script` public data set by elements in `deps.bst`.

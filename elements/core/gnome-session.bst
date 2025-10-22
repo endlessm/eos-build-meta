@@ -1,3 +1,5 @@
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 49.alpha.1 core/gnome-session.bst
+
 kind: meson
 
 sources:

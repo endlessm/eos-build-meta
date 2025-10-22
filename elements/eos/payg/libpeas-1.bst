@@ -1,3 +1,5 @@
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.3 core-deps/libpeas-1.bst
+
 kind: meson
 sources:
 - kind: git_repo

@@ -1,5 +1,4 @@
-# Adapted from the Freedesktop SDK element `vm/minimal-ostree/repo.bst`
-# from Freedesktop SDK 24.08.22.
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.22 vm/minimal-ostree/repo.bst
 
 kind: script
 description: |

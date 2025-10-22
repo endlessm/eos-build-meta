@@ -1,3 +1,5 @@
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.3 gnomeos/initramfs.bst
+
 kind: script
 description: |
   EOS7 initramfs construction using Dracut.
