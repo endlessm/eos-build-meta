@@ -37,6 +37,9 @@ config:
   - ln -s var/roothome "%{install-root}/root"
   - ln -s run/media "%{install-root}/media"
 
+  - mkdir "%{install-root}/usr"
+  - ln -sf /var/local "%{install-root}/usr/local"
+
   # Special undocumented support for encrypted file systems using fscrypt.
   # In Endless OS, the root partition is mounted at `/sysroot/`. The files in
   # `/` are put there by OSTree when it checks out a tree. This symlink helps
