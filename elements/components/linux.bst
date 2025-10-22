@@ -18,10 +18,10 @@ depends:
 
 build-depends:
 - freedesktop-sdk.bst:bootstrap-import.bst
-- freedesktop-sdk.bst:components/bc.bst
 - freedesktop-sdk.bst:components/bison.bst
 - freedesktop-sdk.bst:components/cpio.bst  # loongarch64 build enabled CONFIG_IKHEADERS by default
 - freedesktop-sdk.bst:components/flex.bst
+- freedesktop-sdk.bst:components/bc.bst
 - freedesktop-sdk.bst:components/gzip.bst
 - freedesktop-sdk.bst:components/openssl.bst # Override: Added.
 - freedesktop-sdk.bst:components/python3.bst
