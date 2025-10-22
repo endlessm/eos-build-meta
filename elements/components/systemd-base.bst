@@ -5,8 +5,8 @@ kind: meson
 sources:
 - kind: git_repo
   url: github:endlessm/systemd
-  track: 161-rebase-256.17
-  ref: Version_256.17-9-gba32d89741ca101e4a14a2a04020628dcc11dcc6
+  track: 161-rebase-257.10
+  ref: Version_241-40626-ga44e1e4ed123f942daf56e80163adb554285bf0b
 
 build-depends:
 - freedesktop-sdk.bst:bootstrap-import.bst
