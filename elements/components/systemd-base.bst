@@ -1,4 +1,4 @@
-# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.22 components/systemd-base.bst
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.3 core-deps/systemd-base.bst
 
 kind: meson
 

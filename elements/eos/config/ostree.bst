@@ -1,4 +1,4 @@
-# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.22 vm/config/ostree.bst
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-25.08.1 vm/config/ostree.bst
 
 kind: manual
 description: |

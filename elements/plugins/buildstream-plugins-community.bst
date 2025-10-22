@@ -1,4 +1,4 @@
-# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.3 plugins/buildstream-plugins-community.bst
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.5 plugins/buildstream-plugins-community.bst
 
 kind: junction
 
