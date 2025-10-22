@@ -45,11 +45,5 @@ variables:
     -Dtests=false
     -Dsystem_dbus_proxy=xdg-dbus-proxy
 
-sources:
-- kind: git_repo
-  url: github:flatpak/flatpak.git
-  track: 1.1[02468]*
-  ref: 1.16.1-0-gb676905d91aa3c4e524ca663784d4cf085c465d7
-# Override: Apply patches.
-- kind: patch
-  path: patches/flatpak/revert-extra-data-sandbox.patch
+(@):
+- elements/include/flatpak.yml
