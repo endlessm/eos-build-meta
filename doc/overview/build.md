@@ -107,7 +107,7 @@ elements:
     a stack element which lists each element to include.
   * [`eos/filesystem.bst`](https://github.com/endlessm/eos-build-meta/blob/main/elements/eos/filesystem.bst)
     a compose element that defines which *artifacts* to include, based on *split rules*.
-  * [`eos/repo.bst](https://github.com/endlessm/eos-build-meta/blob/main/elements/eos/repo.bst),
+  * [`eos/repo.bst`](https://github.com/endlessm/eos-build-meta/blob/main/elements/eos/repo.bst),
     a script element that creates the final root filesystem and commits it to
     an OSTree repository, ready for the next stage.
 
@@ -126,4 +126,4 @@ For more information on this stage, see:
   * The eos-image-builder
     [README](https://github.com/endlessm/eos-image-builder/blob/master/README.md)
   * The Endless Support & Training page
-    ["Endless OS Image Builder](https://support.endlessos.org/en/deployment/image-builder)
+    ["Endless OS Image Builder"](https://support.endlessos.org/en/deployment/image-builder)
