@@ -159,7 +159,7 @@ function update_element {
 
 	# Detect renamed elements.
 	local NEW_SRC_ELEMENT=$OLD_SRC_ELEMENT
-	local RENAMED_ELEMENT=`git diff --name-status refs/tags/$OLD_TAG..refs/tags/$NEW_TAG | grep --extended-regexp --max-count 1 "^R[0-9]{3}\s$OLD_SRC_ELEMENT\s[-./a-z0-9]+" | cut --fields 3`
+	local RENAMED_ELEMENT=`git diff --name-status refs/tags/$OLD_TAG..refs/tags/$NEW_TAG | grep --extended-regexp --max-count 1 "^R[0-9]{3}\selements/$OLD_SRC_ELEMENT\s[-./a-z0-9]+" | cut --fields 3`
 	if [ -n "$RENAMED_ELEMENT" ]; then
 		NEW_SRC_ELEMENT=${RENAMED_ELEMENT#elements/}
 		echo "Renamed: $OLD_SRC_ELEMENT → $NEW_SRC_ELEMENT"
