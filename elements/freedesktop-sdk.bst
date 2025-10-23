@@ -32,7 +32,6 @@ config:
     components/dracut.bst: components/dracut.bst
     components/flatpak.bst: components/flatpak.bst
     components/linux.bst: components/linux.bst
-    components/linux-module-cert.bst: eos/linux-module-cert.bst
     components/ostree.bst: components/ostree.bst
     vm/config/sudo.bst: eos/config/sudo.bst
 
