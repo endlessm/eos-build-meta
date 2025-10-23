@@ -11,7 +11,6 @@
 # It also assumes the gnome-build-meta and freedesktop-sdk remotes
 # and their tags are available and up-to-date.
 #
-# FIXME It doesn't support removed elements.
 # FIXME It doesn't update any other files than the ones in elements/.
 #
 # This script first updates the gnome-build-meta.bst junction element's
@@ -152,6 +151,12 @@ function update_element {
 	# Only update elements borrowed from older versions.
 	if [[ "$OLD_TAG" == "$NEW_TAG" ]]; then
 		echo "Skipping $DST_ELEMENT: $SRC_PROJECT $OLD_TAG = $NEW_TAG"
+		return
+	fi
+
+	# Detect removed elements.
+	if git diff --name-status refs/tags/$OLD_TAG..refs/tags/$NEW_TAG | grep --extended-regexp --max-count 1 --quiet "^D\selements/$OLD_SRC_ELEMENT"; then
+		echo "Skipping $DST_ELEMENT: Removed in $SRC_PROJECT $NEW_TAG"
 		return
 	fi
 
