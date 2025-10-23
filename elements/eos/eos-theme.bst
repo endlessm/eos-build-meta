@@ -12,7 +12,8 @@ description: |
 sources:
 - kind: git_repo
   url: github:endlessm/eos-theme.git
-  ref: 27604966c939ce49532d1d868c0e14af18d0e45d
+  track: 174-use-update-ca-trust
+  ref: 43acff2553cb0c03f1dc5b0d522e9790aa13bc70
 
 build-depends:
 - freedesktop-sdk.bst:components/systemd.bst
