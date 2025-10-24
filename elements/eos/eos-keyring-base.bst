@@ -20,7 +20,8 @@ description: |
 sources:
 - kind: git_repo
   url: github:endlessm/eos-keyring.git
-  ref: 99f6609b0d799f7463c87fec45e5a9e1a9a36994
+  track: 174-use-update-ca-trust
+  ref: c9c7fb95fc34d91c69efa057ae7392435491a1a9
 
 build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-autotools.bst

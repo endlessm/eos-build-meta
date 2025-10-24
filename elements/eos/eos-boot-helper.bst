@@ -24,8 +24,8 @@ variables:
 sources:
 - kind: git_repo
   url: github:endlessm/eos-boot-helper
-  track: master
-  ref: Release_6.0.5-17-g5f8019dba9859784b1ea90accee7895f3786c4a3
+  track: 174-use-update-ca-trust
+  ref: a1f642cb0cf0c59bb94f56311d0354b16614455d
 
 public:
   bst:
