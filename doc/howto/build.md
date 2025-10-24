@@ -129,8 +129,17 @@ caches, and connect only to Endless's cache.
 In your `~/.config/buildstream.conf` file, add the following to achieve that:
 
 ```
+# Configuration optimized for building eos-build-meta
+#
+# Use the Endless cache for Freedesktop SDK and GNOME OS artifacts,
+# instead of the upstream cache servers which are sometimes overloaded.
 projects:
-  eos:
+  freedesktop-sdk:
+    artifacts:
+      override-project-caches: true
+      servers:
+        - url: https://bstcache.endlessos.org
+  gnome:
     artifacts:
       override-project-caches: true
       servers:
