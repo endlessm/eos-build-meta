@@ -10,6 +10,7 @@ depends:
 # Low level OS elements.
 - components/linux.bst
 - eos/config/ostree.bst
+- eos/config/systemd-oomd.bst
 - eos/config/systemd-sysusers.bst
 - eos/efi-binaries.bst
 - eos/eos-boot-helper.bst

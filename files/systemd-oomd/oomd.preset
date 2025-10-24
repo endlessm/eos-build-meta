@@ -1,0 +1,2 @@
+disable systemd-oomd.service
+disable systemd-oomd.socket
