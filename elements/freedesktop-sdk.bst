@@ -1,12 +1,15 @@
 # utils/update-elements.sh: Derived from gnome-build-meta.bst 48.3 freedesktop-sdk.bst
 
 kind: junction
+description: |
+  Overridden to apply override some of its elements and to apply patches to it.
 
 sources:
 - kind: git_repo
   url: gitlab:freedesktop-sdk/freedesktop-sdk.git
   track: freedesktop-sdk-24.08*
   ref: freedesktop-sdk-24.08.22-0-gb586eff57a98db393c1ba25730a265e0b3900196
+# Override: Apply patches.
 - kind: patch_queue
   path: patches/freedesktop-sdk
 
@@ -67,5 +70,6 @@ config:
     components/zenity.bst: gnome-build-meta.bst:void/zenity.bst
 
     components/xdg-desktop-portal-base.bst: gnome-build-meta.bst:core-deps/xdg-desktop-portal.bst
+    components/linux-module-cert.bst: gnome-build-meta.bst:gnomeos/linux-module-cert.bst
     components/systemd-base.bst: gnome-build-meta.bst:core-deps/systemd-base.bst
     components/systemd.bst: gnome-build-meta.bst:core-deps/systemd.bst

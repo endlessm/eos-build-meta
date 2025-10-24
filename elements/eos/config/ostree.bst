@@ -1,8 +1,11 @@
-# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.22 vm/config/ostree.bst
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-25.08.1 vm/config/ostree.bst
 
 kind: manual
 description: |
   Root filesystem setup and OSTree configuration.
+
+  Borrowed from freedesktop-sdk, where FreeDesktop-related files and
+  configuration are replaced with Endless OS-specific ones.
 
 build-depends:
 - freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
@@ -49,5 +52,7 @@ config:
   - install -Dm644 -t "%{install-root}/usr/lib/tmpfiles.d" ostree.conf
 
 sources:
+# Borrow: Similar to files/vm/ostree-config in freedesktop-sdk where ostree.conf
+# is borrowed unchanged, and eos.conf replaces freedesktop-sdk.conf.in.
 - kind: local
   path: files/ostree-config

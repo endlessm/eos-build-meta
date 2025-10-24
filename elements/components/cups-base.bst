@@ -4,9 +4,8 @@ kind: autotools
 description:
   Printing system.
 
-  This element overrides its equivalent in Freedesktop SDK so we can
-  name the system group "sudo" instead of "wheel", for backwards
-  compatibility with EOS6.
+  Overridden to rename the 'wheel' group to 'sudo', and to add sysuser ids (cf.
+  doc/overview/sysusers.md) for backwards compatibility with Endless OS 6.
 
 build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-autotools.bst
@@ -77,6 +76,9 @@ sources:
   - "*op*"
   ref: v2.4.10-0-gf3e5cc069c25647619aba8e0aefaa1969d71447e
 - kind: local
+  # Overridde: Modified to name the system group "sudo".
   path: files/cups/tmpfiles.conf
 - kind: local
+  # Overridde: Hardcodes the user ID for one of the sysusers, instead of
+  # dynamically allocating one. Cf. doc/overview/sysusers.md.
   path: files/cups/sysusers.conf

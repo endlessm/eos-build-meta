@@ -1,6 +1,8 @@
 # utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.23 components/flatpak.bst
 
 kind: meson
+description: |
+  Overridden to modify elements/include/flatpak.yml to apply patches.
 
 build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
@@ -48,5 +50,6 @@ sources:
   url: github:flatpak/flatpak.git
   track: 1.1[02468]*
   ref: 1.16.1-0-gb676905d91aa3c4e524ca663784d4cf085c465d7
+# Override: Apply patches.
 - kind: patch
   path: patches/flatpak/revert-extra-data-sandbox.patch

@@ -1,5 +1,3 @@
-# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.3 gnomeos/initramfs.bst
-
 kind: script
 description: |
   EOS7 initramfs construction using Dracut.
@@ -11,6 +9,9 @@ description: |
 
     * endless.conf, from `eos/eos-boot-helper.bst`
     * ostree.conf, from `freedesktop-sdk.bst:components/ostree.bst`
+
+  See gnomeos/initramfs.bst or iso/initramfs.bst in gnome-build-meta for
+  examples of similar elements.
 
 build-depends:
 - eos/eos-boot-helper.bst

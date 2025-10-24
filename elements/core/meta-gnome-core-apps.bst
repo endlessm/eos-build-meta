@@ -8,6 +8,9 @@
 # Additional design team approval is required before adding or removing
 # desktop applications from core. Current contact: Allan Day.
 kind: stack
+description: |
+  Overriden to only keep some applications.
+
 depends:
 - gnome-build-meta.bst:core/baobab.bst
 - gnome-build-meta.bst:core/evince.bst

@@ -7,6 +7,10 @@ description: |
   The output artifact contains a `ostree/repo` directory which is an OSTree
   repo in `archive` format with a single commit and a single branch.
 
+  The element diverged significantly from the one we derived it from, so it may
+  not make sense to include further changes from the source element, include
+  them at your discretion.
+
 build-depends:
 - freedesktop-sdk.bst:components/ostree.bst
 - freedesktop-sdk.bst:vm/deploy-tools.bst

@@ -1,6 +1,8 @@
 # utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.24 components/dracut.bst
 
 kind: autotools
+description: |
+  Overridden to have the unpatched 108 version.
 
 build-depends:
 - freedesktop-sdk.bst:components/pkg-config.bst
