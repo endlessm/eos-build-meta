@@ -25,5 +25,4 @@ config:
     - |
       version="$(ls -1 /lib/modules | head -n1)"
       mkdir -p %{install-root}/usr/lib/modules/${version}
-      cp /usr/share/efi_binaries_payg/payg-image-signed.efi %{install-root}/usr/lib/modules/${version}/
-
+      cp /usr/share/efi_binaries_payg/payg-image-signed.efi %{install-root}/usr/lib/modules/${version}/payg-image.efi
