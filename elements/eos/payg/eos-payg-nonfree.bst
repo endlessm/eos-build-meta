@@ -14,6 +14,9 @@ depends:
 - eos/payg/eos-payg.bst
 - eos/payg/libsodium.bst
 
+runtime-depends:
+- freedesktop-sdk.bst:components/efitools.bst
+
 sources:
 - kind: git_repo
   url: github:endlessm/eos-payg-nonfree

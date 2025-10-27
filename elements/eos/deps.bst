@@ -32,6 +32,7 @@ depends:
 - gnome-build-meta.bst:gnomeos-deps/toolbox.bst
 
 # Endless additions to GNOME OS.
+- freedesktop-sdk.bst:components/efitools.bst
 - freedesktop-sdk.bst:components/git.bst
 - eos/eos-event-recorder-daemon.bst
 - eos/eos-factory-tools.bst
