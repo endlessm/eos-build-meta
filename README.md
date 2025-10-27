@@ -18,6 +18,7 @@ EOS7 has documentation in this repository, starting with this README.
 Tutorial documentation for contributors is in `doc/howto`:
 
   * [`doc/howto/build.md`](./doc/howto/build.md), how to build EOS7
+  * [`doc/howto/build-payg.md`](./doc/howto/build-payg.md), how to build the EOS7 PAYG variant
   * [`doc/howto/debug-initramfs.md`](./doc/howto/debug-initramfs.md), how to debug issues in the initramfs
   * [`doc/howto/test.md`](./doc/howto/test.md), how to test EOS7
   * [`doc/howto/test-enrol-snakeoil-certificate.md`](./doc/howto/test-enrol-snakeoil-certificate.md), how to test unofficial builds of EOS7 with UEFI Secure Boot enabled
@@ -31,6 +32,7 @@ Overview documentation for understand the EOS7 architecture is in `doc/overview`
     build process works.
   * [`doc/overview/images.md`](./doc/overview/images.md), an overview of EOS7
     image outputs.
+  * [`doc/overview/payg.md`](./doc/overview/payg.md), about the PAYG variant.
   * [`doc/overview/signing.md`](./doc/sysusers.md), an overview of different
     binary signing workflows for cases like UEFI Secure Boot.
   * [`doc/overview/sysusers.md`](./doc/sysusers.md), covering how system

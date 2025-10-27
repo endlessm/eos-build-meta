@@ -38,6 +38,9 @@ To produce it, CI calls eos-image-builder with the following flags:
 To test the PAYG images, see the internal eos-payg-nonfree repo's
 `eos-payg-demo` directory.
 
+See [`doc/overview/payg.md`](doc/overview/payg.md) for details on how
+the PAYG image build is special.
+
 ### eosinstaller-amd64-amd64-base
 
 This image variant needs reworking, see: #15
