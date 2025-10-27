@@ -13,15 +13,30 @@ The testing should ensure the following base OS functionality is working:
 
 As the build process is split into two stages (OSTree and Image),
 so is the test matrix.
-
 For information on how to test each scenario, see
 [`doc/howto/test.md`](./doc/howto/test.md).
 
 ## Testing the OSTree stage
 
-There is one variant of the ostree stage:
+The following project options meaningfully affect the output of the OSTree stage:
 
-  * arch=amd64 (the user tree for all EOS7 systems)
+  * `arch`: the target CPU architecture
+  * `payg`: whether PAYG components are included
+  * `signed_boot`: which signing method is used.
+
+The `arch` setting is currently always `x86_64` as there is only one
+supported architecture.
+
+Official builds produced in CI from the 'main' branch always set `-o payg true`
+and `-o signed_boot endless`.
+
+Local builds set `payg` to false, which should not affect the behaviour of
+images apart from `eosimpact-amd64-payg-base`. See
+[`doc/howto/build-payg.md`](doc/howto/build-payg.md) for more information.
+
+Local builds also set `-o signed_boot snakeoil`, which means the resulting
+image will not be trusted by UEFI firmwares with Secure Boot enabled.
+See [`doc/howto/test.md`](doc/howto/test.md) for a workaround.
 
 The following scenarios need to be tested for the OSTree:
 
