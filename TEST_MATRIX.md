@@ -51,11 +51,32 @@ hardware support is working. Others can be on a laptop or VM.
 
 Image variants are listed in [`doc/overview/images.md`](./doc/overview/images.md).
 
-We currently test two of these variants:
+We currently test these variants:
 
   1. eos-amd64-amd64-base
   2. eosimpact-amd64-payg-base
+  3. eosinstaller-amd64-amd64-base
 
-The following scenarios need to be tested for each image:
+### `eos-amd64-amd64-base`
 
-  1. Boot the disk image in a VM, using UEFI firmware with Secure Boot enabled.
+The "regular" Endless OS 7 image.
+
+Test that the disk image boots in a machine with UEFI Secure Boot enabled
+and the default chain of trust.
+
+Also test that the ISO boots into a working live media. (This requires some
+special services defined in
+[eos-boot-helper](https://github.com/endlessm/eos-boot-helper)).
+
+### `eosimpact-amd64-payg-base`
+
+The Pay As You Go image.
+
+See the (internal) repository eos-payg-nonfree for the `eos-payg-demo` tool,
+and see the (internal) documentation on PAYG.
+
+### `eosinstaller-amd64-amd64-base`
+
+The installer image.
+
+This requires further work, see: #15 ["Make eos-installer work"](https://github.com/endlessm/eos-build-meta/issues/15).
