@@ -1,4 +1,4 @@
-# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.23 components/flatpak.bst
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.25 components/flatpak.bst
 
 kind: meson
 description: |
@@ -8,7 +8,6 @@ build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
 - freedesktop-sdk.bst:components/bison.bst
 - freedesktop-sdk.bst:components/docbook-xsl.bst
-- freedesktop-sdk.bst:components/xmlto.bst
 - freedesktop-sdk.bst:components/gettext.bst
 - freedesktop-sdk.bst:components/gobject-introspection.bst
 - freedesktop-sdk.bst:components/libxslt.bst
@@ -45,11 +44,5 @@ variables:
     -Dtests=false
     -Dsystem_dbus_proxy=xdg-dbus-proxy
 
-sources:
-- kind: git_repo
-  url: github:flatpak/flatpak.git
-  track: 1.1[02468]*
-  ref: 1.16.1-0-gb676905d91aa3c4e524ca663784d4cf085c465d7
-# Override: Apply patches.
-- kind: patch
-  path: patches/flatpak/revert-extra-data-sandbox.patch
+(@):
+- elements/include/flatpak.yml

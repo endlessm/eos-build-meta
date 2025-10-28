@@ -1,4 +1,4 @@
-# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.3 core-deps/accountsservice.bst
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.5 core-deps/accountsservice.bst
 
 kind: meson
 description: |

@@ -1,4 +1,4 @@
-# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.22 components/linux-pam.bst
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.25 components/linux-pam.bst
 
 kind: manual
 description: |

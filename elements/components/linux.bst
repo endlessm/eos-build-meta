@@ -1,4 +1,4 @@
-# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.22 components/linux.bst
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.25 components/linux.bst
 
 kind: make
 description: |
@@ -18,10 +18,10 @@ depends:
 
 build-depends:
 - freedesktop-sdk.bst:bootstrap-import.bst
-- freedesktop-sdk.bst:components/bc.bst
 - freedesktop-sdk.bst:components/bison.bst
 - freedesktop-sdk.bst:components/cpio.bst  # loongarch64 build enabled CONFIG_IKHEADERS by default
 - freedesktop-sdk.bst:components/flex.bst
+- freedesktop-sdk.bst:components/bc.bst
 - freedesktop-sdk.bst:components/gzip.bst
 - freedesktop-sdk.bst:components/openssl.bst # Override: Added.
 - freedesktop-sdk.bst:components/python3.bst
@@ -41,6 +41,7 @@ variables:
       debian_arch: amd64
   - arch == "aarch64":
       debian_arch: arm64
+  strip-binaries: ""
 
 environment:
   ARCH: '%{kernel_arch}'
@@ -102,6 +103,9 @@ config:
 
     ln -sr "${targetdir}" "%{install-root}%{indep-libdir}/modules/${release}/build"
 
+  - |
+    %{install-extra}
+
   # BuildStream can cache the content of the buildtree in some cases.
   # For successful builds, we must ensure the private key is deleted so that it
   # can't be pushed to the public artifact cache server.
@@ -136,6 +140,8 @@ public:
       devel:
         (>):
         - '%{bootdir}/System.map'
+    overlap-whitelist:
+    - "%{project_licensedir}/linux/COPYING"
 
 (@):
 - elements/include/linux.yml
