@@ -100,20 +100,29 @@ junction element.
 The eos-build-meta project defines integration instructions for more Endless specific
 components.
 
-It also defines the final filesystem tree for EOS7, which is done in the following
-elements:
+It also defines the final filesystem trees for EOS7.
+
+The base tree `eos` is defined in the following elements:
 
   * [`eos/deps.bst`](https://github.com/endlessm/eos-build-meta/blob/main/elements/eos/deps.bst),
     a stack element which lists each element to include.
-  * [`eos/filesystem.bst`](https://github.com/endlessm/eos-build-meta/blob/main/elements/eos/filesystem.bst)
+  * [`eos/filesystem.bst`](https://github.com/endlessm/eos-build-meta/blob/main/elements/eos/filesystem.bst),
     a compose element that defines which *artifacts* to include, based on *split rules*.
-  * [`eos/repo.bst`](https://github.com/endlessm/eos-build-meta/blob/main/elements/eos/repo.bst),
-    a script element that creates the final root filesystem and commits it to
-    an OSTree repository, ready for the next stage.
 
-The purpose of `eos/filesystem.bst` is to exclude certain types of file from the final
-image. For example, we don't want to include debug symbols. For more information on
-how this works, see the BuildStream manual's section on
+The developer tree `eosdev` is defined in:
+
+  * [`eosdev/filesystem.bst`](https://github.com/endlessm/eos-build-meta/blob/main/elements/eosdev/filesystem.bst)
+    a compose element which includes additional 'devel' and 'doc' artifacts.
+
+All the trees are exported in
+[`repo.bst`](https://github.com/endlessm/eos-build-meta/blob/main/elements/repo.bst),
+which a script element that creates the final filesystem trees and commits them
+as branches in a sngle OSTree repository, ready for exporting.
+
+The purpose the `filesystem.bst` elements is to exclude certain types of file
+from the final image. For example, we don't want to include developer tools in
+the base tree. For more information on how this works, see the BuildStream
+manual's section on
 ["Using > Handling files > Composition"](https://docs.buildstream.build/master/handling-files/composition.html).
 
 ## Image build stage

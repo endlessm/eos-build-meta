@@ -15,6 +15,7 @@ depends:
 - eos/efi-binaries.bst
 - eos/eos-boot-helper.bst
 - eos/eos-keyring.bst
+- eos/etc-machine-id.bst
 - eos/grub/grub-i386-pc.bst
 - eos/grub/grub-config.bst
 - eos/initramfs.bst
@@ -46,6 +47,7 @@ depends:
 - eos/eos-theme.bst
 - eos/eos-updater.bst
 - eos/payg/deps.bst
+- eos/systemd-sysusers-override.bst
 - eos/update-ca-certificates-symlink.bst
 
 # Used by eos-image-builder. This could move into a separate tree.
@@ -63,3 +65,14 @@ depends:
 
 # GNOME Shell Extensions
 - eos/gnome-shell-extensions.bst
+
+# Signed kernel
+(?):
+  - signed_boot == "endless":
+      depends:
+        (>):
+          - signing/signed-kernel-endless.bst
+  - signed_boot == "snakeoil":
+      depends:
+        (>):
+          - signing/signed-kernel-snakeoil.bst
