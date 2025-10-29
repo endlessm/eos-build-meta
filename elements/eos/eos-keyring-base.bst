@@ -20,7 +20,8 @@ description: |
 sources:
 - kind: git_repo
   url: github:endlessm/eos-keyring.git
-  ref: 99f6609b0d799f7463c87fec45e5a9e1a9a36994
+  track: master
+  ref: 83ac8efea31e8417f672d858eec0e57a3007882e
 
 build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-autotools.bst
