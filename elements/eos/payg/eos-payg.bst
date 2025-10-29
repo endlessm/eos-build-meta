@@ -12,6 +12,9 @@ depends:
 - gnome-build-meta.bst:sdk/glib.bst
 - eos/payg/libpeas-1.bst
 
+runtime-depends:
+- eos/payg/python3-dateutil.bst
+
 sources:
 - kind: git_repo
   url: github:endlessm/eos-payg.git
