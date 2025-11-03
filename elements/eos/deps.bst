@@ -67,12 +67,4 @@ depends:
 - eos/gnome-shell-extensions.bst
 
 # Signed kernel
-(?):
-  - signed_boot == "endless":
-      depends:
-        (>):
-          - signing/signed-kernel-endless.bst
-  - signed_boot == "snakeoil":
-      depends:
-        (>):
-          - signing/signed-kernel-snakeoil.bst
+- signing/signed-kernel.bst
