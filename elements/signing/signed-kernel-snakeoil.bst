@@ -16,12 +16,6 @@ config:
         --cert VENDOR-snakeoil.crt \
         --output "%{install-root}/boot/vmlinuz.signed" \
         "/boot/vmlinuz"
-  - |
-    echo "Installing signed kernel to location expected by OSTree."
-    sysroot="$1"
-    version="$(ls -1 /${sysroot}/usr/lib/modules | head -n1)"
-    mkdir -p "%{install-root}/usr/lib/modules/${version}"
-    cp "%{install-root}/boot/vmlinuz.signed" "%{install-root}/usr/lib/modules/${version}/vmlinuz"
 
 sources:
 - kind: local
