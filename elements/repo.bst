@@ -32,6 +32,11 @@ variables:
 
 environment:
   OSTREE_REPO: "%{install-root}/ostree/repo"
+  (?):
+    - enable_eosdev == true:
+        ENABLE_EOSDEV: "true"
+    - enable_eosdev == false:
+        ENABLE_EOSDEV: "false"
 
 config:
   commands:
@@ -74,4 +79,8 @@ config:
   - ostree init --repo="${OSTREE_REPO}" --mode=archive
 
   - ostree commit --branch=%{eos-branch} /sysroot-eos
-  - ostree commit --branch=%{eosdev-branch} /sysroot-eosdev
+
+  - |
+    if [ "${ENABLE_EOSDEV}" == "true" ]; then
+      ostree commit --branch=%{eosdev-branch} /sysroot-eosdev
+    fi

@@ -117,7 +117,9 @@ The developer tree `eosdev` is defined in:
 All the trees are exported in
 [`repo.bst`](https://github.com/endlessm/eos-build-meta/blob/main/elements/repo.bst),
 which a script element that creates the final filesystem trees and commits them
-as branches in a sngle OSTree repository, ready for exporting.
+as branches in a sngle OSTree repository, ready for exporting. However, `eosdev`
+OSTree commit is not built by default. You can enable the creation of `eosdev`
+OSTree commit by setting option **enable_eosdev**: `-o enable_eosdev true`.
 
 The purpose the `filesystem.bst` elements is to exclude certain types of file
 from the final image. For example, we don't want to include developer tools in
