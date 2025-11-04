@@ -27,6 +27,8 @@ sources:
 public:
   initial-script:
     script: |
+      SYSROOT="${1}"
+
       # Apply Endless OS specific configuration to systemd-sysusers config.
       #
       # These changes are needed for backwards compatibility with existing EOS6
