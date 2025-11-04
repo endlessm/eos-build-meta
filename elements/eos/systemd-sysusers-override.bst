@@ -27,6 +27,8 @@ sources:
 public:
   initial-script:
     script: |
+      SYSROOT="${1}"
+
       # Apply Endless OS specific configuration to systemd-sysusers config.
       #
       # These changes are needed for backwards compatibility with existing EOS6
@@ -37,19 +39,19 @@ public:
       # Freedesktop SDK.
       #
       # See `doc/sysusers.md` for more information.
-      - |
-        # Rename 'wheel' group to 'sudo'
-        sed -e 's/^g wheel/g  sudo/' -i $SYSROOT/usr/lib/sysusers.d/basic.conf
-      - |
-        systemd_sysusers_override.py $SYSROOT/usr/lib/sysusers.d/basic.conf --group adm --static-id 4
-        systemd_sysusers_override.py $SYSROOT/usr/lib/sysusers.d/basic.conf --group lp --static-id 7
-        systemd_sysusers_override.py $SYSROOT/usr/lib/sysusers.d/basic.conf --group sudo --static-id 27
-        systemd_sysusers_override.py $SYSROOT/usr/lib/sysusers.d/basic.conf --group utmp --static-id 43
-        systemd_sysusers_override.py $SYSROOT/usr/lib/sysusers.d/polkit.conf --user polkitd --static-id 105
-        systemd_sysusers_override.py $SYSROOT/usr/lib/sysusers.d/systemd-journal.conf --group systemd-journal --static-id 121
-        systemd_sysusers_override.py $SYSROOT/usr/lib/sysusers.d/systemd-timesync.conf --user systemd-timesync --static-id 133
+      # Rename 'wheel' group to 'sudo'
+      sed -e 's/^g wheel/g  sudo/' -i $SYSROOT/usr/lib/sysusers.d/basic.conf
+
+      systemd_sysusers_override.py $SYSROOT/usr/lib/sysusers.d/basic.conf --group adm --static-id 4
+      systemd_sysusers_override.py $SYSROOT/usr/lib/sysusers.d/basic.conf --group lp --static-id 7
+      systemd_sysusers_override.py $SYSROOT/usr/lib/sysusers.d/basic.conf --group sudo --static-id 27
+      systemd_sysusers_override.py $SYSROOT/usr/lib/sysusers.d/basic.conf --group utmp --static-id 43
+      ls -al $SYSROOT/usr/lib/sysusers.d/polkit.conf
+      systemd_sysusers_override.py $SYSROOT/usr/lib/sysusers.d/polkit.conf --user polkitd --static-id 105
+      systemd_sysusers_override.py $SYSROOT/usr/lib/sysusers.d/systemd-journal.conf --group systemd-journal --static-id 121
+      systemd_sysusers_override.py $SYSROOT/usr/lib/sysusers.d/systemd-timesync.conf --user systemd-timesync --static-id 133
 
       # Update tmpfiles.d configs for 'wheel' group rename.
-      - |
-        sed -e 's/ wheel / sudo /' -i $SYSROOT/usr/lib/tmpfiles.d/cups.conf
-        sed -e 's/:group:wheel:/:group:sudo:/' -i $SYSROOT/usr/lib/tmpfiles.d/systemd.conf
+      ls -l $SYSROOT/usr/lib/tmpfiles.d/cups.conf
+      sed -e 's/ wheel / sudo /' -i $SYSROOT/usr/lib/tmpfiles.d/cups.conf
+      sed -e 's/:group:wheel:/:group:sudo:/' -i $SYSROOT/usr/lib/tmpfiles.d/systemd.conf

@@ -25,5 +25,4 @@ public:
       #
       #   - <https://github.com/endlessm/eos-build-meta/issues/95>
       #   - <https://www.freedesktop.org/software/systemd/man/latest/machine-id.html#First%20Boot%20Semantics>.
-      - |
-        touch $SYSROOT/etc/machine-id
+      touch $SYSROOT/etc/machine-id
