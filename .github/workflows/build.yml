@@ -160,7 +160,7 @@ jobs:
                 timeout: 30
           EOF
           source venv/bin/activate
-          bst -o payg true -o signed_boot endless build --retry-failed repo.bst
+          bst -o payg true -o signed_boot endless -o enable_eosdev true build --retry-failed repo.bst
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
       - name: Build root filesystem (signed_boot=snakeoil)
@@ -210,7 +210,7 @@ jobs:
 
           echo "Check out built repo to a temporary directory"
           checkout="$(mktemp --suffix="-update-repo" -d -p "$(pwd)")"
-          ./venv/bin/bst -o payg true -o signed_boot endless artifact checkout --hardlinks "${build_element}" --directory "${checkout}"
+          ./venv/bin/bst -o payg true -o signed_boot endless -o enable_eosdev true artifact checkout --hardlinks "${build_element}" --directory "${checkout}"
 
           echo "Create new local repo"
           local_repo="./ostree-repo"
