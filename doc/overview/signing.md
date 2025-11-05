@@ -61,13 +61,13 @@ provided by Shim via the `shim_lock` API.
 The kernel is signed in one of two ways, depending on the `signed_boot` project
 option.
 
-When `signed_boot == "snakeoil"`, the element `eos/signed-kernel-snakeoil.bst`
+When `signed_boot == "snakeoil"`, the element `signing/signed-kernel-snakeoil.bst`
 produces a signed kernel using the public `VENDOR-snakeoil` key.
 
 In this case, the kernel embeds the `MODULES-snakeoil` certificate and can
 use that to validate modules.
 
-When `signed_boot == "endless"`, the element `eos/signed-kernel.bst`
+When `signed_boot == "endless"`, the element `signing/signed-kernel-endless.bst`
 requests an official signature from the private eos-sb-signer service.
 
 In this case, the kernel generates a new private key and certificate as part
