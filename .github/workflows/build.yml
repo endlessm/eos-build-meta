@@ -63,6 +63,11 @@ jobs:
           echo "${ENDLESSCLIENT_CA_CHAIN}" >> client.crt
           echo "${ENDLESSCLIENT_KEY}" > client.key
           chmod 600 client.key
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            PUSH_ARTIFACTS="true"
+          else
+            PUSH_ARTIFACTS="false"
+          fi
           mkdir -p ~/.config
           cat > ~/.config/buildstream.conf << EOF
           # BuildStream user configuration
@@ -89,7 +94,7 @@ jobs:
           artifacts:
             servers:
             - url: https://bstcache.endlessos.org
-              push: true
+              push: ${PUSH_ARTIFACTS}
               auth:
                 client-cert: $(pwd)/client.crt
                 client-key: $(pwd)/client.key
