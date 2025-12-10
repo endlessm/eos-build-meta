@@ -3,7 +3,7 @@ kind: meson
 sources:
 - kind: git_repo
   url: github:endlessm/gnome-initial-setup.git
-  track: 166-gnome-initial-setup-48.1
+  track: master
   ref: 4e809a869293eb6995a8252e13df90724bf06143
 build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
