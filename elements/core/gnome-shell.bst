@@ -6,7 +6,7 @@ sources:
 - kind: git_repo
   url: github:endlessm/gnome-shell.git
   track: 12-gnome-shell-48.4
-  ref: e02d4778884c94edf3e344509046787fb5e40620
+  ref: d88568d750078c279a40a35c316e3ede1f383bb1
 - kind: git_module
   url: gnome:gi-docgen.git
   path: subprojects/gi-docgen
