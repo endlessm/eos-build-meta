@@ -5,8 +5,8 @@ kind: meson
 sources:
 - kind: git_repo
   url: github:endlessm/gnome-shell.git
-  track: 12-gnome-shell-48.4
-  ref: d88568d750078c279a40a35c316e3ede1f383bb1
+  track: master
+  ref: e6d8004ebcf603fbdc95b81100f06295dc31dae8
 - kind: git_module
   url: gnome:gi-docgen.git
   path: subprojects/gi-docgen
