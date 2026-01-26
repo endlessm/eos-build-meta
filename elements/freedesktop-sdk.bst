@@ -34,6 +34,7 @@ config:
     components/linux-pam.bst: components/linux-pam.bst
     components/linux-pam-base.bst: components/linux-pam-base.bst
     components/ostree.bst: components/ostree.bst
+    components/polkit-base.bst: components/polkit-base.bst
     vm/config/sudo.bst: eos/config/sudo.bst
 
     # Overrides taken from gnome-build-meta
