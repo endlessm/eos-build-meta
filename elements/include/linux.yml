@@ -3,10 +3,10 @@
 sources:
 - kind: git_repo
   url: github:endlessm/linux.git
-  track: v*
+  track: master
   exclude:
   - '*-rc*'
-  ref: Release_6.0.7-0-g7e061bb6897622861dfd36b41ce83079982080ea
+  ref: 8438fb3d672d9a855de888f3dab81f7f24c95789
 # Override: Our patches are completely different from the upstream ones, no need
 # to update them.
 - kind: patch_queue
