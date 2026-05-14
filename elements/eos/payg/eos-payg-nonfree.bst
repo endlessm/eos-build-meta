@@ -13,6 +13,8 @@ build-depends:
 depends:
 - eos/payg/eos-payg.bst
 - eos/payg/libsodium.bst
+- freedesktop-sdk.bst:components/curl.bst
+- freedesktop-sdk.bst:components/openssl.bst
 
 runtime-depends:
 - freedesktop-sdk.bst:components/efitools.bst
@@ -21,7 +23,7 @@ sources:
 - kind: git_repo
   url: github:endlessm/eos-payg-nonfree
   track: master
-  ref: Release_6.0.7-8-g4dc4892a7fad5129324f279a9a1e702f178d7e9a
+  ref: 4c4749b7d97438e4186267e6da25dffa5699efc8
 
 variables:
   meson-local: >-
