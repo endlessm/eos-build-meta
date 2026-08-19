@@ -1,7 +1,17 @@
-# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.25 components/linux-pam-base.bst
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-26.08beta.3 components/linux-pam-base.bst
+# SPDX-FileCopyrightText: Freedesktop-SDK Developers
+# SPDX-License-Identifier: MIT
 
 kind: meson
 description: |
+  PAM authentication system.
+
+  This element provides PAM (Pluggable Authentication Modules), a framework
+  used by most Linux operating systems to authenticate and manage user logins.
+  This element includes the client library and the core modules.
+
+  See `components/linux-pam.bst` for a base PAM configuration.
+
   Derived to enable usergroups for private user groups, the UMASK 0002, and to
   extend env PATH.
 
@@ -71,14 +81,14 @@ description: |
   https://phabricator.endlessm.com/T35802
   ---
 
-depends:
-- freedesktop-sdk.bst:components/audit.bst
-- freedesktop-sdk.bst:bootstrap-import.bst
-- freedesktop-sdk.bst:components/libeconf.bst
-
 build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
 - freedesktop-sdk.bst:components/flex.bst
+
+depends:
+- freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
+- freedesktop-sdk.bst:components/audit.bst
+- freedesktop-sdk.bst:components/libeconf.bst
 
 variables:
   meson-local: >-
@@ -89,6 +99,7 @@ variables:
     -Dselinux=disabled
     -Ddocs=disabled
     -Delogind=disabled
+    -Dpwaccess=disabled
     -Dusergroups=true
 
 config:
@@ -105,6 +116,14 @@ config:
       fi
 
 public:
+  initial-script:
+    script: |
+      #!/bin/bash
+      sysroot="${1}"
+      file="${sysroot}%{bindir}/unix_chkpwd"
+      if [ -f "$file" ]; then
+          chmod 4755 "$file"
+      fi
   bst:
     split-rules:
       devel:
@@ -128,4 +147,4 @@ sources:
 - kind: git_repo
   url: github:linux-pam/linux-pam.git
   track: v*
-  ref: v1.7.1-0-g693c4f75b10b25e09f70fe0b22f41bdcf9a48968
+  ref: v1.7.2-0-gfe03a10115c082a8486ccbab7462139d7e4bb067
