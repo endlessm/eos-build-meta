@@ -1,4 +1,6 @@
-# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.25 components/cups-base.bst
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-26.08beta.3 components/_private/cups-base.bst
+# SPDX-FileCopyrightText: Freedesktop-SDK Developers
+# SPDX-License-Identifier: MIT
 
 kind: autotools
 description:
@@ -9,6 +11,7 @@ description:
 
 build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-autotools.bst
+- freedesktop-sdk.bst:components/avahi-libs.bst
 - freedesktop-sdk.bst:components/gzip.bst
 - freedesktop-sdk.bst:components/openssl.bst
 - freedesktop-sdk.bst:components/systemd.bst
@@ -60,15 +63,22 @@ public:
       - '%{debugdir}/dwz/**'
       - '%{sourcedir}'
       - '%{sourcedir}/**'
+      cups-license:
+      - "%{project_licensedir}"
+      - "%{project_licensedir}/**"
   cpe:
     product: cups
-    ignored:
-    - CVE-2022-26691
 
 sources:
 - kind: git_repo
   url: github:OpenPrinting/cups.git
-  ref: v2.4.10-0-gf3e5cc069c25647619aba8e0aefaa1969d71447e
+  track: v*
+  exclude:
+  - "*a*"
+  - "*b*"
+  - "*rc*"
+  - "*op*"
+  ref: v2.4.19-0-g6ba0487abb05afc93d639f37676add8fd65d3756
 - kind: local
   # Overridde: Modified to name the system group "sudo".
   path: files/cups/tmpfiles.conf
