@@ -29,7 +29,6 @@ config:
     # Overrides applied in eos-build-meta.
     components/bash-config.bst: eos/config/bash-config.bst
     components/cups-base.bst: components/cups-base.bst
-    components/flatpak.bst: components/flatpak.bst
     components/linux.bst: components/linux.bst
     components/linux-pam.bst: components/linux-pam.bst
     components/linux-pam-base.bst: components/linux-pam-base.bst
