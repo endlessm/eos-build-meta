@@ -1,21 +1,23 @@
-# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.25 components/polkit-base.bst
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-26.08beta.3 components/_private/polkit-base.bst
+# SPDX-FileCopyrightText: Freedesktop-SDK Developers
+# SPDX-License-Identifier: MIT
 
 kind: meson
 description: |
   Overridden so we can name the privileged group "sudo" for backwards compatibility
-  with Endless OS 6.
+  with Endless OS 6. https://github.com/endlessm/eos-build-meta/issues/91
 
 build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
+- freedesktop-sdk.bst:components/gobject-introspection.bst
 - freedesktop-sdk.bst:components/gtk-doc.bst
 - freedesktop-sdk.bst:components/perl-xml-parser.bst
-- freedesktop-sdk.bst:components/gobject-introspection.bst
 - freedesktop-sdk.bst:components/strace.bst
 - freedesktop-sdk.bst:components/systemd.bst
 
 depends:
-- freedesktop-sdk.bst:components/glib.bst
 - freedesktop-sdk.bst:components/duktape.bst
+- freedesktop-sdk.bst:components/glib.bst
 - freedesktop-sdk.bst:components/linux-pam.bst
 - freedesktop-sdk.bst:components/systemd-libs.bst
 
@@ -44,4 +46,5 @@ sources:
 - kind: git_repo
   url: github:polkit-org/polkit.git
   track: '[0-9]*'
-  ref: 126-0-gd627b0d1e1108563658dabe3fb8d2a065e64df10
+  ref: 127-0-g9e4894c969eecf26a3ba762f4f7a268aa0fb3e51
+  version-guess-pattern: '\d+'
