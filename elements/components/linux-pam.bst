@@ -1,7 +1,27 @@
-# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.25 components/linux-pam.bst
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-26.08beta.3 components/linux-pam.bst
+# SPDX-FileCopyrightText: Freedesktop-SDK Developers
+# SPDX-License-Identifier: MIT
 
 kind: manual
 description: |
+  Base configuration files for PAM authentication system.
+
+  PAM is an authentication framework, used by most Linux operating systems to
+  authenticate and manage user logins. The PAM client library and the plugins
+  are provided by `components/linux-pam-base.bst`.
+
+  This element provides a default configuration which you should review and
+  adapt for your use case. Other elements can install PAM configuration
+  for specific utilities. In particular, see `components/shadow.bst` which
+  includes a `/usr/bin/login` implementation and PAM configuration.
+
+  The "Linux PAM System Administrators' Guide" is recommended reading to
+  understand PAM configuration, it is available in the linux-pam source code
+  repository at `doc/sag`.
+
+  This element is intended for system integration, it is not included
+  in Flatpak or OCI images.
+
   Derived to allow weak passwords.
 
   ---
@@ -44,8 +64,12 @@ description: |
   https://phabricator.endlessm.com/T35802
   ---
 
+build-depends:
+- freedesktop-sdk.bst:bootstrap/bash.bst
+- freedesktop-sdk.bst:bootstrap/coreutils.bst
+
 depends:
-- freedesktop-sdk.bst:bootstrap-import.bst
+- freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
 
 runtime-depends:
 - freedesktop-sdk.bst:components/linux-pam-base.bst
@@ -53,6 +77,7 @@ runtime-depends:
 
 variables:
   pamconfdir: "%{sysconfdir}/pam.d"
+  strip-binaries: ''
 
 config:
   build-commands:
