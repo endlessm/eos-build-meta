@@ -69,5 +69,4 @@ config:
 
     components/xdg-desktop-portal-base.bst: gnome-build-meta.bst:core-deps/xdg-desktop-portal.bst
     components/linux-module-cert.bst: gnome-build-meta.bst:gnomeos/linux-module-cert.bst
-    components/systemd-base.bst: gnome-build-meta.bst:core-deps/systemd-base.bst
     components/systemd.bst: gnome-build-meta.bst:core-deps/systemd.bst
