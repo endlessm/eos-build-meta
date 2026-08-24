@@ -1,4 +1,4 @@
-# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.5 freedesktop-sdk.bst
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 51.beta freedesktop-sdk.bst
 
 kind: junction
 description: |
@@ -7,8 +7,10 @@ description: |
 sources:
 - kind: git_repo
   url: gitlab:freedesktop-sdk/freedesktop-sdk.git
-  track: freedesktop-sdk-24.08*
-  ref: freedesktop-sdk-24.08.25-0-g2ebdfee96782e1b2ce14a6585da1eb16463deb5f
+  track: freedesktop-sdk-26.08*
+  ref: freedesktop-sdk-26.08beta.3-0-g4c7a4177c501510d68ebcba31c5b65ea23bc1b4f
+- kind: patch_queue
+  path: patches/freedesktop-sdk
 
 config:
   options:
@@ -16,9 +18,9 @@ config:
     (?):
     - x86_64_v3:
         x86_64_v3: true
-    - arch in ('x86_64', 'i686'):
+    - arch == 'x86_64':
         bootstrap_build_arch: 'x86_64'
-    - arch in ('aarch64', 'arm'):
+    - arch == 'aarch64':
         bootstrap_build_arch: 'aarch64'
     - arch == "ppc64le":
         bootstrap_build_arch: "ppc64le"
@@ -28,36 +30,38 @@ config:
   overrides:
     # Overrides applied in eos-build-meta.
     components/bash-config.bst: eos/config/bash-config.bst
-    components/cups-base.bst: components/cups-base.bst
+    components/_private/cups-base.bst: components/cups-base.bst
     components/linux.bst: components/linux.bst
     components/linux-pam.bst: components/linux-pam.bst
     components/linux-pam-base.bst: components/linux-pam-base.bst
     components/ostree.bst: components/ostree.bst
-    components/polkit-base.bst: components/polkit-base.bst
+    components/_private/polkit-base.bst: components/polkit-base.bst
     vm/config/sudo.bst: eos/config/sudo.bst
 
     # Overrides taken from gnome-build-meta
     components/at-spi2-core.bst: gnome-build-meta.bst:sdk/at-spi2-core.bst
     components/cairo.bst: gnome-build-meta.bst:sdk/cairo.bst
-    components/fcitx5.bst: gnome-build-meta.bst:sdk/fcitx5-gtk.bst
+    components/fcitx5-gtk.bst: gnome-build-meta.bst:sdk/fcitx5-gtk.bst
     components/gcab.bst: gnome-build-meta.bst:sdk/gcab.bst
     components/gdk-pixbuf.bst: gnome-build-meta.bst:sdk/gdk-pixbuf.bst
     components/glib-networking.bst: gnome-build-meta.bst:sdk/glib-networking.bst
     components/glib.bst: gnome-build-meta.bst:sdk/glib.bst
+    components/glycin.bst: gnome-build-meta.bst:sdk/glycin.bst
     components/gobject-introspection.bst: gnome-build-meta.bst:sdk/gobject-introspection.bst
+    components/python3-gi-docgen.bst: gnome-build-meta.bst:sdk/gi-docgen.bst
     components/graphene.bst: gnome-build-meta.bst:sdk/graphene.bst
     components/gsettings-desktop-schemas.bst: gnome-build-meta.bst:sdk/gsettings-desktop-schemas.bst
-    components/gtk-doc.bst: gnome-build-meta.bst:sdk/gtk-doc.bst
     components/gtk3.bst: gnome-build-meta.bst:sdk/gtk+-3.bst
-    components/ibus.bst: gnome-build-meta.bst:sdk/libibus.bst
+    components/libibus.bst: gnome-build-meta.bst:sdk/libibus.bst
     components/json-glib.bst: gnome-build-meta.bst:sdk/json-glib.bst
+    components/libglycin.bst: gnome-build-meta.bst:sdk/libglycin.bst
     components/libnotify.bst: gnome-build-meta.bst:sdk/libnotify.bst
     components/librsvg.bst: gnome-build-meta.bst:sdk/librsvg.bst
     components/libsoup.bst: gnome-build-meta.bst:sdk/libsoup.bst
     components/pango.bst: gnome-build-meta.bst:sdk/pango.bst
-    components/pipewire-base.bst: gnome-build-meta.bst:sdk-deps/pipewire.bst
     components/pygobject.bst: gnome-build-meta.bst:sdk/pygobject.bst
     components/vala.bst: gnome-build-meta.bst:sdk/vala.bst
+    components/libsecret.bst: gnome-build-meta.bst:sdk/libsecret.bst
 
     # While freedesktop-sdk provides a zenity element, it's the
     # gtk3 version which we don't want, and we also override it
@@ -67,6 +71,16 @@ config:
     # not the Flatpak runtime, as its easy to bundle when needed.
     components/zenity.bst: gnome-build-meta.bst:void/zenity.bst
 
-    components/xdg-desktop-portal-base.bst: gnome-build-meta.bst:core-deps/xdg-desktop-portal.bst
     components/linux-module-cert.bst: gnome-build-meta.bst:gnomeos/linux-module-cert.bst
     components/systemd.bst: gnome-build-meta.bst:core-deps/systemd.bst
+    components/systemd-ukify.bst: gnome-build-meta.bst:core-deps/systemd-ukify.bst
+    components/systemd-libs.bst: gnome-build-meta.bst:core-deps/systemd-libs.bst
+
+    # swick has signed up for dealing with all the issues from building these from git
+    components/_private/xdg-desktop-portal-base.bst: gnome-build-meta.bst:core-deps/xdg-desktop-portal-base.bst
+    components/xdg-desktop-portal.bst: gnome-build-meta.bst:core-deps/xdg-desktop-portal.bst
+    components/flatpak.bst: gnome-build-meta.bst:core-deps/flatpak.bst
+
+    # gnome-calendar still requires libical 3.x. Nothing in the flatpak runtimes depends
+    # on it, so this can be reverted in a stable branch
+    components/libical.bst: gnome-build-meta.bst:core-deps/libical3.bst
