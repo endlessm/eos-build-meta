@@ -1,4 +1,6 @@
-# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.25 components/bash-config.bst
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-26.08beta.3 components/bash-config.bst
+# SPDX-FileCopyrightText: Freedesktop-SDK Developers
+# SPDX-License-Identifier: MIT
 
 kind: manual
 description: |
@@ -9,6 +11,10 @@ description: |
 
   See also, an upstream issue in FDSDK discussing other ways to configure Bash:
   <https://gitlab.com/freedesktop-sdk/freedesktop-sdk/-/issues/1875>.
+
+build-depends:
+- freedesktop-sdk.bst:bootstrap/bash.bst
+- freedesktop-sdk.bst:bootstrap/coreutils.bst
 
 depends:
 - freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
