@@ -1,4 +1,4 @@
-# utils/update-elements.sh: Derived from gnome-build-meta.bst 48.5 core/meta-gnome-core-apps.bst
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 51.beta core/meta-gnome-core-apps.bst
 
 # The core set is not expected to change as frequently as core-deps.
 # Adding or removing elements from here should be approved by
@@ -13,7 +13,6 @@ description: |
 
 depends:
 - gnome-build-meta.bst:core/baobab.bst
-- gnome-build-meta.bst:core/evince.bst
 - gnome-build-meta.bst:core/gnome-clocks.bst
 - gnome-build-meta.bst:core/gnome-console.bst
 - gnome-build-meta.bst:core/gnome-disk-utility.bst
