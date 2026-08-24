@@ -1,11 +1,16 @@
-# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-25.08.1 vm/config/sudo.bst
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-26.08beta.3 vm/config/sudo.bst
+# SPDX-FileCopyrightText: Freedesktop-SDK Developers
+# SPDX-License-Identifier: MIT
 
 kind: manual
 description: |
   Configuration for `sudo`.
 
-  Overridden to rename the 'wheel' groupe to 'sudo', for backwards compatibility
+  Overridden to rename the 'wheel' group to 'sudo', for backwards compatibility
   with Endless OS 6.
+
+build-depends:
+- freedesktop-sdk.bst:public-stacks/runtime-gnu.bst
 
 depends:
 - freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
