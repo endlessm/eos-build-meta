@@ -1,4 +1,6 @@
-# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-25.08.1 vm/config/ostree.bst
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-26.08beta.3 vm/config/ostree.bst
+# SPDX-FileCopyrightText: Freedesktop-SDK Developers
+# SPDX-License-Identifier: MIT
 
 kind: manual
 description: |
@@ -8,12 +10,12 @@ description: |
   configuration are replaced with Endless OS-specific ones.
 
 build-depends:
-- freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
+- freedesktop-sdk.bst:public-stacks/runtime-gnu.bst
 - freedesktop-sdk.bst:components/m4.bst
 
 runtime-depends:
+- components/ostree.bst
 - freedesktop-sdk.bst:components/systemd.bst
-- freedesktop-sdk.bst:components/ostree.bst
 
 variables:
   strip-binaries: ''
