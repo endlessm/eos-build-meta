@@ -24,7 +24,7 @@ depends:
 # GNOME OS elements.
 - gnome-build-meta.bst:gnomeos-deps/deps.bst
 - gnome-build-meta.bst:gnomeos-deps/mokutil.bst
-- gnome-build-meta.bst:gnomeos/os-release-user.bst
+- gnome-build-meta.bst:gnomeos/os-release.bst
 
 # Developer tools which are in the GNOME OS `devel` addon,
 # but in the core image of EOS.
