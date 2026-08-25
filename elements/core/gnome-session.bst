@@ -1,4 +1,4 @@
-# utils/update-elements.sh: Derived from gnome-build-meta.bst 49.alpha.1 core/gnome-session.bst
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 51.0 core/gnome-session.bst
 
 kind: meson
 description: |
@@ -6,25 +6,21 @@ description: |
   "Endless on Wayland" session.
 
 sources:
-- kind: git_repo
-  url: gnome:gnome-session.git
-  track: main
-  # Override: Adds one commit on top of 49.alpha.1, updating mimeapps.list to
-  # drop Evince in favor of Papers and Loupe.
-  ref: 49.alpha.1-1-g83410ba7d3e70b02bc8461e248ff15c9fa9a93ca
+- kind: tar
+  url: gnome_downloads:gnome-session/51/gnome-session-51.0.tar.xz
+  ref: 5195c4f60542a953ab6ebd288f3785b8e7746292d8c167e0c99d353438a184d1
 # Override: Extra sources for Endless OS.
-- kind: patch
-  path: patches/gnome-session/0001-doc-skip-validation-of-xml.patch
 - kind: patch
   path: patches/gnome-session/hide-gnome-session.patch
 - kind: local
   path: files/gnome-session/endless-wayland.desktop
 
 build-depends:
+- (@): gnome-build-meta.bst:include/gcc-for-recc.yml
+- gnome-build-meta.bst:buildsystems/meson.bst
 - freedesktop-sdk.bst:components/docbook-xsl.bst
 - freedesktop-sdk.bst:components/libxslt.bst
 - freedesktop-sdk.bst:components/xmlto.bst
-- freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
 
 depends:
 - gnome-build-meta.bst:core-deps/upower.bst
