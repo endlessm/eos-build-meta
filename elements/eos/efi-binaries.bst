@@ -16,7 +16,7 @@ description: |
   It could be done, using coreos bootupd or something similar.
 
 build-depends:
-  - freedesktop-sdk.bst:bootstrap-import.bst
+  - freedesktop-sdk.bst:public-stacks/buildsystem-make.bst
   - freedesktop-sdk.bst:components/openssl.bst
 
 sources:

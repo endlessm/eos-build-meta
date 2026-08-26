@@ -10,7 +10,7 @@ description: |
   so it can operate on all installed files in `usr/lib/sysusers.d`.
 
 depends:
-- freedesktop-sdk.bst:bootstrap-import.bst
+- freedesktop-sdk.bst:public-stacks/buildsystem-make.bst
 
 runtime-depends:
 - freedesktop-sdk.bst:components/python3.bst

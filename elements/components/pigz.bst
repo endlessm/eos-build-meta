@@ -8,10 +8,10 @@ sources:
 - kind: git_repo
   url: github:madler/pigz
   track: v*
-
   ref: v2.8-0-gfe4894f57739e3039a2ffc2a2a360d35e19bacbe
+
 build-depends:
-- freedesktop-sdk.bst:bootstrap-import.bst
+- freedesktop-sdk.bst:public-stacks/buildsystem-make.bst
 
 config:
   build-commands:

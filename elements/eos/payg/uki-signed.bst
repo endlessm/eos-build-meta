@@ -7,7 +7,7 @@ description: |
   version of OSTree, when `OSTREE_DEPLOY_PAYG` is set in the environment.
 
 build-depends:
-  - freedesktop-sdk.bst:bootstrap-import.bst
+  - freedesktop-sdk.bst:public-stacks/buildsystem-make.bst
   - components/linux.bst
 
 (?):
