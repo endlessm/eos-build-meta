@@ -1,4 +1,6 @@
-# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-24.08.25 vm/minimal-ostree/repo.bst
+# utils/update-elements.sh: Derived from freedesktop-sdk.bst freedesktop-sdk-26.08beta.3 vm/minimal-ostree/repo.bst
+# SPDX-FileCopyrightText: Freedesktop-SDK Developers
+# SPDX-License-Identifier: MIT
 
 kind: script
 description: |
@@ -12,6 +14,7 @@ description: |
   them at your discretion.
 
 build-depends:
+- freedesktop-sdk.bst:components/fakecap.bst
 - freedesktop-sdk.bst:components/ostree.bst
 - freedesktop-sdk.bst:vm/deploy-tools.bst
 - freedesktop-sdk.bst:vm/prepare-image.bst
@@ -25,23 +28,26 @@ build-depends:
   config:
     location: '/sysroot-eosdev'
 
-variables:
-  uuidnamespace: 731a6fa6-5071-4d7b-8e0d-b81a66a590bc
-  eos-branch: "os/eos/amd64/master"
-  eosdev-branch: "os/eosdev/amd64/master"
-
 environment:
   OSTREE_REPO: "%{install-root}/ostree/repo"
+  LD_PRELOAD: /usr/libexec/fakecap/fakecap.so
+  FAKECAP_DB: /fakecap
   (?):
     - enable_eosdev == true:
         ENABLE_EOSDEV: "true"
     - enable_eosdev == false:
         ENABLE_EOSDEV: "false"
 
+variables:
+  uuidnamespace: 731a6fa6-5071-4d7b-8e0d-b81a66a590bc
+  eos-branch: "os/eos/amd64/master"
+  eosdev-branch: "os/eosdev/amd64/master"
+
 config:
   commands:
   - mkdir -p /tmp
   - mkdir -p /efi
+  - mkdir -p /fakecap
 
   # Prepare the filesystem tree, which includes:
   #
@@ -60,6 +66,7 @@ config:
   #   * Installing kernel (from 'signed-kernel-*' element)
   #   * System users overrides (from 'systemd-sysusers-override.bst' element)
   #   * Creating an empty /etc/machine-id (from 'etc-machine-id.bst' element)
+
   - |
     prepare-image.sh \
        --sysroot /sysroot-eos \
