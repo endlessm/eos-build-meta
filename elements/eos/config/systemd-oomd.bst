@@ -4,8 +4,8 @@ description: |
 
   We disable systemd-oomd in Endless OS 7, as it was not enabled in EOS6 either.
 
-depends:
-- freedesktop-sdk.bst:bootstrap-import.bst
+build-depends:
+- freedesktop-sdk.bst:public-stacks/buildsystem-make.bst
 
 config:
   install-commands:
