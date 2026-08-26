@@ -13,7 +13,7 @@ description: |
   working.
 
 build-depends:
-  - freedesktop-sdk.bst:bootstrap-import.bst
+  - freedesktop-sdk.bst:buildsystem-make.bst
 
 config:
   install-commands:
