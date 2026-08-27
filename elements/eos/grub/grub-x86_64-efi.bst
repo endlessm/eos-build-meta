@@ -9,20 +9,13 @@ description: |
   `/usr/lib/efi_binaries/` in the filesystem tree, and installed in the EFI
   System Partition by eos-image-builder when creating disk images.
 
-depends:
-- filename: freedesktop-sdk.bst:bootstrap-import.bst
-- filename: freedesktop-sdk.bst:components/bison.bst
-  type: build
-- filename: freedesktop-sdk.bst:components/flex.bst
-  type: build
-- filename: freedesktop-sdk.bst:components/freetype.bst
-  type: build
-- filename: freedesktop-sdk.bst:components/git.bst
-  type: build
-- filename: freedesktop-sdk.bst:components/patch.bst
-  type: build
-- filename: freedesktop-sdk.bst:public-stacks/buildsystem-autotools.bst
-  type: build
+build-depends:
+- freedesktop-sdk.bst:components/bison.bst
+- freedesktop-sdk.bst:components/flex.bst
+- freedesktop-sdk.bst:components/freetype.bst
+- freedesktop-sdk.bst:components/git.bst
+- freedesktop-sdk.bst:components/patch.bst
+- freedesktop-sdk.bst:public-stacks/buildsystem-autotools.bst
 
 variables:
   autogen: >
