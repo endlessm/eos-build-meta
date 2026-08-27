@@ -14,10 +14,10 @@ sources:
   ref: Release_6.0.11-0-gdf81cf7f9688e03553736b06060f1bd71e54c97d
 
 build-depends:
+- components/python3-flake8.bst
 - freedesktop-sdk.bst:components/avahi.bst
 - freedesktop-sdk.bst:components/gnupg.bst
 - freedesktop-sdk.bst:components/python3.bst
-- freedesktop-sdk.bst:components/python3-flake8.bst
 - freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
 - gnome-build-meta.bst:sdk/gtk-doc.bst
 - gnome-build-meta.bst:sdk/json-glib.bst
