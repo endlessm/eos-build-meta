@@ -14,18 +14,12 @@ description: |
   Note that all new EOS7 installs use UEFI, but existing systems with BIOS boot
   are still supported.
 
-depends:
-- filename: freedesktop-sdk.bst:bootstrap-import.bst
-- filename: freedesktop-sdk.bst:components/bison.bst
-  type: build
-- filename: freedesktop-sdk.bst:components/flex.bst
-  type: build
-- filename: freedesktop-sdk.bst:components/git.bst
-  type: build
-- filename: freedesktop-sdk.bst:components/patch.bst
-  type: build
-- filename: freedesktop-sdk.bst:public-stacks/buildsystem-autotools.bst
-  type: build
+build-depends:
+- freedesktop-sdk.bst:components/bison.bst
+- freedesktop-sdk.bst:components/flex.bst
+- freedesktop-sdk.bst:components/git.bst
+- freedesktop-sdk.bst:components/patch.bst
+- freedesktop-sdk.bst:public-stacks/buildsystem-autotools.bst
 
 variables:
   autogen: >
