@@ -4,7 +4,7 @@ description: |
 
 build-depends:
 - eos/payg/uki.bst
-- freedesktop-sdk.bst:components/sbsigntools.bst
+- freedesktop-sdk.bst:components/_private/sbsigntools.bst
 
 config:
   install-commands:
