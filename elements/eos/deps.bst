@@ -54,9 +54,9 @@ depends:
 - components/pigz.bst
 
 # Used by eos-image-builder to create ISO. This could move into a separate tree.
+- components/libisoburn.bst
 - freedesktop-sdk.bst:components/squashfs-tools.bst
 - freedesktop-sdk.bst:components/mtools.bst
-- gnome-build-meta.bst:iso-deps/libisoburn.bst
 
 # Used by eos-image-builder to create VM image.
 # This could move into a separate tree.
