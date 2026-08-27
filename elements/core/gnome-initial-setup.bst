@@ -21,7 +21,6 @@ depends:
 - gnome-build-meta.bst:core-deps/upower.bst
 - gnome-build-meta.bst:core/gdm.bst
 - gnome-build-meta.bst:core/gnome-desktop.bst
-- gnome-build-meta.bst:core/gnome-keyring.bst
 - gnome-build-meta.bst:sdk/adwaita-icon-theme.bst
 - gnome-build-meta.bst:sdk/glib.bst
 - gnome-build-meta.bst:sdk/gtk.bst
