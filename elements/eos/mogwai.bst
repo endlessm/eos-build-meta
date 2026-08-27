@@ -30,8 +30,8 @@ build-depends:
 - gnome-build-meta.bst:sdk/libsoup.bst
 
 depends:
-- freedesktop-sdk.bst:components/libgsystemservice.bst
 - gnome-build-meta.bst:core-deps/NetworkManager.bst
+- gnome-build-meta.bst:core-deps/libgsystemservice.bst
 - gnome-build-meta.bst:sdk/glib.bst
 
 public:
