@@ -13,7 +13,7 @@ description: |
   working.
 
 build-depends:
-  - freedesktop-sdk.bst:buildsystem-make.bst
+  - freedesktop-sdk.bst:public-stacks/buildsystem-make.bst
 
 config:
   install-commands:
