@@ -29,7 +29,6 @@ depends:
 # Developer tools which are in the GNOME OS `devel` addon,
 # but in the core image of EOS.
 - freedesktop-sdk.bst:components/podman.bst
-- freedesktop-sdk.bst:components/podman-config.bst
 - gnome-build-meta.bst:gnomeos-deps/toolbox.bst
 
 # Endless additions to GNOME OS.
