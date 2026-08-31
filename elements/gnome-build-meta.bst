@@ -13,6 +13,7 @@ config:
     core/gnome-session.bst: core/gnome-session.bst
     core/gnome-shell.bst: core/gnome-shell.bst
     core-deps/accountsservice.bst: components/accountsservice.bst
+    core-deps/systemd.bst: components/systemd.bst
     core-deps/systemd-base.bst: components/systemd-base.bst
     freedesktop-sdk.bst: freedesktop-sdk.bst
     gnomeos/os-release.bst: eos/os-release.bst
