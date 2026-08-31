@@ -8,7 +8,7 @@ description: |
   See `doc/overview/signing.md` for context.
 
 build-depends:
-- components/systemd-base.bst
+- components/systemd.bst
 
 config:
   input: "/usr/lib/systemd/boot/efi/systemd-bootx64.efi"
