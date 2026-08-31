@@ -8,8 +8,8 @@ description: |
   Note that all new EOS7 installs use UEFI, but existing systems with BIOS boot
   are still supported.
 
-depends:
-- freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
+build-depends:
+- freedesktop-sdk.bst:public-stacks/buildsystem-make.bst
 
 variables:
   strip-binaries: ''

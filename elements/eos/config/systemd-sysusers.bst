@@ -10,8 +10,8 @@ description: |
 
   See `doc/sysusers.md` for more information.
 
-depends:
-- freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
+build-depends:
+- freedesktop-sdk.bst:public-stacks/buildsystem-make.bst
 
 config:
   install-commands:
