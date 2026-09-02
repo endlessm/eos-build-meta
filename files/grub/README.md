@@ -8,8 +8,8 @@ Endless OS 7.
 SBAT is metadata format used in UEFI Secure Boot to identify bootloaders
 with known security vulnerabilities and blocklist them.
 
-The SBAT metadata needs to correspond with the version of GRUB built
-in the `eos/grub.bst` element.
+The SBAT metadata needs to correspond with the version of GRUB built in the
+`eos/grub/grub-i386-pc.bst` and `eos/grub/grub-x86_64-efi.bst` elements.
 
 ## Standalone UEFI images builder
 
