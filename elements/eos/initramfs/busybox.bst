@@ -27,6 +27,7 @@ config:
   - |
     sed -e 's@^CONFIG_INSTALL_APPLET_SYMLINKS=y@# CONFIG_INSTALL_APPLET_SYMLINKS is not set@' -i %{build-dir}/.config
     sed -e 's@.*CONFIG_INSTALL_APPLET_DONT.*@CONFIG_INSTALL_APPLET_DONT=y@' -i %{build-dir}/.config
+    sed -e 's@^CONFIG_TC=y@# CONFIG_TC is not set@' -i %{build-dir}/.config
 
   build-commands:
   - |
