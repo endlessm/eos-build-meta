@@ -6,11 +6,11 @@
 sources:
 - kind: git_repo
   url: github:endlessm/grub
-  track: master
+  track: 235-rebase-grub-2.12
   # IMPORTANT: Ensure the SBAT metadata in `files/grub/` corresponds to
   # the version of GRUB being shipped. Systems with UEFI Secure Boot can use
   # the SBAT metadata to blocklist versions of GRUB with known vulnerabilities.
-  ref: 22484f8d7533afe7a0e175aed1b3fcfe035d84b2
+  ref: 267936b1d314aade9a9e267e9a5ed38a260111a2
 
 # This repo is a "source overlay" for GRUB, enabled via `GRUB_CONTRIB`.
 # We need the `grub-ntldr-img` program in eos-image-builder.
@@ -29,4 +29,4 @@ sources:
   # of GNU build system tools.
   #
   # See: <https://github.com/endlessm/grub/blob/master/bootstrap.conf>
-  ref: d271f868a8df9bbec29049d01e056481b7a1a263
+  ref: 9f48fb992a3d7e96610c4ce8be969cff2d61a01b

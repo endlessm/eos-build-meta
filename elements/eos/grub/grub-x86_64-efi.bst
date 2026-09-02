@@ -11,6 +11,7 @@ description: |
 
 build-depends:
 - freedesktop-sdk.bst:components/bison.bst
+- freedesktop-sdk.bst:components/dejavu-fonts.bst
 - freedesktop-sdk.bst:components/flex.bst
 - freedesktop-sdk.bst:components/freetype.bst
 - freedesktop-sdk.bst:components/git.bst
@@ -35,7 +36,10 @@ variables:
   #   * No stack protector, it requires linking a library, but the bootloader is special
   #   * Avoid certain -Werror build failures (this is an old version of GRUB)
   configure: |
-    CFLAGS="$CFLAGS -fno-stack-protector -Wno-error=maybe-uninitialized" %{conf-cmd} %{conf-args} %{conf-local}
+    CFLAGS+=" -fno-stack-protector"
+    CFLAGS+=" -Wno-error=maybe-uninitialized"
+    CFLAGS+=" -Wno-error=unterminated-string-initialization"
+    CFLAGS+=" -Wno-error=attributes" %{conf-cmd} %{conf-args} %{conf-local}
   # GRUB does its own stripping.
   strip-binaries: ""
 
