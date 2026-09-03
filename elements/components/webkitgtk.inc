@@ -1,0 +1,65 @@
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 51.beta sdk/webkitgtk.inc
+
+sources:
+- kind: tar
+  url: webkitgtk:webkitgtk-2.53.90.tar.xz
+  ref: 56b99f7b482221da2b6acc307cac3b8fb777e8dcb7720c56d5d77161a837c8e6
+
+build-depends:
+- (@): gnome-build-meta.bst:include/clang-for-recc.yml
+- gnome-build-meta.bst:buildsystems/cmake.bst
+- gnome-build-meta.bst:sdk-deps/unifdef.bst
+- gnome-build-meta.bst:sdk/gi-docgen.bst
+- gnome-build-meta.bst:sdk/gobject-introspection.bst
+- freedesktop-sdk.bst:components/gperf.bst
+- freedesktop-sdk.bst:components/llvm.bst
+- freedesktop-sdk.bst:components/perl.bst
+- freedesktop-sdk.bst:components/ruby.bst
+
+runtime-depends:
+- freedesktop-sdk.bst:components/gstreamer-libav.bst
+- freedesktop-sdk.bst:components/gstreamer-plugins-good.bst
+
+depends:
+- gnome-build-meta.bst:sdk/at-spi2-core.bst
+- gnome-build-meta.bst:sdk/enchant-2.bst
+- gnome-build-meta.bst:sdk/libmanette-0.2.bst
+- gnome-build-meta.bst:sdk/libsecret.bst
+- gnome-build-meta.bst:sdk/pango.bst
+- gnome-build-meta.bst:sdk/woff2.bst
+- freedesktop-sdk.bst:components/brotli.bst
+- freedesktop-sdk.bst:components/bubblewrap.bst
+- freedesktop-sdk.bst:components/dummy-gbm.bst
+- freedesktop-sdk.bst:components/gstreamer-plugins-bad.bst
+- freedesktop-sdk.bst:components/gstreamer-plugins-base.bst
+- freedesktop-sdk.bst:components/hyphen.bst
+- freedesktop-sdk.bst:components/lcms.bst
+- freedesktop-sdk.bst:components/libavif.bst
+- freedesktop-sdk.bst:components/libepoxy.bst
+- freedesktop-sdk.bst:components/libevent.bst
+- freedesktop-sdk.bst:components/libjxl.bst
+- freedesktop-sdk.bst:components/libseccomp.bst
+- freedesktop-sdk.bst:components/libtasn1.bst
+- freedesktop-sdk.bst:components/libwebp.bst
+- freedesktop-sdk.bst:components/libxslt.bst
+- freedesktop-sdk.bst:components/systemd-libs.bst
+- freedesktop-sdk.bst:components/wayland.bst
+- freedesktop-sdk.bst:components/xdg-dbus-proxy.bst
+- freedesktop-sdk.bst:components/xorg-lib-xt.bst
+- freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
+
+variables:
+  optimize-debug: 'false'
+  (?):
+  - arch == "aarch64":
+      local_flags: >-
+        -mbranch-protection=pac-ret
+
+public:
+  cpe:
+    product: webkitgtk+
+
+# Clang is strongly recommended:
+environment:
+  CC: clang
+  CXX: clang++
