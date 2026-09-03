@@ -17,6 +17,7 @@ config:
     core-deps/systemd-base.bst: components/systemd-base.bst
     freedesktop-sdk.bst: freedesktop-sdk.bst
     gnomeos/os-release.bst: eos/os-release.bst
+    sdk/webkitgtk-6.0.bst: components/sdk/webkitgtk-6.0.bst
 
     plugins/buildstream-plugins.bst: plugins/buildstream-plugins.bst
     plugins/buildstream-plugins-community.bst: plugins/buildstream-plugins-community.bst
