@@ -1,28 +1,29 @@
-# This is derived from gnome-build-meta 48.3, ensure to update it when rebasing.
+# This is derived from gnome-build-meta 51.0, ensure to update it when rebasing.
 
 kind: meson
 
 sources:
 - kind: git_repo
   url: github:endlessm/gnome-shell.git
-  track: master
-  ref: e6d8004ebcf603fbdc95b81100f06295dc31dae8
-- kind: git_module
-  url: gnome:gi-docgen.git
-  path: subprojects/gi-docgen
-  ref: 58433f82d1187f11c25311c6c68c44739d9b3b00
-- kind: git_module
+  track: 236-rebase-gnome-shell-51.0
+  ref: fae5e14f48918bc86eba63bd0acebe24f56b1b9c
+- kind: git_repo
   url: gnome:libgnome-volume-control.git
-  path: subprojects/gvc
-  ref: 5f9768a2eac29c1ed56f1fbb449a77a3523683b6
+  directory: subprojects/gvc
+  ref: d2442f455844e5292cb4a74ffc66ecc8d7595a9f
+- kind: git_repo
+  url: gnome:libshew.git
+  directory: subprojects/libshew
+  ref: d16afc40412b565d2bbecf80335f54a19a978009
 
 build-depends:
+- (@): gnome-build-meta.bst:include/gcc-for-recc.yml
+- gnome-build-meta.bst:buildsystems/meson.bst
 - gnome-build-meta.bst:sdk-deps/sassc.bst
 - gnome-build-meta.bst:core-deps/jasmine-gjs.bst
+- gnome-build-meta.bst:core-deps/umockdev.bst
 - freedesktop-sdk.bst:components/python3-docutils.bst
 - freedesktop-sdk.bst:components/perl.bst
-- freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
-- eos/eos-metrics.bst
 
 runtime-depends:
 - gnome-build-meta.bst:core-deps/libgweather.bst
@@ -46,6 +47,7 @@ depends:
 - gnome-build-meta.bst:sdk/gcr.bst
 - gnome-build-meta.bst:sdk/gjs.bst
 - gnome-build-meta.bst:sdk/glib.bst
+- gnome-build-meta.bst:sdk/glycin.bst
 - gnome-build-meta.bst:sdk/gobject-introspection.bst
 - gnome-build-meta.bst:sdk/gtk.bst
 - gnome-build-meta.bst:sdk/libsoup.bst
@@ -55,5 +57,4 @@ depends:
 
 variables:
   meson-local: >-
-    -Dextensions_app=false
     -Dextensions-tool:bash_completion=disabled
