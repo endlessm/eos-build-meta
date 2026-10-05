@@ -10,7 +10,7 @@ depends:
 - freedesktop-sdk.bst:components/python3.bst
 
 runtime-depends:
-- freedesktop-sdk.bst:components/python3-six.bst
+- gnome-build-meta.bst:core-deps/python3-six.bst
 
 sources:
 - kind: git_repo
