@@ -1,12 +1,15 @@
+# utils/update-elements.sh: Derived from gnome-build-meta.bst 51.0 gnome-initial-setup.bst
+
 kind: meson
 
 sources:
 - kind: git_repo
   url: github:endlessm/gnome-initial-setup.git
-  track: master
-  ref: 4e809a869293eb6995a8252e13df90724bf06143
+  track: 237-rebase-51.0
+  ref: dbd0087adcd40d69bc75764aca867a7a2dfc544a
 build-depends:
-- freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
+- (@): gnome-build-meta.bst:include/gcc-for-recc.yml
+- gnome-build-meta.bst:buildsystems/meson.bst
 
 depends:
 - gnome-build-meta.bst:core-deps/NetworkManager.bst
