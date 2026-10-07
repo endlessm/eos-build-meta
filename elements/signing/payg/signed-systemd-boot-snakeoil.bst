@@ -3,8 +3,8 @@ description: |
   Sign systemd-boot binary with the insecure "snakeoil" key.
 
 build-depends:
-- components/systemd-base.bst
-- freedesktop-sdk.bst:components/sbsigntools.bst
+- components/systemd.bst
+- freedesktop-sdk.bst:components/_private/sbsigntools.bst
 
 config:
   install-commands:

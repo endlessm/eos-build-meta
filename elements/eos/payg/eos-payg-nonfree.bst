@@ -17,7 +17,7 @@ depends:
 - freedesktop-sdk.bst:components/openssl.bst
 
 runtime-depends:
-- freedesktop-sdk.bst:components/efitools.bst
+- components/efitools-bin.bst
 
 sources:
 - kind: git_repo

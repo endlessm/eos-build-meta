@@ -2,8 +2,8 @@ kind: manual
 description: |
   Create an empty /etc/machine-id file.
 
-depends:
-- freedesktop-sdk.bst:bootstrap-import.bst
+build-depends:
+- freedesktop-sdk.bst:public-stacks/buildsystem-make.bst
 
 public:
   initial-script:

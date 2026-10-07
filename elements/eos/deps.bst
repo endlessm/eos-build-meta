@@ -24,16 +24,15 @@ depends:
 # GNOME OS elements.
 - gnome-build-meta.bst:gnomeos-deps/deps.bst
 - gnome-build-meta.bst:gnomeos-deps/mokutil.bst
-- gnome-build-meta.bst:gnomeos/os-release-user.bst
+- gnome-build-meta.bst:gnomeos/os-release.bst
 
 # Developer tools which are in the GNOME OS `devel` addon,
 # but in the core image of EOS.
 - freedesktop-sdk.bst:components/podman.bst
-- freedesktop-sdk.bst:components/podman-config.bst
 - gnome-build-meta.bst:gnomeos-deps/toolbox.bst
 
 # Endless additions to GNOME OS.
-- freedesktop-sdk.bst:components/efitools.bst
+- components/efitools-bin.bst
 - freedesktop-sdk.bst:components/git.bst
 - eos/eos-event-recorder-daemon.bst
 - eos/eos-factory-tools.bst
@@ -55,9 +54,9 @@ depends:
 - components/pigz.bst
 
 # Used by eos-image-builder to create ISO. This could move into a separate tree.
+- components/libisoburn.bst
 - freedesktop-sdk.bst:components/squashfs-tools.bst
 - freedesktop-sdk.bst:components/mtools.bst
-- gnome-build-meta.bst:iso-deps/libisoburn.bst
 
 # Used by eos-image-builder to create VM image.
 # This could move into a separate tree.

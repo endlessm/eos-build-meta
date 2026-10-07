@@ -4,7 +4,7 @@ description: |
 
 build-depends:
 - eos/grub/grub-x86_64-efi.bst
-- freedesktop-sdk.bst:components/sbsigntools.bst
+- freedesktop-sdk.bst:components/_private/sbsigntools.bst
 
 config:
   install-commands:

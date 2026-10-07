@@ -18,4 +18,4 @@ depends:
 - freedesktop-sdk.bst:components/wireless-regdb-bin.bst
 - gnome-build-meta.bst:gnomeos-deps/plymouth-gnome-theme.bst
 - gnome-build-meta.bst:gnomeos-deps/intel-ucode.bst
-- gnome-build-meta.bst:gnomeos/os-release-user.bst
+- gnome-build-meta.bst:gnomeos/os-release.bst

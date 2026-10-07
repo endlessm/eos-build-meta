@@ -8,7 +8,7 @@ sources:
   ref: 3311dff32e746499f4df0d5df04d7eb396382d7e108bb9250e7b519b837043a4
 
 build-depends:
-- freedesktop-sdk.bst:bootstrap-import.bst
+- freedesktop-sdk.bst:public-stacks/buildsystem-make.bst
 
 variables:
   build-dir: "%{build-root}/build"
@@ -27,6 +27,7 @@ config:
   - |
     sed -e 's@^CONFIG_INSTALL_APPLET_SYMLINKS=y@# CONFIG_INSTALL_APPLET_SYMLINKS is not set@' -i %{build-dir}/.config
     sed -e 's@.*CONFIG_INSTALL_APPLET_DONT.*@CONFIG_INSTALL_APPLET_DONT=y@' -i %{build-dir}/.config
+    sed -e 's@^CONFIG_TC=y@# CONFIG_TC is not set@' -i %{build-dir}/.config
 
   build-commands:
   - |

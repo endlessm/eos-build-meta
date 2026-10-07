@@ -4,7 +4,8 @@ description: |
 
 build-depends:
 - freedesktop-sdk.bst:components/linux.bst
-- freedesktop-sdk.bst:components/sbsigntools.bst
+- freedesktop-sdk.bst:components/_private/sbsigntools.bst
+- freedesktop-sdk.bst:public-stacks/buildsystem-make.bst
 
 config:
   install-commands:

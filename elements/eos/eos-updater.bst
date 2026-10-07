@@ -14,10 +14,10 @@ sources:
   ref: Release_6.0.11-0-gdf81cf7f9688e03553736b06060f1bd71e54c97d
 
 build-depends:
+- components/python3-flake8.bst
 - freedesktop-sdk.bst:components/avahi.bst
 - freedesktop-sdk.bst:components/gnupg.bst
 - freedesktop-sdk.bst:components/python3.bst
-- freedesktop-sdk.bst:components/python3-flake8.bst
 - freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
 - gnome-build-meta.bst:sdk/gtk-doc.bst
 - gnome-build-meta.bst:sdk/json-glib.bst
@@ -26,10 +26,10 @@ build-depends:
 
 depends:
 - freedesktop-sdk.bst:components/flatpak.bst
-- freedesktop-sdk.bst:components/libgsystemservice.bst
 - freedesktop-sdk.bst:components/ostree.bst
 - freedesktop-sdk.bst:components/systemd.bst
 - gnome-build-meta.bst:core-deps/NetworkManager.bst
+- gnome-build-meta.bst:core-deps/libgsystemservice.bst
 - gnome-build-meta.bst:sdk/glib.bst
 - gnome-build-meta.bst:sdk/gobject-introspection.bst
 - gnome-build-meta.bst:sdk/pygobject.bst

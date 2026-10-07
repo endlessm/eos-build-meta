@@ -21,7 +21,6 @@ depends:
 - gnome-build-meta.bst:core-deps/upower.bst
 - gnome-build-meta.bst:core/gdm.bst
 - gnome-build-meta.bst:core/gnome-desktop.bst
-- gnome-build-meta.bst:core/gnome-keyring.bst
 - gnome-build-meta.bst:sdk/adwaita-icon-theme.bst
 - gnome-build-meta.bst:sdk/glib.bst
 - gnome-build-meta.bst:sdk/gtk.bst
@@ -30,7 +29,7 @@ depends:
 - freedesktop-sdk.bst:components/geoclue-libs.bst
 - freedesktop-sdk.bst:components/gstreamer.bst
 - freedesktop-sdk.bst:components/pwquality.bst
-- freedesktop-sdk.bst:bootstrap-import.bst
+- freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
 - eos/eos-license-service.bst
 - eos/eos-metrics.bst
 
