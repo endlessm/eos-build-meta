@@ -18,6 +18,7 @@ build-depends:
 - eos/initramfs/deps.bst
 - freedesktop-sdk.bst:components/dracut.bst
 - freedesktop-sdk.bst:components/ostree.bst
+- freedesktop-sdk.bst:public-stacks/runtime-gnu.bst
 
 config:
 
