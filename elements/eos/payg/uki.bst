@@ -18,7 +18,10 @@ build-depends:
 - eos/initramfs/deps.bst
 - eos/payg/eos-payg.bst
 - eos/payg/eos-payg-nonfree.bst
+- freedesktop-sdk.bst:components/binutils.bst
 - freedesktop-sdk.bst:components/dracut.bst
+- freedesktop-sdk.bst:components/findutils.bst
+- freedesktop-sdk.bst:components/lvm2.bst
 - freedesktop-sdk.bst:components/ostree.bst
 - freedesktop-sdk.bst:components/python3-pefile.bst
 - freedesktop-sdk.bst:components/zstd.bst
