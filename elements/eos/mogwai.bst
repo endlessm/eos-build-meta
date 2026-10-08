@@ -24,6 +24,7 @@ sources:
 
 build-depends:
 - freedesktop-sdk.bst:components/python3.bst
+- freedesktop-sdk.bst:components/systemd.bst
 - freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
 - gnome-build-meta.bst:core-deps/python-dbusmock.bst
 - gnome-build-meta.bst:sdk/gtk-doc.bst
