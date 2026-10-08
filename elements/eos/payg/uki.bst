@@ -22,6 +22,7 @@ build-depends:
 - freedesktop-sdk.bst:components/ostree.bst
 - freedesktop-sdk.bst:components/python3-pefile.bst
 - freedesktop-sdk.bst:components/zstd.bst
+- freedesktop-sdk.bst:public-stacks/runtime-gnu.bst
 - gnome-build-meta.bst:core-deps/systemd.bst
 
 variables:
