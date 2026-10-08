@@ -1,5 +1,8 @@
 kind: manual
 
+build-depends:
+- freedesktop-sdk.bst:public-stacks/buildsystem-make.bst
+
 depends:
 - eos/gnome-shell-ext-auto-activities.bst
 - eos/gnome-shell-ext-dash-to-dock.bst
