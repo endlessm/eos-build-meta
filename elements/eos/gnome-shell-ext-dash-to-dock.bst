@@ -6,6 +6,9 @@ sources:
   track: extensions.gnome.org-v*
   ref: extensions.gnome.org-v101-0-g55489eed868dd42474e383b3fc2f47375de44896
 
+build-depends:
+- freedesktop-sdk.bst:public-stacks/buildsystem-make.bst
+
 depends:
 - freedesktop-sdk.bst:components/gettext.bst
 - gnome-build-meta.bst:sdk-deps/sassc.bst

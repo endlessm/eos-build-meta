@@ -6,6 +6,9 @@ sources:
   track: main
   ref: 6fc9381841cac0edbef5b7f6192a765c9426e7aa
 
+build-depends:
+- freedesktop-sdk.bst:public-stacks/buildsystem-make.bst
+
 depends:
 - gnome-build-meta.bst:core/gnome-shell.bst
 
