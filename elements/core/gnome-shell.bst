@@ -54,6 +54,7 @@ depends:
 - freedesktop-sdk.bst:components/gstreamer.bst
 - freedesktop-sdk.bst:components/gstreamer-plugins-base.bst
 - freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
+- eos/eos-metrics.bst
 
 variables:
   meson-local: >-
