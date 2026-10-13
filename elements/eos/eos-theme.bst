@@ -12,7 +12,7 @@ description: |
 sources:
 - kind: git_repo
   url: github:endlessm/eos-theme.git
-  ref: 27604966c939ce49532d1d868c0e14af18d0e45d
+  ref: 6ebe50d39dbf976c61b5f6bcfb86e367d2454fbf
 
 build-depends:
 - freedesktop-sdk.bst:components/systemd.bst
