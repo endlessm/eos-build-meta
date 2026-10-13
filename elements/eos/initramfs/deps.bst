@@ -13,6 +13,7 @@ depends:
 - freedesktop-sdk.bst:components/efivar.bst
 - freedesktop-sdk.bst:components/kmod.bst
 - freedesktop-sdk.bst:components/linux-firmware.bst
+- freedesktop-sdk.bst:components/lvm2.bst
 - freedesktop-sdk.bst:components/shadow.bst
 - freedesktop-sdk.bst:components/systemd.bst
 - freedesktop-sdk.bst:components/wireless-regdb-bin.bst
