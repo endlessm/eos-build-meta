@@ -13,7 +13,7 @@ sources:
 - kind: git_repo
   url: github:endlessm/systemd
   track: 233-rebase-261.2
-  ref: 34b9d0f930e277b46df33a330e8018726b13d271
+  ref: 0ea9d17735bae948326d09071f4596f316375a18
 
 build-depends:
 - (@): gnome-build-meta.bst:include/gcc-for-recc.yml
