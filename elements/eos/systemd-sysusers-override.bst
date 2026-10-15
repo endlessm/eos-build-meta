@@ -52,4 +52,4 @@ public:
 
       # Update tmpfiles.d configs for 'wheel' group rename.
       sed -e 's/ wheel / sudo /' -i $SYSROOT/usr/lib/tmpfiles.d/cups.conf
-      sed -e 's/:group:wheel:/:group:sudo:/' -i $SYSROOT/usr/lib/tmpfiles.d/systemd.conf
+      sed -e 's/group:wheel:/group:sudo:/g' -i $SYSROOT/usr/lib/tmpfiles.d/systemd.conf
