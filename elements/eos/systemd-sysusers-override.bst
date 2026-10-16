@@ -39,9 +39,6 @@ public:
       # Freedesktop SDK.
       #
       # See `doc/sysusers.md` for more information.
-      # Rename 'wheel' group to 'sudo'
-      sed -e 's/^g wheel/g  sudo/' -i $SYSROOT/usr/lib/sysusers.d/basic.conf
-
       systemd_sysusers_override.py $SYSROOT/usr/lib/sysusers.d/basic.conf --group adm --static-id 4
       systemd_sysusers_override.py $SYSROOT/usr/lib/sysusers.d/basic.conf --group lp --static-id 7
       systemd_sysusers_override.py $SYSROOT/usr/lib/sysusers.d/basic.conf --group sudo --static-id 27
@@ -52,4 +49,3 @@ public:
 
       # Update tmpfiles.d configs for 'wheel' group rename.
       sed -e 's/ wheel / sudo /' -i $SYSROOT/usr/lib/tmpfiles.d/cups.conf
-      sed -e 's/group:wheel:/group:sudo:/g' -i $SYSROOT/usr/lib/tmpfiles.d/systemd.conf

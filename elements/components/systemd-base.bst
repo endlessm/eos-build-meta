@@ -13,7 +13,7 @@ sources:
 - kind: git_repo
   url: github:endlessm/systemd
   track: 233-rebase-261.2
-  ref: 0fd60a3025835e29a5a96dab6785ba4f2bd322ef
+  ref: c65b11fad66d0cd75fbac2877ab8d13f91f25714
 
 build-depends:
 - (@): gnome-build-meta.bst:include/gcc-for-recc.yml
@@ -116,6 +116,7 @@ variables:
     -Dkernel-install=true
     -Dvmlinux-h=provided
     -Dvmlinux-h-path='%{includedir}/%{gcc_triplet}/linux/vmlinux.h'
+    -Dwheel-group-name="sudo"
 
 public:
   cpe:
