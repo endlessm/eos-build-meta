@@ -5,6 +5,7 @@ description: |
 build-depends:
 - components/systemd.bst
 - freedesktop-sdk.bst:components/_private/sbsigntools.bst
+- freedesktop-sdk.bst:public-stacks/buildsystem-make.bst
 
 config:
   install-commands:
