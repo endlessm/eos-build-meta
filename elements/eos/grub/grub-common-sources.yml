@@ -13,7 +13,6 @@ sources:
   ref: 2b6321e5bf3bdaf2d265ec7d6f1beafbed6a32ad
 
 # This repo is a "source overlay" for GRUB, enabled via `GRUB_CONTRIB`.
-# We need the `grub-ntldr-img` program in eos-image-builder.
 - directory: grub-extras/
   kind: git_repo
   url: savannah:grub-extras.git
