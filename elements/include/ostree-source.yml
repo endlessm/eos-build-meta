@@ -6,7 +6,7 @@ sources:
 - kind: git_repo
   url: github:endlessm/ostree.git
   track: 241-rebase-v2026.4
-  ref: 404c1c740dfed2d2a55e71fc8dcaeeba807ca9f8
+  ref: bbb4f4615832a38d184013fd30ecefd065402d3a
 - kind: git_module
   path: libglnx
   url: gnome:libglnx.git
