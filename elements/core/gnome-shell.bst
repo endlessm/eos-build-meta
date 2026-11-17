@@ -6,7 +6,7 @@ sources:
 - kind: git_repo
   url: github:endlessm/gnome-shell.git
   track: 236-rebase-gnome-shell-51.0
-  ref: fae5e14f48918bc86eba63bd0acebe24f56b1b9c
+  ref: 28f27ec7720772c3532ccb98aee4b3783b519e5a
 - kind: git_repo
   url: gnome:libgnome-volume-control.git
   directory: subprojects/gvc
