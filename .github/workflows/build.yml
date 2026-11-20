@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Fetch BuildStream cache credentials from Vault
-        uses: hashicorp/vault-action@v3
+        uses: hashicorp/vault-action@v4
         with:
           url: https://vault.endlessos.org
           method: jwt
@@ -34,7 +34,7 @@ jobs:
             pki/issue/endless-client {"common_name": "github@endlessos.org", "ttl": "12h"} ;
 
       - name: Fetch signing credentials from Vault
-        uses: hashicorp/vault-action@v3
+        uses: hashicorp/vault-action@v4
         with:
           url: https://vault.endlessos.org
           method: jwt
@@ -47,7 +47,7 @@ jobs:
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
       - name: Fetch Github read credentials from Vault
-        uses: hashicorp/vault-action@v3
+        uses: hashicorp/vault-action@v4
         with:
           url: https://vault.endlessos.org
           method: jwt
