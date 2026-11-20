@@ -135,7 +135,7 @@ jobs:
       - uses: runs-on/action@v2
         with:
           sccache: s3
-      - uses: mozilla-actions/sccache-action@v0.0.9
+      - uses: mozilla-actions/sccache-action@v0.0.11
 
       - name: Build root filesystem (signed_boot=endless)
         run: |
