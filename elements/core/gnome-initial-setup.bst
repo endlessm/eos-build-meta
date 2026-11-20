@@ -6,7 +6,7 @@ sources:
 - kind: git_repo
   url: github:endlessm/gnome-initial-setup.git
   track: 237-rebase-51.0
-  ref: 6c1d9f77776a1a9ebc3a26d038f9d17f55d3d994
+  ref: 236ade7880746cb8d408dc6d2022184dce17601b
 build-depends:
 - (@): gnome-build-meta.bst:include/gcc-for-recc.yml
 - gnome-build-meta.bst:buildsystems/meson.bst
