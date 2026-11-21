@@ -8,7 +8,7 @@ sources:
   track: master
   exclude:
   - '*-rc*'
-  ref: Release_6.0.11-0-g68faae5cc8fe736a8454c19c0cc88fce53b629cd
+  ref: Release_6.0.13-0-g31d641440467fe8b67b214c81b70a9c0c56639e9
 # Override: Our patches are completely different from the upstream ones, no need
 # to update them.
 - kind: patch_queue
