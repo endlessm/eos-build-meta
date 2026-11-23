@@ -17,7 +17,6 @@ depends:
 - gnome-build-meta.bst:core/gnome-clocks.bst
 - gnome-build-meta.bst:core/gnome-console.bst
 - gnome-build-meta.bst:core/gnome-disk-utility.bst
-- gnome-build-meta.bst:core/gnome-software.bst
 - gnome-build-meta.bst:core/gnome-system-monitor.bst
 - gnome-build-meta.bst:core/nautilus.bst
 - gnome-build-meta.bst:core/simple-scan.bst
