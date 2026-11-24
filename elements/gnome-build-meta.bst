@@ -9,6 +9,7 @@ sources:
 config:
   overrides:
     core/meta-gnome-core-apps.bst: core/meta-gnome-core-apps.bst
+    core/gnome-control-center.bst: core/gnome-control-center.bst
     core/gnome-initial-setup.bst: core/gnome-initial-setup.bst
     core/gnome-session.bst: core/gnome-session.bst
     core/gnome-shell.bst: core/gnome-shell.bst
