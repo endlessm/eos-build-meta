@@ -84,8 +84,10 @@ The GRUB UEFI application is built by the element `eos/grub.bst` and installed
 to `/usr/share/efi_binaries`, where eos-image-builder moves it into the ESP.
 
 The GRUB UEFI application contains all necessary modules and fonts. Note that
-most of the files found in the rootfs at `/boot/grub` are used only by the
-legacy BIOS boot support. See below for more details.
+the only file in the rootfs at `/boot/grub` that is used is `grub.cfg`, which
+the GRUB UEFI application loads. Other files there (such as the `i386-pc`
+modules) belong to systems that boot using legacy BIOS, which is no longer
+supported. See below for more details.
 
 GRUB configuration is also defined in this repo, and installed to
 `/usr/lib/grub/conf` in the filesystem tree. This defines the path where
@@ -134,29 +136,14 @@ See also:
 
 ## BIOS boot process
 
-Endless OS 7 drops support for BIOS on new installations. This means EOS7 disk
-images provide an EFI System Partition, but no BIOS boot record. See issue #87
+Endless OS 7 does not support legacy BIOS boot. EOS7 disk images and ISOs
+provide an EFI System Partition (GPT partition table), but no BIOS boot
+record. See issue #87
 ["Drop support for BIOS boot"](https://github.com/endlessm/eos-build-meta/issues/87)
 for details.
 
-Some existing systems are set up to boot using the BIOS firmware interface,
-and EOS7 preserves support for those systems. This means the `/boot` partition
-in the EOS7 root filesystem contains a second version of GRUB that is only used
-during BIOS boot.
-
-Most EOS6 disk images use a "BIOS/GPT" configuration, where the first partition of
-the disk is the ESP, and the second partition is a 1MB "BIOS boot partition" used
-by GRUB.
-
-In an EOS7 system that was upgraded from EOS6 and uses BIOS boot, the components
-involved in booting are as follows:
-
-  1. The machine firmware (BIOS, or a BIOS compatibility mode running in UEFI)
-  2. The Master Boot Record, containing GRUB first stage (`boot.img`).
-  3. The BIOS boot partition, containing GRUB second stage (`core.img`)
-  4. The `/boot` directory in the rootfs, containing the remaining GRUB modules
-  5. Linux
-  6. The initramfs
-  7. The root filesystem.
-
-Note that there's no concept of "Secure Boot" when using BIOS boot.
+The EOS7 root filesystem no longer ships the legacy BIOS (`i386-pc`) version of
+GRUB, `grub-install` or its configuration. A system that was upgraded from EOS6
+and boots using the BIOS firmware interface keeps the GRUB files that were
+written to disk when it was installed (the Master Boot Record, the BIOS boot
+partition and `/boot/grub`). These are not updated by OSTree upgrades.

@@ -16,7 +16,6 @@ depends:
 - eos/eos-boot-helper.bst
 - eos/eos-keyring.bst
 - eos/etc-machine-id.bst
-- eos/grub/grub-i386-pc.bst
 - eos/grub/grub-config.bst
 - eos/initramfs.bst
 - freedesktop-sdk.bst:components/fscrypt.bst
