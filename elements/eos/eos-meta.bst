@@ -4,7 +4,7 @@ description: eos-meta provides Endless OS engineering scripts and mimeapps.list.
 sources:
 - kind: git_repo
   url: github:endlessm/eos-meta.git
-  ref: 117079ba9747c0b758d4155bd1837a9f32615f9b
+  ref: 99a2e64ab8e42b8d3e589bdaa76d320f59999798
 
 build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
