@@ -25,7 +25,7 @@ sources:
 - kind: git_repo
   url: github:endlessm/eos-boot-helper
   track: master
-  ref: 2611c0022b1e4f7e2cafd5b2dd8bc5ca58b9a670
+  ref: ee082f0f29a9f5456043bb3ff7c26231d8537631
 
 public:
   bst:
