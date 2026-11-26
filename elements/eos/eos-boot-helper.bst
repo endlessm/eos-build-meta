@@ -9,7 +9,6 @@ description: |
 
 build-depends:
 - freedesktop-sdk.bst:components/dbus.bst
-- freedesktop-sdk.bst:components/efivar.bst
 - freedesktop-sdk.bst:components/polkit.bst
 - freedesktop-sdk.bst:components/systemd.bst
 - freedesktop-sdk.bst:public-stacks/buildsystem-autotools.bst
@@ -25,7 +24,7 @@ sources:
 - kind: git_repo
   url: github:endlessm/eos-boot-helper
   track: master
-  ref: ee082f0f29a9f5456043bb3ff7c26231d8537631
+  ref: d03895a0def794ad198211c1afce4971a2d5fce4
 
 public:
   bst:
